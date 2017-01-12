@@ -5,7 +5,7 @@ const vertShader = "" +
     "varying vec3 vAbsolutePosition; \n" +
     "varying float vRevealed; \n"+
     "void main() { \n" +
-    "vec3 positionPlan = vec3(position.x,3.0,position.z); \n" +
+    "vec3 positionPlan = vec3(position.x,position.y,position.z); \n" +
     "vec4 worldPosition = modelMatrix * vec4(positionPlan, 1.0 ); \n" +
     "vAbsolutePosition = worldPosition.xyz; \n" +
     "vRevealed = revealed; \n"+
@@ -34,7 +34,6 @@ const fragShader = "" +
     "#endif \n" +
     "" +
     "void main(void) { \n" +
-    "if(vRevealed > 0.1){" +
     "float offset = size/4.0;  \n" +
     "vec2 UV1 = vec2(vAbsolutePosition.x, vAbsolutePosition.z+progress)/size; \n" +
     "vec2 UV2 = vec2(vAbsolutePosition.x+offset, vAbsolutePosition.z+offset+progress)/size; \n" +
@@ -70,9 +69,6 @@ const fragShader = "" +
     "" +
     "gl_FragColor.xyz = colorFinal * sumLights; \n" +
     "gl_FragColor.a = opacity; \n" +
-    "}else{" +
-    "gl_FragColor = vec4(0.0); \n" +
-    "}" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([

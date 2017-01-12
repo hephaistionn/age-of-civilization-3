@@ -9,6 +9,7 @@ class Map {
         this.element = new THREE.Object3D();
         this.element.matrixAutoUpdate = false;
         this.element.frustumCulled = false;
+        this.element.name = 'map';
 
         this.tileByChunk = config.tileByChunk;
         this.tileSize = config.tileSize;
@@ -23,8 +24,7 @@ class Map {
             this.entityGroups[id] = [];
         }
 
-        this.initGround(model);
-        //this.updateState(model);//called by update(dt) of screen
+        this.createGround(model);
     }
 
     updateState(model) {
@@ -37,7 +37,6 @@ class Map {
             this.updateStateOfOneEntities(model.updatedEntity.pop(), model.updatedEntity.pop());
         }
 
-        this.updateVisibleTile(model);
     }
 
     update(dt) {
@@ -47,11 +46,6 @@ class Map {
 
     remove() {
 
-    }
-
-    updateVisibleTile(model) {
-        this.updateVisibleEntity(model);
-        this.updateVisibleMap(model);
     }
 }
 

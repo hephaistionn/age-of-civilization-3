@@ -41,7 +41,7 @@ module.exports = StateManager => {
             this.save(id, 'currentLeaderId');
         }
         if(id) {
-            console.info('load local gamer');
+            console.log('load local gamer');
             return this.getLeader(id);
         }
     };

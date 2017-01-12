@@ -15,8 +15,6 @@ const Entity = require('../../Engine/Entity/Entity');
 
 let removeMode = false;
 let rotation = 0;
-let moveDx = 0;
-let moveDz = 0;
 
 class ScreenMap {
 
@@ -66,11 +64,6 @@ class ScreenMap {
     update(dt) {
         if(this.map) {
             this.map.update(dt);
-        }
-
-        if(moveDx !== 0 || moveDz !== 0) {
-            this.camera.moveTo(moveDx, moveDz, dt);
-            this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
         }
     }
 
@@ -178,16 +171,6 @@ class ScreenMap {
         }
     }
 
-    mouseLeave(dx, dy) {
-        if(this.monitoringPanel.opened || this.entityManagerPanel.opened) return;
-        moveDx = dx;
-        moveDz = dy;
-    }
-
-    mouseEnter() {
-        moveDx = 0;
-        moveDz = 0;
-    }
 
     mouseWheel(delta) {
         this.camera.mouseWheel(delta);

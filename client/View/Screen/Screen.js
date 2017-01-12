@@ -129,7 +129,7 @@ class Screen {
         let intersects;
         let tileSize;
         if(components.map) {
-            intersects = this.raycaster.intersectObjects(components.map.chunksList, recursive);
+            intersects = this.raycaster.intersectObjects(components.map.clickableArea, recursive);
             tileSize = components.map.tileSize;
         } else {
             intersects = this.raycaster.intersectObjects(components.worldmap.touchSurface, recursive);
@@ -164,7 +164,7 @@ class Screen {
         let intersects;
         let tileSize;
         if(components.map) {
-            intersects = this.raycaster.intersectObjects(components.map.chunksList, recursive);
+            intersects = this.raycaster.intersectObjects(components.map.clickableArea, recursive);
             tileSize = components.map.tileSize;
         } else {
             intersects = this.raycaster.intersectObjects(components.worldmap.touchSurface, recursive);

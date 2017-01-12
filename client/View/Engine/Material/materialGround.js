@@ -2,10 +2,8 @@ const THREE = require('./../../../services/threejs');
 
 const vertShader = "" +
     "attribute float grounds; \n" +
-    "attribute float revealed; \n" +
     "varying vec4 vGrounds; \n" +
     "varying vec3 vecNormal; \n" +
-    "varying float vRevealed; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
@@ -29,7 +27,6 @@ const vertShader = "" +
     "} \n" +
     "vec4 worldPosition = modelMatrix * vec4(position, 1.0 ); \n" +
     "vAbsolutePosition = worldPosition.xyz; \n" +
-    "vRevealed = revealed; \n" +
     "vecNormal = (modelMatrix * vec4(normal, 0.0)).xyz; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
@@ -84,25 +81,30 @@ const fragShader = "" +
     "varying vec4 vGrounds; \n" +
     "varying vec3 vecNormal; \n" +
     "varying vec3 vAbsolutePosition; \n" +
-    "varying float vRevealed; \n" +
     "uniform sampler2D textureA; \n" +
-    "uniform sampler2D textureB; \n" +
-    "uniform sampler2D textureC; \n" +
-    "uniform sampler2D textureD; \n" +
     "" +
     "uniform vec3 ambientLightColor; \n" +
     "void main(void) { \n" +
-    "   if(vRevealed > 0.1) {" +
-    "       vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/40.0; \n" +
-    "       vec3 colorA = texture2D( textureA, UV ).xyz; \n" +
-    "       vec3 colorB = texture2D( textureB, UV ).xyz; \n" +
-    "       vec3 colorC = texture2D( textureC, UV ).xyz; \n" +
-    "       vec3 colorD = texture2D( textureD, UV ).xyz; \n" +
     "       vec3 colorFinal = vec3(0.0); \n" +
-    "       colorFinal += colorA * vGrounds.x; \n" +
-    "       colorFinal += colorB * vGrounds.y; \n" +
-    "       colorFinal += colorC * vGrounds.z; \n" +
-    "       colorFinal += colorD * vGrounds.w; \n" +
+    //"       vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/40.0; \n" +
+    //"       vec3 colorA = texture2D( textureA, UV ).xyz; \n" +
+    //"       vec3 colorB = texture2D( textureB, UV ).xyz; \n" +
+    //"       vec3 colorC = texture2D( textureC, UV ).xyz; \n" +
+    //"       vec3 colorD = texture2D( textureD, UV ).xyz; \n" +
+    //"       if(vGrounds.x > 0.0) {colorFinal = colorA;}" +
+    //"       if(vGrounds.y > 0.0) {colorFinal = colorB;}" +
+    //"       if(vGrounds.z > 0.0) {colorFinal = colorC;}" +
+    //"       if(vGrounds.w > 0.0) {colorFinal = colorD;}" +
+
+    "       vec2 UV = vec2(vAbsolutePosition.x+0.0, vAbsolutePosition.z)/64.0; \n" +
+    "colorFinal = texture2D( textureA, UV ).xyz;"+
+
+
+
+        //"       colorFinal += colorA * step(0.1,vGrounds.x); \n" +
+   // "       colorFinal += colorB * step(0.1,vGrounds.y); \n" +
+    //"       colorFinal += colorC * step(0.1,vGrounds.z); \n" +
+    //"       colorFinal += colorD * step(0.1,vGrounds.w); \n" +
     "       vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "       DirectionalLight directionalLight;" +
     "       for(int i = 0; i < NUM_DIR_LIGHTS; i++) {\n" +
@@ -115,13 +117,18 @@ const fragShader = "" +
     "       } \n" +
     "       sumLights = ambientLightColor + sumLights; \n" +
     "       colorFinal *= sumLights; \n" +
+
+   //// "float moduX = mod(vAbsolutePosition.x, 8.0);"  +
+  //  "float moduZ = mod(vAbsolutePosition.z, 8.0);"  +
+  //  "if(moduX > 4.0 && moduZ < 4.0 || moduX < 4.0 && moduZ > 4.0){"  +
+  //  "colorFinal = colorFinal * 0.95;" +
+ //   "}"+
+
     "       if(vAbsolutePosition.y<3.0){ \n" +
     "           colorFinal = mix(vec3(0.2,0.6,0.7), colorFinal, vAbsolutePosition.y/3.0); \n" +
     "       }" +
     "       gl_FragColor = vec4(colorFinal , 1.0); \n" +
-    "   } else {" +
-    "       gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); \n" +
-    "   }" +
+
     "}";
 
 const uniforms = THREE.UniformsUtils.merge([
@@ -130,9 +137,6 @@ const uniforms = THREE.UniformsUtils.merge([
 ]);
 
 uniforms.textureA = {type: 't', value: THREE.loadTexture("pic/rock_0.jpg")};
-uniforms.textureB = {type: 't', value: THREE.loadTexture("pic/grass_0.jpg")};
-uniforms.textureC = {type: 't', value: THREE.loadTexture("pic/grass_1.jpg")};
-uniforms.textureD = {type: 't', value: THREE.loadTexture("pic/soil_0.jpg")};
 
 const mat = new THREE.ShaderMaterial({
     uniforms: uniforms,

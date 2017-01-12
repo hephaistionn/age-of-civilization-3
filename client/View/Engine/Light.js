@@ -13,10 +13,10 @@ module.exports = class Light {
         this.directionalLight.matrixAutoUpdate = false;
         if(model.shadow) {
             this.directionalLight.castShadow = true;
-            this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-100, 100, 100, -100, 10, 1000));
+            this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-20, 20, 20, -20, 1, 1000));
             this.directionalLight.shadow.bias = 0.1;
-            this.directionalLight.shadow.mapSize.width = 512;
-            this.directionalLight.shadow.mapSize.height = 512;
+            this.directionalLight.shadow.mapSize.width = 512*2;
+            this.directionalLight.shadow.mapSize.height = 512*2;
         }
 
         this.element.add(this.ambient);

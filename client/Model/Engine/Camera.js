@@ -1,14 +1,14 @@
 class Camera {
 
     constructor(config) {
-        this.x = config.x || 10; //camera position
-        this.y = config.y || 12; //camera position
-        this.z = config.z || 10; //camera position
+        this.x = config.x || 0; //camera position
+        this.y = config.y || 96; //camera position
+        this.z = config.z || 0; //camera position
         this.iX = 0; //camera position before drag
         this.iZ = 0; //camera position before drag
-        this.offsetX = config.offsetX || -10; //target positio relative too camera position
-        this.offsetY = config.offsetY || -12; //target position relative to camera position
-        this.offsetZ = config.offsetZ || -10; //target position relative to camera position
+        this.offsetX = config.offsetX || -80; //target positio relative too camera position
+        this.offsetY = config.offsetY || -96; //target position relative to camera position
+        this.offsetZ = config.offsetZ || -80; //target position relative to camera position
         this.targetX = this.x + this.offsetX;
         this.targetY = this.y + this.offsetY;
         this.targetZ = this.z + this.offsetZ;
@@ -27,7 +27,7 @@ class Camera {
         this.offsetYInit = 0;
         this.offsetZInit = 0;
         this.moveReady = false;
-        this.zoomMax = config.zoomMax || 30;
+        this.zoomMax = config.zoomMax || 300;
         this.zoomMin = config.zoomMin || 5;
         this.AngleXZ = Math.atan2(-this.offsetZ, -this.offsetX);
         this.updated = false;

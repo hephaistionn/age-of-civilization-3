@@ -1,84 +1,48 @@
 const THREE = require('../../../services/threejs');
 const materialGround = require('./../Material/materialGround');
 const materialWater = require('./../Material/materialWater');
+const materialBorder = require('./../Material/materialBorder');
 const ee = require('../../../services/eventEmitter');
 
 module.exports = Map=> {
 
-    Map.prototype.initGround = function initGround(model) {
+    Map.prototype.createGround = function createGround(model) {
         this.materialGround = materialGround;
-        this.materialGround.uniforms.textureA.value = THREE.loadTexture("pic/rock_0.jpg");
-        this.materialGround.uniforms.textureB.value = THREE.loadTexture("pic/grass_0.jpg");
-        this.materialGround.uniforms.textureC.value = THREE.loadTexture("pic/grass_1.jpg");
-        this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/soil_0.jpg");
-        //this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
-        //this.materialGround = new THREE.MeshPhongMaterial( { color: 0x555555 } );
-        //this.materialWater = new THREE.MeshPhongMaterial({color: 0x3333ff, map : THREE.ImageUtils.loadTexture('pic/water_0.jpg'), transparent: true, shininess: 90, opacity: 0.66 });
+        this.materialGround.uniforms.textureA.value = THREE.loadTexture("map/map2_color_test.png");
         this.materialWater = materialWater;
         this.waterOscillation = 1;
 
-        const nbPointX = model.nbPointX;
-        const nbPointZ = model.nbPointZ;
-        const nbTileX = model.nbTileX;
-        const nbTileZ = model.nbTileZ;
+        this.chunkMesh = this.drawChunkMesh(model.nbTileX, model.nbTileZ, model);
+        this.waterMesh = this.drawWaterMesh(model);
+        this.borderMesh = this.drawBorderMesh(model);
 
-        const chunksTiles = [0];
-        for(let x = 0; x < nbTileX; x++) {
-            if(chunksTiles[chunksTiles.length - 1] === this.tileByChunk) {
-                chunksTiles.push(1);
-            } else {
-                chunksTiles[chunksTiles.length - 1]++;
-            }
-        }
-        this.chunksTiles = chunksTiles;
-        const length = chunksTiles.length;
-        let x, z, offsetXTiles, offsetZTiles, nbXTiles, nbZTiles;
+        this.element.add(this.chunkMesh);
+        this.element.add(this.waterMesh);
+        this.element.add(this.borderMesh);
 
-        function findVextexUnderWater(vertex) {
-            return vertex < 3;
-        }
-
-        this.chunks = [];
-        this.chunksList = [];
-        this.offsetList = [];
-        for(x = 0; x < length; x++) {
-            this.chunks[x] = [];
-            for(z = 0; z < length; z++) {
-
-                nbXTiles = chunksTiles[x];
-                nbZTiles = chunksTiles[z];
-
-                offsetXTiles = x * this.tileByChunk;
-                offsetZTiles = z * this.tileByChunk;
-                let chunkMesh = this.createSurfaceMesh(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model);
-
-                chunkMesh.position.set(offsetXTiles * this.tileSize, 0, offsetZTiles * this.tileSize);
-                chunkMesh.updateMatrixWorld();
-                chunkMesh.matrixAutoUpdate = false;
-                chunkMesh.matrixWorldNeedsUpdate = false;
-                chunkMesh.receiveShadow = true;
-                this.element.add(chunkMesh);
-
-                this.chunks[x][z] = chunkMesh;
-                this.chunksList.push(chunkMesh);
-                this.offsetList.push(offsetXTiles);
-                this.offsetList.push(offsetZTiles);
-
-            }
-        }
-
+        this.clickableArea  = [this.chunkMesh];
     };
 
-    Map.prototype.createWater = function createWater(chunkMesh) {
-        const waterGeometry = chunkMesh.geometry;
-        let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
-        waterMesh.position.set(0, 0, 0);
-        waterMesh.updateMatrix();
-        waterMesh.updateMatrixWorld();
-        waterMesh.matrixAutoUpdate = false;
-        waterMesh.matrixWorldNeedsUpdate = false;
-        waterMesh.receiveShadow = true;
-        return waterMesh;
+    Map.prototype.drawWaterMesh = function drawWater(model) {
+        if(this.chunkMesh.geometry.boundingBox.min.y <= 3) {
+            const sizeX = this.tileSize * model.nbTileX;
+            const sizeZ = this.tileSize * model.nbTileZ;
+            const waterGeometry = new THREE.PlaneBufferGeometry(sizeX, sizeZ, 2, 2);
+            const waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
+           // const waterMesh = new THREE.Mesh(waterGeometry, materialTest);
+            waterMesh.position.set(0, 3, 0);
+            waterMesh.updateMatrix();
+            waterMesh.updateMatrixWorld();
+            waterMesh.matrixAutoUpdate = false;
+            waterMesh.matrixWorldNeedsUpdate = false;
+            waterMesh.name = 'water.';
+            return waterMesh;
+        }else{
+            const waterMesh = new THREE.Object3D();
+            waterMesh.matrixAutoUpdate = false;
+            waterMesh.name = 'water.';
+            return waterMesh;
+        }
     };
 
     Map.prototype.updateWater = function updateWater(dt) {
@@ -101,20 +65,18 @@ module.exports = Map=> {
         }
     };
 
-    Map.prototype.createSurfaceMesh = function createSurfaceMesh(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model) {
-        const chunkGeo = this.createSurfaceGeo(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model);
-        const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
-        chunkMesh.name = 'chunck.' + offsetXTiles + '.' + offsetZTiles;
+    Map.prototype.drawChunkMesh = function drawChunkMesh(nbXTiles, nbZTiles, model) {
+        const chunkGeo = this.createChunkGeo(nbXTiles, nbZTiles, model);
         chunkGeo.computeBoundingBox();
-        if(chunkGeo.boundingBox.min.y <= 3) {
-            const waterMesh = this.createWater(chunkMesh);
-            waterMesh.name = 'water.' + offsetXTiles + '.' + offsetZTiles;
-            chunkMesh.add(waterMesh);
-        }
+        const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
+        chunkMesh.name = 'chunck';
+        chunkMesh.matrixAutoUpdate = false;
+        chunkMesh.matrixWorldNeedsUpdate = false;
+        chunkMesh.receiveShadow = true;
         return chunkMesh;
     };
 
-    Map.prototype.createSurfaceGeo = function createSurfaceGeo(offsetXTiles, offsetZTiles, nbXTiles, nbZTiles, model) {
+    Map.prototype.createChunkGeo = function createChunkGeo(nbXTiles, nbZTiles, model) {
         const xSize = nbXTiles * this.tileSize;
         const zSize = nbZTiles * this.tileSize;
 
@@ -125,11 +87,10 @@ module.exports = Map=> {
         const length = position.count;
         const normalArray = new Float32Array(length * 3);
         const groundArry = new Float32Array(length);
-        const revealedArray = new Float32Array(length);
 
         for(let i = 0; i < length; i++) {
-            let tileX = offsetXTiles + posArray[i * 3] / this.tileSize;
-            let tileZ = offsetZTiles + posArray[i * 3 + 2] / this.tileSize;
+            let tileX = posArray[i * 3] / this.tileSize;
+            let tileZ = posArray[i * 3 + 2] / this.tileSize;
             let index = tileZ * model.nbPointX + tileX;
 
             let pointsType = model.pointsType[index] || 0;
@@ -148,60 +109,160 @@ module.exports = Map=> {
         }
 
         chunkGeometry.addAttribute('grounds', new THREE.BufferAttribute(groundArry, 1));
-        chunkGeometry.addAttribute('revealed', new THREE.BufferAttribute(revealedArray, 1));
         chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
         chunkGeometry.attributes.position.needsUpdate = true;
         return chunkGeometry;
     };
 
-    Map.prototype.refreshTexture = function refreshTexture() {
-        this.materialGround.uniforms.textureA.value = THREE.loadTexture("pic/rock_0.jpg");
-        this.materialGround.uniforms.textureB.value = THREE.loadTexture("pic/grass_0.jpg");
-        this.materialGround.uniforms.textureC.value = THREE.loadTexture("pic/grass_1.jpg");
-        this.materialGround.uniforms.textureD.value = THREE.loadTexture("pic/soil_0.jpg");
-    };
+    Map.prototype.drawBorderMesh = function drawBorderMesh(model) {
+        if(!this.borderMesh) { //can be redrawn
+            this.borderMesh = this.createBorderMesh(model);
+        }
 
-    Map.prototype.updateVisibleMap = function updateVisibleMap(model) {
-        const flags = model.entityGroups.EntityExplorer;
-        const nbFlag = flags.length;
-        let i, l, j, k, geometry, revealed, array, position;
-        let px, pz, fx, fz;
+        const borderMesh = this.borderMesh;
+        const chunk = this.chunkMesh;
+        const nbX = model.nbPointX;
+        const nbZ =  model.nbPointZ;
+        const position = chunk.geometry.attributes.position;
+        const posArray = position.array;
+        const topLeft = new Float32Array(nbX * 3);
+        const topRight = new Float32Array(nbZ * 3);
+        let i;
 
-        for(k = 0; k < this.chunksList.length; k++) {
+        //compute border left
+        let offset = nbX * (nbZ - 1 ) * 3;
+        for(i = 0; i < nbX; i++) {
+            topLeft[i * 3] = posArray[offset + i * 3];          //x
+            topLeft[i * 3 + 1] = posArray[offset + i * 3 + 1];  //y
+            topLeft[i * 3 + 2] = posArray[offset + i * 3 + 2];  //z
+        }
 
-            geometry = this.chunksList[k].geometry;
-            revealed = geometry.attributes.revealed;
-            position = geometry.attributes.position.array;
+        //compute border right
+        for(i = 0; i < nbZ; i++) {
+            topRight[i * 3]     = posArray[((nbZ-i)*nbX-1)  * 3 ];      //x
+            topRight[i * 3 + 1] = posArray[((nbZ-i)*nbX-1)  * 3  + 1];  //y
+            topRight[i * 3 + 2] = posArray[((nbZ-i)*nbX-1)  * 3  + 2];  //z
+        }
 
-            revealed.needsUpdate = true;
-            array = revealed.array;
-            l = array.length;
+        let x, y, z;
+        let pos = borderMesh.geometry.attributes.position.array;
+        let col = borderMesh.geometry.attributes.color.array;
+        let indice = borderMesh.geometry.index.array;
 
-            let offsetXTiles = this.offsetList[k * 2];
-            let offsetZTiles = this.offsetList[k * 2 + 1];
+        //compute vertices
+        for(i = 0; i < nbX; i++) {
+            x = topLeft[i * 3];
+            y = topLeft[i * 3 + 1];
+            z = topLeft[i * 3 + 2];
 
-            for(i = 0; i < l; i++) {
+            //compute column
+            pos[i*3] = x;
+            pos[i*3 + 1] = y;
+            pos[i*3 + 2] = z;
+            col[i*3] = 25/255;
+            col[i*3 + 1] = 255/255;
+            col[i*3 + 2] = 0;
 
-                px = position[i * 3] / this.tileSize + offsetXTiles;
-                pz = position[i * 3 + 2] / this.tileSize + offsetZTiles;
+            pos[i*3 + nbX*3] = x;
+            pos[i*3 + nbX*3 + 1] = y - 2;
+            pos[i*3 + nbX*3 + 2] = z;
+            col[i*3 + nbX*3] = 84/255;
+            col[i*3 + nbX*3 + 1] = 62/255;
+            col[i*3 + nbX*3 + 2] = 44/255;
 
-                for(j = 0; j < nbFlag; j++) {
-                    fx = flags[j].x;
-                    fz = flags[j].z;
+            pos[i*3 + nbX*6] = x;
+            pos[i*3 + nbX*6 + 1] = -10;
+            pos[i*3 + nbX*6 + 2] = z;
+            col[i*3 + nbX*6] = 84/255;
+            col[i*3 + nbX*6 + 1] = 62/255;
+            col[i*3 + nbX*6 + 2] = 44/255;
+        }
 
-                    let dx = px - fx;
-                    let dz = pz - fz;
+        const offsetX = 3 * (nbX) * 3;
 
-                    if(Math.sqrt(dx * dx + dz * dz) < flags[j].radius) {
-                        array[i] = 1;
-                        break;
-                    } else {
-                        array[i] = 0;
-                    }
-                }
+        for(i = 0; i < nbZ; i++) {
+            x = topRight[i * 3];
+            y = topRight[i * 3 + 1];
+            z = topRight[i * 3 + 2];
+
+            //compute column
+            pos[offsetX+i*3] = x;
+            pos[offsetX+i*3 + 1] = y;
+            pos[offsetX+i*3 + 2] = z;
+            col[offsetX+i*3] = 25/255*0.7;
+            col[offsetX+i*3 + 1] = 255/255*0.7;
+            col[offsetX+i*3 + 2] = 0;
+
+            pos[offsetX + i*3 + nbX*3] = x;
+            pos[offsetX + i*3 + nbX*3 + 1] = y - 2;
+            pos[offsetX + i*3 + nbX*3 + 2] = z;
+            col[offsetX + i*3 + nbX*3] = 84/255*0.7;
+            col[offsetX + i*3 + nbX*3 + 1] = 62/255*0.7;
+            col[offsetX + i*3 + nbX*3 + 2] = 44/255*0.7;
+
+            pos[offsetX + i*3 + nbX*6] = x;
+            pos[offsetX + i*3 + nbX*6 + 1] = -10;
+            pos[offsetX + i*3 + nbX*6 + 2] = z;
+            col[offsetX + i*3 + nbX*6] = 84/255*0.7;
+            col[offsetX + i*3 + nbX*6 + 1] = 62/255*0.7;
+            col[offsetX + i*3 + nbX*6 + 2] = 44/255*0.7;
+        }
+
+        //compute indice
+        let ctn = 0;
+        for(i = 0; i < nbX - 1; i++) {
+            for(let j=0; j<2; j++){
+                indice[ctn++] = i+ nbX*j;
+                indice[ctn++] = i+ nbX + nbX*j;
+                indice[ctn++] = i+ 1+ nbX*j;
+                indice[ctn++] = i+ nbX+ nbX*j;
+                indice[ctn++] = i+ 1+ nbX+ nbX*j;
+                indice[ctn++] = i+ 1+ nbX*j;
             }
         }
-    }
 
+        const offsetIndex = (nbX) * 3;
+        for(i = 0; i < nbZ - 1; i++) {
+            for(let j=0; j<2; j++){
+                indice[ctn++] = offsetIndex + i+ nbX*j;
+                indice[ctn++] = offsetIndex + i+ nbX + nbX*j;
+                indice[ctn++] = offsetIndex + i+ 1+ nbX*j;
+                indice[ctn++] = offsetIndex + i+ nbX+ nbX*j;
+                indice[ctn++] = offsetIndex + i+ 1+ nbX+ nbX*j;
+                indice[ctn++] = offsetIndex + i+ 1+ nbX*j;
+            }
+        }
+
+        borderMesh.geometry.setDrawRange( 0, ctn  );
+        borderMesh.geometry.attributes.position.needsUpdate = true;
+        borderMesh.geometry.attributes.color.needsUpdate = true;
+        borderMesh.geometry.index.needsUpdate = true;
+        return borderMesh;
+    };
+
+    Map.prototype.createBorderMesh = function createBorderMesh(model) {
+        const nbX = model.nbPointX;
+        const nbZ =  model.nbPointZ;
+        const size = (nbX + nbZ) * 3; //3 level of vertices;
+
+        const geometry = new THREE.BufferGeometry();
+
+        geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(size * 3), 3));
+        geometry.addAttribute('color', new THREE.BufferAttribute(new Float32Array(size * 3), 3));
+        geometry.setIndex(new THREE.BufferAttribute( new Uint16Array(size *4), 1));
+
+        const mesh = new THREE.Mesh(geometry, materialBorder);
+
+        mesh.matrixAutoUpdate = false;
+        mesh.frustumCulled = false;
+        mesh.matrixWorldNeedsUpdate = false;
+        this.element.add(mesh);
+
+        return mesh;
+    };
+
+    Map.prototype.refreshTexture = function refreshTexture() {
+        this.materialGround.uniforms.textureA.value = THREE.loadTexture("map/map2_color_test.png");
+    };
 
 };
