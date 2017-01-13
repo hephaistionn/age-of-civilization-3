@@ -7,7 +7,7 @@ module.exports = class Camera {
         const canvas = document.getElementById('D3');
 
         this.element = new THREE.PerspectiveCamera(12, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-        //this.element = new THREE.OrthographicCamera(canvas.clientWidth / - 20, canvas.clientWidth / 20, canvas.clientHeight / 20, canvas.clientHeight / - 20, 1, 1000);
+        this.element = new THREE.OrthographicCamera(canvas.clientWidth / - 20, canvas.clientWidth / 20, canvas.clientHeight / 20, canvas.clientHeight / - 20, 1, 1000);
         this.target = new THREE.Vector3();
 
         this.tileSize = config.tileSize;
