@@ -28,7 +28,6 @@ class Worldmap {
     }
 
     update(dt) {
-        this.updateWater(dt);
     }
 
     remove() {
