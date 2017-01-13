@@ -41,7 +41,6 @@ class Map {
 
     update(dt) {
         this.updateDynamicEntities(dt);
-        this.updateWater(dt);
     }
 
     remove() {

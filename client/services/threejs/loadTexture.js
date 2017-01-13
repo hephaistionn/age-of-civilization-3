@@ -11,7 +11,7 @@ const textureLoader = new THREE.TextureLoader();
 THREE.loadTexture = function loadTexture(path) {
     const texture = textureLoader.load(path);
     texture.image = canvas;
-    //texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     //texture.anisotropy = 1;
     texture.flipY = false;
     texture.magFilter = THREE.NearestFilter;

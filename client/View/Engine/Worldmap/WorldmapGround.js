@@ -12,7 +12,6 @@ module.exports = Worldmap => {
         //this.materialWater = new THREE.MeshPhongMaterial({color: 0x3333ff, map : THREE.ImageUtils.loadTexture('pic/water_0.jpg'), transparent: true, shininess: 90, opacity: 0.66 });
         this.materialWater = materialWater;
         this.materialWater.uniforms.opacity.value = 0.80;
-        this.materialWater.uniforms.size.value = 10.0;
 
         this.waterOscillation = 1;
 
@@ -53,22 +52,10 @@ module.exports = Worldmap => {
     };
 
     Worldmap.prototype.updateWater = function updateWater(dt) {
-        const uniformTime = this.materialWater.uniforms.time;
-        const uniformProgress = this.materialWater.uniforms.progress;
         const uniformCameraPosition = this.materialWater.uniforms.cameraPosition;
-        uniformTime.value += dt / 1000 * this.waterOscillation;
-        uniformProgress.value += dt / 2400;
         const camera = this.element.parent.camera;
         if(camera) {
             uniformCameraPosition.value = camera.position;
-        }
-
-        if(uniformTime.value > 1) {
-            this.waterOscillation = -1;
-            uniformTime.value = 1;
-        } else if(uniformTime.value < 0) {
-            this.waterOscillation = 1;
-            uniformTime.value = 0;
         }
     };
 

@@ -10,7 +10,7 @@ class EntityRoad {
     constructor(model) {
         this.model = model;
 
-        this.tileByChunk = config.tileByChunk;
+        this.tileByChunk = 20;//config.tileByChunk;
         this.tileSize = config.tileSize;
         this.nbTileX = this.model._map.nbTileX;
         this.nbTileZ = this.model._map.nbTileZ;
