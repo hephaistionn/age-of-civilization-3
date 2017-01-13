@@ -81,13 +81,13 @@ const fragShader = "" +
     "varying vec4 vGrounds; \n" +
     "varying vec3 vecNormal; \n" +
     "varying vec3 vAbsolutePosition; \n" +
-    "uniform sampler2D textureA; \n" +
+    "uniform sampler2D texture; \n" +
     "" +
     "uniform vec3 ambientLightColor; \n" +
     "void main(void) { \n" +
     "       vec3 colorFinal = vec3(0.0); \n" +
     //"       vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/40.0; \n" +
-    //"       vec3 colorA = texture2D( textureA, UV ).xyz; \n" +
+    //"       vec3 colorA = texture2D( texture, UV ).xyz; \n" +
     //"       vec3 colorB = texture2D( textureB, UV ).xyz; \n" +
     //"       vec3 colorC = texture2D( textureC, UV ).xyz; \n" +
     //"       vec3 colorD = texture2D( textureD, UV ).xyz; \n" +
@@ -97,7 +97,7 @@ const fragShader = "" +
     //"       if(vGrounds.w > 0.0) {colorFinal = colorD;}" +
 
     "       vec2 UV = vec2(vAbsolutePosition.x+0.0, vAbsolutePosition.z)/64.0; \n" +
-    "colorFinal = texture2D( textureA, UV ).xyz;"+
+    "colorFinal = texture2D( texture, UV ).xyz;"+
 
 
 
@@ -136,7 +136,7 @@ const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['ambient']
 ]);
 
-uniforms.textureA = {type: 't', value: THREE.loadTexture("pic/rock_0.jpg")};
+uniforms.texture = {type: 't', value: THREE.loadTexture("pic/rock_0.jpg")};
 
 const mat = new THREE.ShaderMaterial({
     uniforms: uniforms,

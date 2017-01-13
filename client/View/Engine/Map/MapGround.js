@@ -8,9 +8,10 @@ module.exports = Map=> {
 
     Map.prototype.createGround = function createGround(model) {
         this.materialGround = materialGround;
-        this.materialGround.uniforms.textureA.value = THREE.loadTexture("map/map2_color_test.png");
+        this.materialBorder = materialBorder;
         this.materialWater = materialWater;
-        this.waterOscillation = 1;
+        this.materialGround.uniforms.texture.value = THREE.loadTexture("map/map2_color_test.png");
+        this.materialBorder.uniforms.texture.value = THREE.loadTexture("map/map2_color_test.png");
 
         this.chunkMesh = this.drawChunkMesh(model.nbTileX, model.nbTileZ, model);
         this.waterMesh = this.drawWaterMesh(model);
@@ -156,26 +157,23 @@ module.exports = Map=> {
             pos[i * 3] = x;
             pos[i * 3 + 1] = y;
             pos[i * 3 + 2] = z;
-            col[i * 3] = 25 / 255;
-            col[i * 3 + 1] = 255 / 255;
-            col[i * 3 + 2] = 0;
+            col[i ] = 0;
 
             pos[i * 3 + nbX * 3] = x;
             pos[i * 3 + nbX * 3 + 1] = y - 2;
             pos[i * 3 + nbX * 3 + 2] = z;
-            col[i * 3 + nbX * 3] = 84 / 255;
-            col[i * 3 + nbX * 3 + 1] = 62 / 255;
-            col[i * 3 + nbX * 3 + 2] = 44 / 255;
+            col[i + nbX ] = 1;
+
 
             pos[i * 3 + nbX * 6] = x;
             pos[i * 3 + nbX * 6 + 1] = -10;
             pos[i * 3 + nbX * 6 + 2] = z;
-            col[i * 3 + nbX * 6] = 84 / 255;
-            col[i * 3 + nbX * 6 + 1] = 62 / 255;
-            col[i * 3 + nbX * 6 + 2] = 44 / 255;
+            col[i  + nbX * 2] = 1;
+
         }
 
         const offsetX = 3 * (nbX) * 3;
+        const offsetX1 = 3 * (nbX);
 
         for(i = 0; i < nbZ; i++) {
             x = topRight[i * 3];
@@ -186,23 +184,20 @@ module.exports = Map=> {
             pos[offsetX + i * 3] = x;
             pos[offsetX + i * 3 + 1] = y;
             pos[offsetX + i * 3 + 2] = z;
-            col[offsetX + i * 3] = 25 / 255 * 0.7;
-            col[offsetX + i * 3 + 1] = 255 / 255 * 0.7;
-            col[offsetX + i * 3 + 2] = 0;
+            col[offsetX1 + i ] = 0;
+
 
             pos[offsetX + i * 3 + nbX * 3] = x;
             pos[offsetX + i * 3 + nbX * 3 + 1] = y - 2;
             pos[offsetX + i * 3 + nbX * 3 + 2] = z;
-            col[offsetX + i * 3 + nbX * 3] = 84 / 255 * 0.7;
-            col[offsetX + i * 3 + nbX * 3 + 1] = 62 / 255 * 0.7;
-            col[offsetX + i * 3 + nbX * 3 + 2] = 44 / 255 * 0.7;
+            col[offsetX1 + i + nbX] = -1;
+
 
             pos[offsetX + i * 3 + nbX * 6] = x;
             pos[offsetX + i * 3 + nbX * 6 + 1] = -10;
             pos[offsetX + i * 3 + nbX * 6 + 2] = z;
-            col[offsetX + i * 3 + nbX * 6] = 84 / 255 * 0.7;
-            col[offsetX + i * 3 + nbX * 6 + 1] = 62 / 255 * 0.7;
-            col[offsetX + i * 3 + nbX * 6 + 2] = 44 / 255 * 0.7;
+            col[offsetX1 + i + nbX * 2] = -1;
+
         }
 
         //compute indice
@@ -245,10 +240,10 @@ module.exports = Map=> {
         const geometry = new THREE.BufferGeometry();
 
         geometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(size * 3), 3));
-        geometry.addAttribute('color', new THREE.BufferAttribute(new Float32Array(size * 3), 3));
+        geometry.addAttribute('color', new THREE.BufferAttribute(new Float32Array(size), 1));
         geometry.setIndex(new THREE.BufferAttribute(new Uint16Array(size * 4), 1));
 
-        const mesh = new THREE.Mesh(geometry, materialBorder);
+        const mesh = new THREE.Mesh(geometry, this.materialBorder);
 
         mesh.matrixAutoUpdate = false;
         mesh.frustumCulled = false;
