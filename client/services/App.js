@@ -107,6 +107,7 @@ class App {
     }
 
     createScreen(id, params, cb) {
+        params.mapId = 'test';
         const mapPath = 'map/'+params.mapId+'.png';
         this.pixelMap.compute(mapPath, (dataMap)=> {
             this.modelInstances[id] = new this.models[id](params, dataMap);

@@ -25,11 +25,12 @@ const fragShader = "" +
     "varying vec3 vecNormal; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "uniform sampler2D texture; \n"+
+    "uniform float textureSize; \n" +
     "" +
     "uniform vec3 ambientLightColor; \n" +
     "void main(void) { \n" +
     "" +
-    "vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/40.0; \n" +
+    "vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/textureSize; \n" +
     "vec3 color = texture2D( texture, UV ).xyz; \n" +
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "DirectionalLight directionalLight;" +
@@ -48,14 +49,14 @@ const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['ambient']
 ]);
 
-uniforms.texture = {type: 't', value: THREE.loadTexture("map/map2_color_test.png")};
+uniforms.texture = {type: 't', value: null};
+uniforms.textureSize = {type: 'f', value: 16};
 
 const mat = new THREE.ShaderMaterial({
     uniforms: uniforms,
     vertexShader: vertShader,
     fragmentShader: fragShader,
-    lights: true,
-    transparent: false
+    lights: true
 });
 
 module.exports = mat;

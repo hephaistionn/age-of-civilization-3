@@ -26,6 +26,7 @@ const fragShader = "" +
     "}; \n" +
     "uniform DirectionalLight directionalLights[ NUM_DIR_LIGHTS ]; \n" +
     "uniform sampler2D directionalShadowMap[ NUM_DIR_LIGHTS ]; \n" +
+    "uniform float textureSize; \n" +
     "varying vec4 vDirectionalShadowCoord; \n" +
     "float unpackDepth( const in vec4 rgba_depth ) { \n" +
     "    const vec4 bit_shift = vec4( 1.0 / ( 256.0 * 256.0 * 256.0 ), 1.0 / ( 256.0 * 256.0 ), 1.0 / 256.0, 1.0 ); \n" +
@@ -51,7 +52,7 @@ const fragShader = "" +
     "" +
     "uniform vec3 ambientLightColor; \n" +
     "void main(void) { \n" +
-    "   vec2 UV = vec2(vAbsolutePosition.x+0.0, vAbsolutePosition.z)/64.0; \n" +
+    "   vec2 UV = vec2(vAbsolutePosition.x+0.0, vAbsolutePosition.z)/textureSize; \n" +
     "   vec3 colorFinal = texture2D( texture, UV ).xyz;"+
     "   vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "   DirectionalLight directionalLight;" +
@@ -74,7 +75,8 @@ const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['ambient']
 ]);
 
-uniforms.texture = {type: 't', value: THREE.loadTexture("pic/rock_0.jpg")};
+uniforms.texture = {type: 't', value: null};
+uniforms.textureSize = {type: 'f', value: 16};
 
 const mat = new THREE.ShaderMaterial({
     uniforms: uniforms,

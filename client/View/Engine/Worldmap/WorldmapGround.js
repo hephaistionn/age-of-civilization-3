@@ -6,6 +6,9 @@ module.exports = Worldmap => {
 
     Worldmap.prototype.initGround = function initGround(model) {
         this.materialWorldmap = materialWorldmap;
+
+        this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
+        this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
         this.materialWater = new THREE.MeshBasicMaterial({color: 0x4ea4b5, transparent: true, opacity: 0.85 });
 
         const nbPointX = model.nbPointX;

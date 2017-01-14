@@ -13,6 +13,6 @@ EntityTree.selectable = false;
 EntityTree.tile_x = 1;
 EntityTree.tile_z = 1;
 EntityTree.walkable = false;
-EntityTree.code = 50; //value in alpha blue
+EntityTree.code = 255; //value in alpha blue
 EntityTree.resource = true;
 module.exports = EntityTree;

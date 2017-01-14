@@ -10,12 +10,12 @@ class Map {
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
         this.tiltMax = config.tiltMax || 50;
-        this.pointsType = config.pointsType;
         this.pointsHeights = config.pointsHeights;
         this.pointsNormal = config.pointsNormal;
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
-        this.tilesType = config.tilesType;
+        this.tilesColor = config.tilesColor;
+        this.canvasColor = config.canvas;
         this.entityGroupUpdated = [];
         this.updatedEntity = [];
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
@@ -192,34 +192,6 @@ class Map {
         } else {
             return this.grid.isWalkableAt(x, z) ? true : false;
         }
-    }
-
-    isRevealed(x, z) {
-        if(x.length) {
-            for(let i = 0; i < x.length; i += 2) {
-                if(!this.isRevealedTile(x[i], x[i + 1])) {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            return this.isRevealedTile(x, z);
-        }
-    }
-
-    isRevealedTile(x, z) {
-        const flags = this.entityGroups.EntityExplorer;
-        const nbFlag = flags.length;
-        for(let j = 0; j < nbFlag; j++) {
-            const dx = flags[j].x - x;
-            const dz = flags[j].z - z;
-            if(Math.sqrt(dx * dx + dz * dz) < flags[j].radius) {
-                return true;
-                break;
-            }
-        }
-        return false;
-
     }
 
     getHeightTile(x, z) {

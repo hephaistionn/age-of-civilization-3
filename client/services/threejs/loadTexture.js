@@ -9,8 +9,13 @@ ctx.fillStyle = 'black';
 ctx.fill();
 const textureLoader = new THREE.TextureLoader();
 THREE.loadTexture = function loadTexture(path) {
-    const texture = textureLoader.load(path);
-    texture.image = canvas;
+    let texture;
+    if(typeof path === 'string'){
+        texture = textureLoader.load(path);
+        texture.image = canvas;
+    }else{
+        texture = new THREE.Texture(path);//is canvas
+    }
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
     //texture.anisotropy = 1;
     texture.flipY = false;

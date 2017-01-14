@@ -17,8 +17,9 @@ const fragShader = "" +
     "varying float vColor; \n" +
     "" + 
     "uniform sampler2D texture; \n" +
+    "uniform float textureSize; \n" +
     "void main(void) { \n" +
-    "   vec2 UV = vec2(vAbsolutePosition.x-0.01, vAbsolutePosition.y-0.01)/64.0; \n" +
+    "   vec2 UV = vec2(vAbsolutePosition.x-0.01, vAbsolutePosition.y-0.01)/textureSize; \n" +
     "   vec3 color = texture2D( texture, UV ).xyz; \n" +
     "   if(vColor>0.0) {   \n" +
     "       if(vColor>0.99){ \n"+
@@ -36,7 +37,8 @@ const fragShader = "" +
     "}";
 
 const uniforms = THREE.UniformsUtils.merge([]);
-uniforms.texture = {type: 't', value: THREE.loadTexture("pic/rock_0.jpg")};
+uniforms.texture = {type: 't', value: null};
+uniforms.textureSize = {type: 'f', value: 16};
 
 const mat = new THREE.ShaderMaterial({
     uniforms: uniforms,

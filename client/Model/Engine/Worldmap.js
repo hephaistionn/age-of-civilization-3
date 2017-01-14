@@ -9,12 +9,12 @@ class Worldmap {
         this.nbPointZ = config.nbPointZ;
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
-        this.pointsType = config.pointsType;
         this.pointsHeights = config.pointsHeights;
         this.pointsNormal = config.pointsNormal;
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
-        this.tilesType = config.tilesType;
+        this.tilesColor = config.tilesColor;
+        this.canvasColor = config.canvas;
         this.cities = [];
         this.updatedCity = [];
         this.tiltMax = 40;

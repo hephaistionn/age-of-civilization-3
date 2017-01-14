@@ -30,5 +30,5 @@ EntityExplorer.tile_z = 1;
 EntityExplorer.walkable = false;
 EntityExplorer.cost = {wood: 20};
 EntityExplorer.require = {};
-EntityExplorer.code = 255;
+EntityExplorer.code = 254;
 module.exports = EntityExplorer;

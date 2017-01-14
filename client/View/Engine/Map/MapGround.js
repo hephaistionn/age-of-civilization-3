@@ -10,8 +10,10 @@ module.exports = Map=> {
         this.materialGround = materialGround;
         this.materialBorder = materialBorder;
         this.materialWater = materialWater;
-        this.materialGround.uniforms.texture.value = THREE.loadTexture("map/map2_color_test.png");
-        this.materialBorder.uniforms.texture.value = THREE.loadTexture("map/map2_color_test.png");
+        this.materialGround.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
+        this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
+        this.materialBorder.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
+        this.materialBorder.uniforms.textureSize.value = model.nbPointX * this.tileSize;
 
         this.chunkMesh = this.drawChunkMesh(model.nbTileX, model.nbTileZ, model);
         this.waterMesh = this.drawWaterMesh(model);
@@ -84,16 +86,13 @@ module.exports = Map=> {
         const posArray = position.array;
         const length = position.count;
         const normalArray = new Float32Array(length * 3);
-        const groundArry = new Float32Array(length);
 
         for(let i = 0; i < length; i++) {
             let tileX = posArray[i * 3] / this.tileSize;
             let tileZ = posArray[i * 3 + 2] / this.tileSize;
             let index = tileZ * model.nbPointX + tileX;
 
-            let pointsType = model.pointsType[index] || 0;
             let pointsHeights = model.pointsHeights[index] || 0;
-            groundArry[i] = pointsType;
             posArray[i * 3 + 1] = pointsHeights / 255 * this.tileHeight;
 
             let dx = model.pointsNormal[index * 3] / 127 / this.tileSize;
@@ -106,7 +105,6 @@ module.exports = Map=> {
             normalArray[i * 3 + 2] = dz / l;
         }
 
-        chunkGeometry.addAttribute('grounds', new THREE.BufferAttribute(groundArry, 1));
         chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
         chunkGeometry.attributes.position.needsUpdate = true;
         return chunkGeometry;
@@ -254,7 +252,7 @@ module.exports = Map=> {
     };
 
     Map.prototype.refreshTexture = function refreshTexture() {
-        this.materialGround.uniforms.textureA.value = THREE.loadTexture("map/map2_color_test.png");
+        this.materialGround.uniforms.texture.value = THREE.loadTexture("map/map2_color_test.png");
     };
 
 };
