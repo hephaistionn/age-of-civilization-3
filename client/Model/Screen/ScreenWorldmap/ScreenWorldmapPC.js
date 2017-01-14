@@ -19,12 +19,6 @@ class ScreenWorldmap {
     constructor(model, mapProperties) {
 
         this.camera = new Camera({
-            x: model.camera.x,
-            y: 40,
-            z: model.camera.z,
-            offsetX: 0.0001,
-            offsetY: -40,
-            offsetZ: -30,
             zoomMax: 70,
             zoomMin: 20
         });
