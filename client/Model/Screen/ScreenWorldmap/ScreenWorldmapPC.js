@@ -15,11 +15,13 @@ class ScreenWorldmap {
 
     constructor(model, mapProperties) {
 
-        this.camera = new Camera({
-            zoomMax: 120,
-            zoomMin: 20
-        });
-        this.camera.setMapBorder(mapProperties);
+        this.camera = new Camera({map:mapProperties, zoom: model.zoom||1});
+
+        this.camera.move(
+            model.camera.x || mapProperties.nbTileX/2+10,
+            model.camera.z|| mapProperties.nbTileZ/2+10
+        );
+
 
         this.light = new Light({
             offsetX: -10,
@@ -118,6 +120,7 @@ class ScreenWorldmap {
     syncState(model) {
         model.camera.x = this.camera.x;
         model.camera.z = this.camera.z;
+        model.camera.zoom = this.camera.zoom;
     }
 
 }

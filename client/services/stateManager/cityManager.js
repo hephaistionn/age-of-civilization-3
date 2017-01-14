@@ -30,7 +30,7 @@ module.exports = StateManager => {
             x: params.x,
             y: params.y,
             z: params.z,
-            camera: {x: 25, z: 25},
+            camera: {x: 0, z: 0},
             map: {
 
             },

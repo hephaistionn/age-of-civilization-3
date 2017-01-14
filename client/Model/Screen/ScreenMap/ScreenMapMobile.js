@@ -22,8 +22,12 @@ class ScreenMap {
 
     constructor(model, mapProperties) {
 
-        this.camera = new Camera({x: model.camera.x, z: model.camera.z});
-        this.camera.setMapBorder(mapProperties);
+        this.camera = new Camera({map:mapProperties, zoom: model.zoom||1});
+
+        this.camera.move(
+            model.camera.x || mapProperties.nbTileX/2+10,
+            model.camera.z|| mapProperties.nbTileZ/2+10
+        );
 
         this.light = new Light({shadow: true});
         this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
@@ -169,6 +173,7 @@ class ScreenMap {
     syncState(model) {
         model.camera.x = this.camera.x;
         model.camera.z = this.camera.z;
+        model.camera.zoom = this.camera.zoom;
         this.map.syncState(model.map);
     }
 

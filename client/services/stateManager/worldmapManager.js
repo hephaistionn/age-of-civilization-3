@@ -7,7 +7,7 @@ module.exports = StateManager => {
             mapId: 'worldmap4',
             challengers: [],
             cities: [],
-            camera: {x: 100, z: 70}
+            camera: {x: 0, z: 0}
         };
 
         //if there are no players, the map should not be persistent. it is linked to nobody.

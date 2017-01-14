@@ -1,39 +1,36 @@
 class Camera {
 
     constructor(config) {
-        this.x = config.x || 0; //camera position
-        this.y = config.y || 96; //camera position
-        this.z = config.z || 0; //camera position
+        this.x = config.x || 10; //camera position
+        this.y = config.y || 12; //camera position
+        this.z = config.z || 10; //camera position
         this.iX = 0; //camera position before drag
         this.iZ = 0; //camera position before drag
-        this.offsetX = config.offsetX || -80; //target positio relative too camera position
-        this.offsetY = config.offsetY || -96; //target position relative to camera position
-        this.offsetZ = config.offsetZ || -80; //target position relative to camera position
-        this.targetX = this.x + this.offsetX;
-        this.targetY = this.y + this.offsetY;
-        this.targetZ = this.z + this.offsetZ;
+        this.targetX = config.targetX || 0;
+        this.targetY = config.targetY || 0;
+        this.targetZ = config.targetZ || 0;
+        this.offsetX = this.targetX - this.x;
+        this.offsetY = this.targetY - this.y;
+        this.offsetZ = this.targetZ - this.z;
         this.pressX = 0;
         this.pressZ = 0;
-        this.moveSpeed = 0.01;
-        this.maxXTarget = 0;
-        this.maxZTarget = 0;
-        this.minX = 0 - this.offsetX;
-        this.minZ = 0 - this.offsetZ;
-        this.maxX = this.maxXTarget - this.offsetX;
-        this.maxZ = this.maxZTarget - this.offsetZ;
-        this.zoom = 1;
+        this.minX = 0 + this.offsetX;
+        this.minZ = 0 + this.offsetZ;
+        this.maxX = 0 - this.offsetX;
+        this.maxZ = 0 - this.offsetZ;
         this.zoomInit = 1;
         this.moveReady = false;
-        this.zoom = 1;
-        this.zoomMax = config.zoomMax || 3;
-        this.zoomMin = config.zoomMin || .5;
+        this.zoom = config.zoom||1;
+        this.zoomMax = config.zoomMax || 1.5;
+        this.zoomMin = config.zoomMin || .8;
         this.updated = false;
+        if(config.map)this.setMapBorder(config.map);
     }
 
     move(x, y, z) {
         this.x = x;
-        this.z = z;
-        this.y = y;
+        this.y = z ? y : this.y;
+        this.z = z ? z : y;
         this.limiter();
         this.targetX = this.x + this.offsetX;
         this.targetY = this.y + this.offsetY;
@@ -80,23 +77,19 @@ class Camera {
     }
 
     mouseWheel(delta) {
-        if(this.zoom < this.zoomMin && delta < 0 || this.zoom > this.zoomMax && delta > 0) return;
-        this.zoom += delta/100;
+        if(this.zoom > this.zoomMax && delta < 0 || this.zoom < this.zoomMin && delta >0) return;
+        this.zoom -= delta/100;
         this.updated = true;
     }
 
     setMapBorder(dataMap) {
-        this.maxXTarget = dataMap.nbTileX;
-        this.maxZTarget = dataMap.nbTileZ;
-        this.computeBorder();
+        const margin  = 8;
+        this.minX = 0 - this.offsetX+margin;
+        this.minZ = 0 - this.offsetZ+margin;
+        this.maxX = dataMap.nbTileX - this.offsetX -margin;
+        this.maxZ = dataMap.nbTileZ - this.offsetZ -margin;
     }
 
-    computeBorder() {
-        this.minX = 0 - this.offsetX;
-        this.minZ = 0 - this.offsetZ;
-        this.maxX = this.maxXTarget - this.offsetX;
-        this.maxZ = this.maxZTarget - this.offsetZ;
-    }
 
     limiter() {
         this.x = this.x <= this.minX ? this.minX : this.x;
