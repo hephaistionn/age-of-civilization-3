@@ -8,7 +8,7 @@ module.exports = Worldmap => {
         this.materialWorldmap = materialWorldmap;
 
         this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
-        this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
+        this.materialWorldmap.uniforms.textureSize.value = model.nbPointX * this.tileSize;
         this.materialWater = new THREE.MeshBasicMaterial({color: 0x4ea4b5, transparent: true, opacity: 0.85 });
 
         const nbPointX = model.nbPointX;
@@ -57,16 +57,13 @@ module.exports = Worldmap => {
         const posArray = position.array;
         const length = position.count;
         const normalArray = new Float32Array(length * 3);
-        const groundArry = new Float32Array(length);
 
         for(let i = 0; i < length; i++) {
             let tileX = posArray[i * 3] / this.tileSize;
             let tileZ = posArray[i * 3 + 2] / this.tileSize;
             let index = tileZ * model.nbPointX + tileX;
 
-            let pointsType = model.pointsType[index] || 0;
             let pointsHeights = model.pointsHeights[index] || 0;
-            groundArry[i] = pointsType;
             posArray[i * 3 + 1] = pointsHeights / 255 * this.tileHeight;
 
             let dx = model.pointsNormal[index * 3] / 127 / this.tileSize;
@@ -79,7 +76,6 @@ module.exports = Worldmap => {
             normalArray[i * 3 + 2] = dz / l;
         }
 
-        chunkGeometry.addAttribute('grounds', new THREE.BufferAttribute(groundArry, 1));
         chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
         chunkGeometry.attributes.position.needsUpdate = true;
         return chunkGeometry;
