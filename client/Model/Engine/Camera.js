@@ -14,7 +14,6 @@ class Camera {
         this.targetZ = this.z + this.offsetZ;
         this.pressX = 0;
         this.pressZ = 0;
-        this.speed = 0.001;
         this.moveSpeed = 0.01;
         this.maxXTarget = 0;
         this.maxZTarget = 0;
@@ -22,14 +21,12 @@ class Camera {
         this.minZ = 0 - this.offsetZ;
         this.maxX = this.maxXTarget - this.offsetX;
         this.maxZ = this.maxZTarget - this.offsetZ;
-        this.zoom = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
-        this.offsetXInit = 0;
-        this.offsetYInit = 0;
-        this.offsetZInit = 0;
+        this.zoom = 1;
+        this.zoomInit = 1;
         this.moveReady = false;
-        this.zoomMax = config.zoomMax || 300;
-        this.zoomMin = config.zoomMin || 5;
-        this.AngleXZ = Math.atan2(-this.offsetZ, -this.offsetX);
+        this.zoom = 1;
+        this.zoomMax = config.zoomMax || 3;
+        this.zoomMin = config.zoomMin || .5;
         this.updated = false;
     }
 
@@ -40,19 +37,6 @@ class Camera {
         this.limiter();
         this.targetX = this.x + this.offsetX;
         this.targetY = this.y + this.offsetY;
-        this.targetZ = this.z + this.offsetZ;
-        this.updated = true;
-    }
-
-    moveTo(dx, dz, dt) {
-        let module = Math.sqrt(dx * dx + dz * dz);
-        let a = -Math.atan2(dx, dz) + this.AngleXZ;
-        dx = module * Math.cos(a);
-        dz = module * Math.sin(a);
-        this.x -= dx * this.speed * dt * this.offsetZ;
-        this.z -= dz * this.speed * dt * this.offsetZ;
-        this.limiter();
-        this.targetX = this.x + this.offsetX;
         this.targetZ = this.z + this.offsetZ;
         this.updated = true;
     }
@@ -81,50 +65,23 @@ class Camera {
         this.iZ = this.z;
         this.pressX = x;
         this.pressZ = z;
-        this.computeCurrentZoom();
     }
 
     cleatMove() {
         this.moveReady = false;
+        this.zoomInit = this.zoom;
     }
 
-    computeCurrentZoom() {
-        this.zoom = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
-        this.offsetXInit = this.offsetX / this.zoom;
-        this.offsetYInit = this.offsetY / this.zoom;
-        this.offsetZInit = this.offsetZ / this.zoom;
-    }
 
     scale(delta) {
-        if(this.offsetY > -this.zoomMin && delta < 0 || this.offsetY < -this.zoomMax && delta > 0) return;
-        let zoom = this.zoom + delta;
-        this.offsetX = this.offsetXInit * zoom;
-        this.offsetY = this.offsetYInit * zoom;
-        this.offsetZ = this.offsetZInit * zoom;
-        let x = this.targetX - this.offsetX;
-        let y = this.targetY - this.offsetY;
-        let z = this.targetZ - this.offsetZ;
-        this.computeBorder();
+        if(this.zoom < this.zoomMin && delta < 0 || this.zoom > this.zoomMax && delta > 0) return;
+        this.zoom = this.zoomInit + delta;
         this.move(x, y, z);
     }
 
     mouseWheel(delta) {
-        if(this.offsetY > -this.zoomMin && delta < 0 || this.offsetY < -this.zoomMax && delta > 0) return;
-        let length = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
-        this.offsetX /= length;
-        this.offsetY /= length;
-        this.offsetZ /= length;
-        length += delta;
-        this.offsetX *= length;
-        this.offsetY *= length;
-        this.offsetZ *= length;
-
-        let x = this.targetX - this.offsetX;
-        let y = this.targetY - this.offsetY;
-        let z = this.targetZ - this.offsetZ;
-
-        this.computeBorder();
-        this.move(x, y, z);
+        if(this.zoom < this.zoomMin && delta < 0 || this.zoom > this.zoomMax && delta > 0) return;
+        this.zoom += delta/100;
         this.updated = true;
     }
 

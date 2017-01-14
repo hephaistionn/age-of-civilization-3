@@ -11,15 +11,12 @@ const EntityManagerPanel = require('../../UI/EntityManagerPanel');
 const FirstStartPanel = require('../../UI/FirstStartPanel');
 const LeaderCreationPanel = require('../../UI/LeaderCreationPanel');
 
-let moveDx = 0;
-let moveDz = 0;
-
 class ScreenWorldmap {
 
     constructor(model, mapProperties) {
 
         this.camera = new Camera({
-            zoomMax: 70,
+            zoomMax: 120,
             zoomMin: 20
         });
         this.camera.setMapBorder(mapProperties);
@@ -73,11 +70,6 @@ class ScreenWorldmap {
         if(this.worldmap) {
             this.worldmap.update(dt);
         }
-
-        if(moveDx !== 0 || moveDz !== 0) {
-            this.camera.moveTo(moveDx, moveDz, dt);
-            this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-        }
     }
 
     mouseMovePress(x, z) {
@@ -87,17 +79,6 @@ class ScreenWorldmap {
 
     mouseUp() {
         this.camera.cleatMove();
-    }
-
-    mouseLeave(dx, dy) {
-        if(this.entityManagerPanel.opened) return;
-        moveDx = dx;
-        moveDz = dy;
-    }
-
-    mouseEnter() {
-        moveDx = 0;
-        moveDz = 0;
     }
 
     mouseMoveOnMap(x, z) {

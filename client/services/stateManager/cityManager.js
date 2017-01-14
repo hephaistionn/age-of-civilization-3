@@ -11,7 +11,7 @@ module.exports = StateManager => {
             leader: params.leader,
             level: params.level || 1,
             type: params.type || 0,
-            mapId: 'map2',
+            mapId: 'test',
             states: {
                 population: 0,
                 workers: 0,

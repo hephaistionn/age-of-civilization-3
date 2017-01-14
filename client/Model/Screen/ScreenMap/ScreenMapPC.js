@@ -19,6 +19,7 @@ let rotation = 0;
 class ScreenMap {
 
     constructor(model, mapProperties) {
+        console.log('recall constructor map')
 
         this.camera = new Camera({x: model.camera.x, z: model.camera.z});
         this.camera.setMapBorder(mapProperties);

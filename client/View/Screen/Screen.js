@@ -62,7 +62,7 @@ class Screen {
     show(models) {
         const map = this.components.map || this.components.worldmap;
         if(map) {
-            map.refreshTexture();
+            map.refreshTexture(models.map||models.worldmap);
         }
 
         let model;

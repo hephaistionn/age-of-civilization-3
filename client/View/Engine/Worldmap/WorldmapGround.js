@@ -9,7 +9,7 @@ module.exports = Worldmap => {
 
         this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
         this.materialWorldmap.uniforms.textureSize.value = model.nbPointX * this.tileSize;
-        this.materialWater = new THREE.MeshBasicMaterial({color: 0x4ea4b5, transparent: true, opacity: 0.85 });
+        this.materialWater = new THREE.MeshBasicMaterial({color: 0x006699, transparent: true, opacity: 0.85 });
 
         const nbPointX = model.nbPointX;
         const nbPointZ = model.nbPointZ;
@@ -81,8 +81,9 @@ module.exports = Worldmap => {
         return chunkGeometry;
     };
 
-    Worldmap.prototype.refreshTexture = function refreshTexture() {
-        this.materialWorldmap.uniforms.texture.value = THREE.loadTexture("map/map2_color_test.png");
+    Worldmap.prototype.refreshTexture = function refreshTexture(model) {
+        this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
+        this.materialWorldmap.uniforms.textureSize.value = model.nbPointX * this.tileSize;
     }
 
 

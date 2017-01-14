@@ -251,8 +251,11 @@ module.exports = Map=> {
         return mesh;
     };
 
-    Map.prototype.refreshTexture = function refreshTexture() {
-        this.materialGround.uniforms.texture.value = THREE.loadTexture("map/map2_color_test.png");
+    Map.prototype.refreshTexture = function refreshTexture(model) {
+        this.materialGround.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
+        this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
+        this.materialBorder.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
+        this.materialBorder.uniforms.textureSize.value = model.nbPointX * this.tileSize;
     };
 
 };
