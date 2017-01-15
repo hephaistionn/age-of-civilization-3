@@ -20,7 +20,11 @@ class ScreenMap {
 
     constructor(model, mapProperties) {
 
-        this.camera = new Camera({map:mapProperties, zoom: model.zoom||1});
+        this.camera = new Camera({
+            map:mapProperties,
+            zoom: model.zoom||1.3,
+            zoomMax:1.8
+        });
 
         this.camera.move(
             model.camera.x || mapProperties.nbTileX/2+10,

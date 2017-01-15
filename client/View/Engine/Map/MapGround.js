@@ -14,6 +14,7 @@ module.exports = Map=> {
         this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
         this.materialBorder.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
         this.materialBorder.uniforms.textureSize.value = model.nbPointX * this.tileSize;
+        //this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
 
         this.chunkMesh = this.drawChunkMesh(model.nbTileX, model.nbTileZ, model);
         this.waterMesh = this.drawWaterMesh(model);
@@ -44,7 +45,7 @@ module.exports = Map=> {
                 sizeX, -sizeY, sizeZ, sizeX, -sizeY, 0, sizeX, 0, 0
             ]);
             const lighting = new Float32Array([
-                1, 1, 1, 1, 1, 1, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7
+                1, 1, 1, 1, 1, 1, 0.8, 0.8, 0.8, 0.8, 0.8, 0.8, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6
             ]);
             waterGeometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
             waterGeometry.addAttribute('lighting', new THREE.BufferAttribute(lighting, 1));
@@ -80,33 +81,19 @@ module.exports = Map=> {
         const xSize = nbXTiles * this.tileSize;
         const zSize = nbZTiles * this.tileSize;
 
-        const chunkGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, nbXTiles, nbZTiles);
+        let chunkGeometry = new THREE.PlaneGeometry(xSize, zSize, nbXTiles, nbZTiles);
 
-        const position = chunkGeometry.attributes.position;
-        const posArray = position.array;
-        const length = position.count;
-        const normalArray = new Float32Array(length * 3);
-
+        const vertices = chunkGeometry.vertices;
+        const length = vertices.length;
         for(let i = 0; i < length; i++) {
-            let tileX = posArray[i * 3] / this.tileSize;
-            let tileZ = posArray[i * 3 + 2] / this.tileSize;
-            let index = tileZ * model.nbPointX + tileX;
-
-            let pointsHeights = model.pointsHeights[index] || 0;
-            posArray[i * 3 + 1] = pointsHeights / 255 * this.tileHeight;
-
-            let dx = model.pointsNormal[index * 3] / 127 / this.tileSize;
-            let dy = model.pointsNormal[index * 3 + 1] / 127 / this.tileHeight;
-            let dz = model.pointsNormal[index * 3 + 2] / 127 / this.tileSize;
-            let l = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-            normalArray[i * 3] = dx / l;
-            normalArray[i * 3 + 1] = dy / l;
-            normalArray[i * 3 + 2] = dz / l;
+            let pointsHeights = model.pointsHeights[i];
+            vertices[i].y = pointsHeights / 255 * this.tileHeight;
         }
 
-        chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
-        chunkGeometry.attributes.position.needsUpdate = true;
+         const modiferSimplify = new THREE.SimplifyModifier();
+        chunkGeometry = modiferSimplify.modify( chunkGeometry,Math.round(chunkGeometry.vertices.length*0.33) );
+
+        chunkGeometry.computeVertexNormals();
         return chunkGeometry;
     };
 
@@ -116,28 +103,27 @@ module.exports = Map=> {
         }
 
         const borderMesh = this.borderMesh;
-        const chunk = this.chunkMesh;
         const nbX = model.nbPointX;
         const nbZ = model.nbPointZ;
-        const position = chunk.geometry.attributes.position;
-        const posArray = position.array;
+        const nbXm = nbX-1;
+        const nbZm = nbZ-1;
         const topLeft = new Float32Array(nbX * 3);
         const topRight = new Float32Array(nbZ * 3);
+        const heightFactor = this.tileHeight/255;
         let i;
 
         //compute border left
-        let offset = nbX * (nbZ - 1 ) * 3;
+        let offset = nbX * (nbZ - 1 );
         for(i = 0; i < nbX; i++) {
-            topLeft[i * 3] = posArray[offset + i * 3];          //x
-            topLeft[i * 3 + 1] = posArray[offset + i * 3 + 1];  //y
-            topLeft[i * 3 + 2] = posArray[offset + i * 3 + 2];  //z
+            topLeft[i * 3] = i*this.tileSize;      //x
+            topLeft[i * 3 + 1] = model.pointsHeights[offset+i] * heightFactor;  //y
+            topLeft[i * 3 + 2] = nbZm*this.tileSize;  //z
         }
-
         //compute border right
         for(i = 0; i < nbZ; i++) {
-            topRight[i * 3] = posArray[((nbZ - i) * nbX - 1) * 3];      //x
-            topRight[i * 3 + 1] = posArray[((nbZ - i) * nbX - 1) * 3 + 1];  //y
-            topRight[i * 3 + 2] = posArray[((nbZ - i) * nbX - 1) * 3 + 2];  //z
+            topRight[i * 3] = nbXm*this.tileSize;     //x
+            topRight[i * 3 + 1] = model.pointsHeights[((nbZ-i) * nbX - 1)]* heightFactor;  //y
+            topRight[i * 3 + 2] = (nbZm - i)*this.tileSize;  //z
         }
 
         let x, y, z;

@@ -9,7 +9,8 @@ module.exports = Worldmap => {
 
         this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
         this.materialWorldmap.uniforms.textureSize.value = model.nbPointX * this.tileSize;
-        this.materialWater = new THREE.MeshBasicMaterial({color: 0x006699, transparent: true, opacity: 0.85 });
+        this.materialWater = new THREE.MeshBasicMaterial({color: 0x006699, transparent: true, opacity: 0.80 });
+        //this.materialWorldmap = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
 
         const nbPointX = model.nbPointX;
         const nbPointZ = model.nbPointZ;
@@ -34,8 +35,8 @@ module.exports = Worldmap => {
     };
 
     Worldmap.prototype.createWater = function createWater(nbTileX, nbTileZ) {
-        const xSize = nbTileX * this.tileSize * 2;
-        const zSize = nbTileZ * this.tileSize * 2;
+        const xSize = nbTileX * this.tileSize * 4;
+        const zSize = nbTileZ * this.tileSize * 4;
         const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
         let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
         waterMesh.position.set(-xSize / 4, 3, -zSize / 4);
@@ -48,36 +49,39 @@ module.exports = Worldmap => {
     };
 
     Worldmap.prototype.createSurface = function createSurface(nbXTiles, nbZTiles, model) {
-        const xSize = nbXTiles * this.tileSize;
-        const zSize = nbZTiles * this.tileSize;
 
-        const chunkGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, nbXTiles, nbZTiles);
+        const  tileSize = this.tileSize/1;
 
-        const position = chunkGeometry.attributes.position;
-        const posArray = position.array;
-        const length = position.count;
-        const normalArray = new Float32Array(length * 3);
+        const xSize = nbXTiles * tileSize;
+        const zSize = nbZTiles * tileSize;
 
+        let chunkGeometry = new THREE.PlaneGeometry(xSize, zSize, nbXTiles, nbZTiles);
+
+        const vertices = chunkGeometry.vertices;
+        const length = vertices.length;
         for(let i = 0; i < length; i++) {
-            let tileX = posArray[i * 3] / this.tileSize;
-            let tileZ = posArray[i * 3 + 2] / this.tileSize;
-            let index = tileZ * model.nbPointX + tileX;
-
-            let pointsHeights = model.pointsHeights[index] || 0;
-            posArray[i * 3 + 1] = pointsHeights / 255 * this.tileHeight;
-
-            let dx = model.pointsNormal[index * 3] / 127 / this.tileSize;
-            let dy = model.pointsNormal[index * 3 + 1] / 127 / this.tileHeight;
-            let dz = model.pointsNormal[index * 3 + 2] / 127 / this.tileSize;
-            let l = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-            normalArray[i * 3] = dx / l;
-            normalArray[i * 3 + 1] = dy / l;
-            normalArray[i * 3 + 2] = dz / l;
+            let pointsHeights = model.pointsHeights[i];
+            vertices[i].y = pointsHeights / 255 * this.tileHeight;
         }
 
-        chunkGeometry.addAttribute('normal', new THREE.BufferAttribute(normalArray, 3));
-        chunkGeometry.attributes.position.needsUpdate = true;
+        const lengthFace = chunkGeometry.faces.length;
+        const filterdFaces = [];
+        let face;
+        for(let i = 0; i < lengthFace; i++) {
+            face = chunkGeometry.faces[i];
+            if(vertices[face.a].y > 0.1 && vertices[face.b].y > 0.1 && vertices[face.c].y > 0.1 ) {
+                filterdFaces.push(face.clone());
+            }
+        }
+        chunkGeometry.faces = filterdFaces;
+
+        //const modifierSubdivi = new THREE.SubdivisionModifier(1);
+        //modifierSubdivi.modify( chunkGeometry );
+
+        const modiferSimplify = new THREE.SimplifyModifier();
+        chunkGeometry = modiferSimplify.modify( chunkGeometry,Math.round(chunkGeometry.vertices.length*0.6) );
+
+        chunkGeometry.computeVertexNormals();
         return chunkGeometry;
     };
 

@@ -1,9 +1,9 @@
 class Camera {
 
     constructor(config) {
-        this.x = config.x || 10; //camera position
-        this.y = config.y || 12; //camera position
-        this.z = config.z || 10; //camera position
+        this.x = config.x || 20; //camera position
+        this.y = config.y || 24; //camera position
+        this.z = config.z || 20; //camera position
         this.iX = 0; //camera position before drag
         this.iZ = 0; //camera position before drag
         this.targetX = config.targetX || 0;
@@ -22,7 +22,7 @@ class Camera {
         this.moveReady = false;
         this.zoom = config.zoom||1;
         this.zoomMax = config.zoomMax || 1.5;
-        this.zoomMin = config.zoomMin || .8;
+        this.zoomMin = config.zoomMin || .7;
         this.updated = false;
         if(config.map)this.setMapBorder(config.map);
     }
