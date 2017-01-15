@@ -32,7 +32,7 @@
     "gulp-util": "^3.0.7",
     "heap": "^0.2.6",
     "lodash": "^4.2.1",
-    "three": "0.74.0",
+    "three": "^0.74.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"

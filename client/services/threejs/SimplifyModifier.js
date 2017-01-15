@@ -164,18 +164,6 @@ THREE.SimplifyModifier = function() {
         if ( f.v2 ) removeFromArray( f.v2.faces, f );
         if ( f.v3 ) removeFromArray( f.v3.faces, f );
 
-        // TODO optimize this!
-        var vs = [ this.v1, this.v2, this.v3 ];
-        var v1, v2;
-
-        for( var i = 0 ; i < 3 ; i ++ ) {
-            v1 = vs[ i ];
-            v2 = vs[( i+1) % 3 ];
-
-            if( !v1 || !v2 ) continue;
-            v1.removeIfNonNeighbor( v2 );
-            v2.removeIfNonNeighbor( v1 );
-        }
 
     }
 
