@@ -20,6 +20,7 @@ class Worldmap {
         this.tiltMax = 40;
         this.heightMin = 0.16;
         this.updated = false;
+        this.mapArea = 'map/worldmap4_area.png';
     }
 
     addCity(params) {

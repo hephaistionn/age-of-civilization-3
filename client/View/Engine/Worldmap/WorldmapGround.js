@@ -31,6 +31,7 @@ module.exports = Worldmap => {
         this.touchSurface = [mapMesh];
         this.waterMesh = waterMesh;
 
+        this.initAreaMap(model);
         return mapMesh;
     };
 
@@ -88,7 +89,40 @@ module.exports = Worldmap => {
     Worldmap.prototype.refreshTexture = function refreshTexture(model) {
         this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
         this.materialWorldmap.uniforms.textureSize.value = model.nbPointX * this.tileSize;
-    }
+    };
 
+
+    Worldmap.prototype.initAreaMap = function initAreaMap(model) {
+        THREE.loadCanvasTexture( model.mapArea,  (context, canvas) => {
+            this.cavasArea = canvas;
+            this.contextArea = context;
+            this.imageArea = context.getImageData(0, 0, context.width, context.height);
+            this.computeAreaMap(model);
+        });
+    };
+
+    Worldmap.prototype.computeAreaMap = function computeAreaMap(model) {
+
+        const revealed = [1,2,3,4,5,6,7];
+        const currentSelected  =  [8,9,10,11];
+
+        if(!this.imageArea) return;
+
+        const data = this.imageArea.data;
+        const length  = data.length;
+        let codeArea;
+        for(let i = 0; i < length; i=i+4) {
+            codeArea = data[i];
+            if(revealed.indexOf(codeArea)!==-1){
+                data[i+1] = 255;
+            }else if(currentSelected.indexOf(codeArea)!==-1){
+                data[i+1] = 153;
+            } else{
+                data[i+1] = 50;
+            }
+        }
+        this.contextArea.putImageData(this.imageArea, 0, 0);
+        this.materialWorldmap.uniforms.textureArea.value = THREE.loadTexture(this.cavasArea);
+    };
 
 };

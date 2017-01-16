@@ -24,3 +24,18 @@ THREE.loadTexture = function loadTexture(path) {
     texture.needsUpdate = true;
     return texture;
 };
+
+THREE.loadCanvasTexture = function loadCanvasTexture(url,cb) {
+    const image = new Image();
+    image.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = this.width;
+        canvas.height = this.height;
+        const context = canvas.getContext('2d');
+        context.width = this.width;
+        context.height = this.height;
+        context.drawImage(this, 0, 0);
+        cb(context, canvas);
+    };
+    image.src = url;
+};

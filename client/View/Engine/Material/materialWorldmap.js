@@ -25,6 +25,7 @@ const fragShader = "" +
     "varying vec3 vecNormal; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "uniform sampler2D texture; \n"+
+    "uniform sampler2D textureArea; \n"+
     "uniform float textureSize; \n" +
     "" +
     "uniform vec3 ambientLightColor; \n" +
@@ -32,6 +33,7 @@ const fragShader = "" +
     "" +
     "vec2 UV = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/textureSize; \n" +
     "vec3 color = texture2D( texture, UV ).xyz; \n" +
+    "vec3 areaCode = texture2D( textureArea, UV ).xyz; \n" +
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "DirectionalLight directionalLight;" +
     "for(int i = 0; i < NUM_DIR_LIGHTS; i++) \n" +
@@ -39,13 +41,14 @@ const fragShader = "" +
     "    directionalLight = directionalLights[ i ]; \n" +
     "    sumLights += dot(directionalLight.direction, vecNormal)* directionalLight.color; \n" +
     "} \n" +
-    "sumLights = ambientLightColor + sumLights; \n" +
+    "sumLights = ambientLightColor + sumLights ; \n" +
     "color *= sumLights; \n" +
     "if(vAbsolutePosition.y<3.0){ \n" +
      "   color = mix(vec3(0.0,0.0,0.0), color, vAbsolutePosition.y/1.0-2.0); \n" +
-    "}" +
+    "}\n" +
+    "color = color * areaCode.y;\n" +
     "gl_FragColor = vec4(color , 1.0); \n" +
-    "} ";
+    "}";
 
 const uniforms = THREE.UniformsUtils.merge([
     THREE.UniformsLib['lights'],
@@ -53,6 +56,7 @@ const uniforms = THREE.UniformsUtils.merge([
 ]);
 
 uniforms.texture = {type: 't', value: null};
+uniforms.textureArea = {type: 't', value: null};
 uniforms.textureSize = {type: 'f', value: 16};
 
 const mat = new THREE.ShaderMaterial({

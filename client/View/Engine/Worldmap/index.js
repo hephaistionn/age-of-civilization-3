@@ -25,6 +25,7 @@ class Worldmap {
         while(model.updatedCity.length !== 0) {
             this.updateStateOfOneCities(model.updatedCity.pop());
         }
+        this.computeAreaMap(model);
     }
 
     update(dt) {
