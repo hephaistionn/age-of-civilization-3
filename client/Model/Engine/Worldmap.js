@@ -4,7 +4,6 @@ const EntityCity = require('./Entity/Building/EntityCity');
 class Worldmap {
 
     constructor(config) {
-
         this.nbPointX = config.nbPointX;
         this.nbPointZ = config.nbPointZ;
         this.nbTileX = config.nbTileX;
@@ -15,17 +14,19 @@ class Worldmap {
         this.tilesTilt = config.tilesTilt;
         this.tilesColor = config.tilesColor;
         this.canvasColor = config.canvas;
+        this.areaTiles = config.areaTiles;
         this.cities = [];
         this.updatedCity = [];
         this.tiltMax = 40;
         this.heightMin = 0.16;
         this.updated = false;
-        this.mapArea = 'map/worldmap4_area.png';
     }
 
     addCity(params) {
+        params.y = this.getHeightTile(params.x,params.z);
         const city = new EntityCity(params);
         this.cities.push(city);
+        this.updateAreaMap();
         this.updated = true;
     }
 
@@ -35,46 +36,40 @@ class Worldmap {
         this.updated = true;
     }
 
-    updateCity(model) {
-        let index = this.cities.indexOf(city);
-        this.updatedCity.push(index);
-        this.updated = true;
-    }
 
     getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
         return this.tilesHeight[index] / 255;
     }
 
-    isWalkable(x, z) {
-        if(x.length) {
-            for(let i = 0; i < x.length; i += 2) {
-                const index = Math.floor(x[i + 1]) * this.nbTileX + Math.floor(x[i]);
-                const tilt = this.tilesTilt[index];
-                const y = this.tilesHeight[index] / 255;
-                if(tilt > this.tiltMax) {
-                    return false;
-                } else if(y < this.heightMin) {
-                    return false;
-                }
-            }
-        } else {
-            const index = Math.floor(z) * this.nbTileX + Math.floor(x);
-            const tilt = this.tilesTilt[index];
-            const y = this.tilesHeight[index] / 255;
-            if(tilt > this.tiltMax) {
-                return false;
-            } else if(y < this.heightMin) {
-                return false;
+    updateAreaMap() {
+        const controlled = [];
+        const free = [];
+
+        for(let i = 0; i < this.cities.length; i++) {
+            const city = this.cities[i];
+            if(city.level > 0){
+                controlled.push(i+1);
+            }else{
+                free.push(i+1);
             }
         }
-        return true;
-    }
 
-    isRevealed(x, z) {
-        return true;
+        const data = this.areaTiles;
+        const length  = data.length;
+        let codeArea;
+        for(let i = 0; i < length; i=i+4) {
+            codeArea = data[i];
+            if(controlled.indexOf(codeArea)!==-1){
+                data[i+1] = 255;
+            }else if(free.indexOf(codeArea)!==-1){
+                data[i+1] = 153;
+            } else{
+                data[i+1] = 50;
+            }
+        }
     }
-
+ 
     update(dt) {
 
     }

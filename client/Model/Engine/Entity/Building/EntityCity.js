@@ -7,7 +7,7 @@ class EntityCity {
         this.y = params.y || 0;
         this.z = params.z || 0;
         this.a = params.a || 0;
-        this.level = params.level || 1;
+        this.level = params.level || 0;
         this.type = params.type || 'mesopotamia';
         this.name = params.name || 'no name';
         this.leader = params.leader || 'free';

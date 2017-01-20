@@ -5,11 +5,20 @@ module.exports = class PixelMap {
         this.heightMax = 4;
     }
 
-    compute(url, cb) {
+    compute(url, urlArea, cb) {
         return this.loadImage(url, (context, canvas)=> {
-            const dataMap = this.getData(context);
+            const dataMap = this.getDataMap(context);
             dataMap.canvas = canvas;
-            cb(dataMap);
+            if(urlArea){
+                this.loadImage(urlArea, (contextArea)=> {
+                    const dataArea = this.getDataArea(contextArea);
+                    dataMap.citySpawns = dataArea.citySpawns;
+                    dataMap.areaTiles = dataArea.areaTiles;
+                    cb(dataMap);
+                });
+            }else{
+                cb(dataMap);
+            }
         })
     }
 
@@ -28,11 +37,32 @@ module.exports = class PixelMap {
         image.src = url;
     }
 
-    getData(context) {
+    getDataArea(context) {
         const image = context.getImageData(0, 0, context.width, context.height);
-        let imageData = image.data;
-        let size = context.height * context.width;
-        let data = {};
+        const imageData = image.data;
+        const size = context.height * context.width;
+        const data = {};
+        const citySpawns = [];
+        let areaNumber = 0;
+        for(let i = 0; i < size; i++) {
+            if(imageData[i*4 + 2] > 10){
+                areaNumber = imageData[i*4];
+                citySpawns[2*(areaNumber-1)] = i % context.width;
+                citySpawns[2*(areaNumber-1) + 1] = Math.floor(i / context.width)-1;
+                console.log(areaNumber + ' = ',citySpawns[2*(areaNumber-1)],citySpawns[2*(areaNumber-1) + 1]) ;
+                imageData[i*4 + 2] = 0;
+            }
+        }
+        data.areaTiles = imageData;
+        data.citySpawns = citySpawns;
+        return data;
+    }
+
+    getDataMap(context) {
+        const image = context.getImageData(0, 0, context.width, context.height);
+        const imageData = image.data;
+        const size = context.height * context.width;
+        const data = {};
         data.nbPointZ = context.height;
         data.nbPointX = context.width;
         data.nbTileZ = context.height - 1;

@@ -109,7 +109,8 @@ class App {
     createScreen(id, params, cb) {
         //params.mapId = 'worldmap4';
         const mapPath = 'map/'+params.mapId+'.png';
-        this.pixelMap.compute(mapPath, (dataMap)=> {
+        const areaMapPath = params.areaMapId ? 'map/'+params.areaMapId+'.png' : null;
+        this.pixelMap.compute(mapPath, areaMapPath, (dataMap)=> {
             this.modelInstances[id] = new this.models[id](params, dataMap);
             this.params[id] = params;
             this.viewInstances[id] = new Screen();

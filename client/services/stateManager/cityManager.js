@@ -9,7 +9,7 @@ module.exports = StateManager => {
         const city = {
             name: params.name,
             leader: params.leader,
-            level: params.level || 1,
+            level: params.level || 0 ,
             type: params.type || 0,
             mapId: 'test',
             states: {
@@ -91,8 +91,6 @@ module.exports = StateManager => {
     StateManager.prototype.updateExplorers = function updateExplorers(value) {
         this.currentCity.states.explorers += value;
     };
-
-
 
     StateManager.prototype.updateTrade = function updateTrade(id) {
         const trade = this.currentCity.trade;

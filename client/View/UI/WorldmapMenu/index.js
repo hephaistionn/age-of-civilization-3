@@ -16,12 +16,6 @@ module.exports = class WorldmapMenu {
         this.nodeButtonBack.onclick = model.back.bind(model);
         this.node.appendChild(this.nodeButtonBack);
 
-        this.nodeButtonConstruct = document.createElement('div');
-        this.nodeButtonConstruct.className = 'button construct';
-        this.nodeButtonConstruct.textContent = 'Construct';
-        this.nodeButtonConstruct.onclick = model.onConstructModeFct.bind(model);
-        this.node.appendChild(this.nodeButtonConstruct);
-
         this.updateState(model);
     }
 
@@ -31,12 +25,6 @@ module.exports = class WorldmapMenu {
             this.showNode(this.nodeButtonBack);
         } else {
             this.hideNode(this.nodeButtonBack);
-        }
-
-        if(model.constructMode) {
-            this.nodeButtonConstruct.className = 'button construct hide';
-        } else {
-            this.nodeButtonConstruct.className = 'button construct';
         }
     }
 

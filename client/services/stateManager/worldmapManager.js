@@ -5,6 +5,7 @@ module.exports = StateManager => {
         const worldmap = {
             id: id,
             mapId: 'worldmap4',
+            areaMapId: 'worldmap4_area',
             challengers: [],
             cities: [],
             camera: {x: 0, z: 0}
@@ -47,6 +48,16 @@ module.exports = StateManager => {
         } else {
             return this.newWorldmap();
         }
+    };
+
+    StateManager.prototype.getCityNewCitiesByLevel = function getCityNewCitiesByLevel(level) {
+        const stepCities =  [[
+            {name:'ville1'}
+        ],[
+            {name:'ville2'},
+            {name:'ville3'}
+        ]];
+        return [].concat.apply([], stepCities.slice(0,level));
     };
 
 };

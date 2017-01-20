@@ -89,37 +89,24 @@ module.exports = Worldmap => {
     Worldmap.prototype.refreshTexture = function refreshTexture(model) {
         this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
         this.materialWorldmap.uniforms.textureSize.value = model.nbPointX * this.tileSize;
+        this.updateAreaMap(model);
     };
 
 
     Worldmap.prototype.initAreaMap = function initAreaMap(model) {
-        THREE.loadCanvasTexture( model.mapArea,  (context, canvas) => {
-            this.cavasArea = canvas;
-            this.contextArea = context;
-            this.imageArea = context.getImageData(0, 0, context.width, context.height);
-            this.computeAreaMap(model);
-        });
+        this.cavasArea = document.createElement('canvas');
+        this.cavasArea.width = model.nbPointX;
+        this.cavasArea.height = model.nbPointZ;
+        this.contextArea = this.cavasArea.getContext('2d');
+        this.contextArea.width = model.nbPointX;
+        this.contextArea.height = model.nbPointZ;
+        this.imageArea = this.contextArea.getImageData(0, 0, model.nbPointX, model.nbPointZ);
     };
 
-    Worldmap.prototype.computeAreaMap = function computeAreaMap(model) {
-
-        const revealed = [1,2,3,4,5,6,7];
-        const currentSelected  =  [8,9,10,11];
-
-        if(!this.imageArea) return;
-
-        const data = this.imageArea.data;
-        const length  = data.length;
-        let codeArea;
-        for(let i = 0; i < length; i=i+4) {
-            codeArea = data[i];
-            if(revealed.indexOf(codeArea)!==-1){
-                data[i+1] = 255;
-            }else if(currentSelected.indexOf(codeArea)!==-1){
-                data[i+1] = 153;
-            } else{
-                data[i+1] = 50;
-            }
+    Worldmap.prototype.updateAreaMap = function updateAreaMap(model) {
+        const l = model.areaTiles.length;
+        for(let i = 0; i < l; i++) {
+            this.imageArea.data[i] = model.areaTiles[i];
         }
         this.contextArea.putImageData(this.imageArea, 0, 0);
         this.materialWorldmap.uniforms.textureArea.value = THREE.loadTexture(this.cavasArea);
