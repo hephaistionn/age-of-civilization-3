@@ -48,8 +48,7 @@ module.exports = class PixelMap {
             if(imageData[i*4 + 2] > 10){
                 areaNumber = imageData[i*4];
                 citySpawns[2*(areaNumber-1)] = i % context.width;
-                citySpawns[2*(areaNumber-1) + 1] = Math.floor(i / context.width)-1;
-                console.log(areaNumber + ' = ',citySpawns[2*(areaNumber-1)],citySpawns[2*(areaNumber-1) + 1]) ;
+                citySpawns[2*(areaNumber-1) + 1] = Math.floor(i / context.width)-1; 
                 imageData[i*4 + 2] = 0;
             }
         }

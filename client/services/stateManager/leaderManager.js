@@ -1,22 +1,16 @@
 module.exports = StateManager => {
 
     StateManager.prototype.newLeader = function newLeader(params) {
-        const id = this.computeUUID('leader_');
-        const leader = {
-            id: id,
-            name: params.name,
-            level: 1,
-            challengers: [],
-            worldmapId: null
-        };
+        params.id = this.computeUUID('leader_');
+        const leader = require('./../../Data/cityDefault')(params);
         this.save(leader);
-        this.currentLeader = this.loadCurrentLeader(id);
-        this.newWorldmap();
+        this.currentLeader = this.loadCurrentLeader(leader.id);
+        this.newWorldmap({});
 
         //save all Leader created
         const localLeaders = this.load('LocalLeaders') || [];
-        if(localLeaders.indexOf(id) !== -1) return;
-        localLeaders.push(id);
+        if(localLeaders.indexOf(leader.id) !== -1) return;
+        localLeaders.push(leader.id);
         this.save(localLeaders, 'LocalLeaders');
     };
 

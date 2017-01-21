@@ -5,40 +5,11 @@ module.exports = StateManager => {
     const CLOSE = 0;
 
     StateManager.prototype.newCity = function newCity(params) {
-        const id = this.computeUUID('city_');
-        const city = {
-            name: params.name,
-            leader: params.leader,
-            level: params.level || 0 ,
-            type: params.type || 0,
-            mapId: 'test',
-            states: {
-                population: 0,
-                workers: 0,
-                explorers: 0
-            },
-            resources: {
-                wood: 200,
-                stone: 100,
-                meat: 100
-            },
-            trade: {
-                wood: CLOSE,
-                stone: CLOSE,
-                meat: CLOSE
-            },
-            x: params.x,
-            y: params.y,
-            z: params.z,
-            camera: {x: 0, z: 0},
-            map: {
-
-            },
-            id: id
-        };
+        params.id = this.computeUUID('city_');
+        const city = require('./../../Data/cityDefault')(params);
         this.save(city);
-        this.cities[id] = city;
-        this.setWorldmapCity(id);
+        this.cities[city.id] = city;
+        this.setWorldmapCity(city.id);
         return city;
     };
 

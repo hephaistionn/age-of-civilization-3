@@ -1,21 +1,17 @@
+
+
 module.exports = StateManager => {
 
     StateManager.prototype.newWorldmap = function newWorldmap(params) {
-        const id = this.computeUUID('worldmap_');
-        const worldmap = {
-            id: id,
-            mapId: 'worldmap4',
-            areaMapId: 'worldmap4_area',
-            challengers: [],
-            cities: [],
-            camera: {x: 0, z: 0}
-        };
+
+        params.id = this.computeUUID('worldmap_');
+        const worldmap = require('./../../Data/worldmapDefault')(params);
 
         //if there are no players, the map should not be persistent. it is linked to nobody.
         if(this.currentLeader) {
             this.save(worldmap);
-            this.worldmaps[id] = worldmap;
-            this.currentLeader.worldmapId = id;
+            this.worldmaps[worldmap.id] = worldmap;
+            this.currentLeader.worldmapId = worldmap.id;
             this.currentWorldmap = worldmap;
         }
 
@@ -46,17 +42,15 @@ module.exports = StateManager => {
         if(this.currentLeader) {
             return this.getWorldmap(this.currentLeader.worldmapId);
         } else {
-            return this.newWorldmap();
+            return this.newWorldmap({});
         }
     };
 
     StateManager.prototype.getCityNewCitiesByLevel = function getCityNewCitiesByLevel(level) {
-        const stepCities =  [[
-            {name:'ville1'}
-        ],[
-            {name:'ville2'},
-            {name:'ville3'}
-        ]];
+        const areas = {
+            areaDefault :require('../../Data/areaDefault')
+        };
+        const stepCities = areas[this.currentWorldmap.areaMapId];
         return [].concat.apply([], stepCities.slice(0,level));
     };
 
