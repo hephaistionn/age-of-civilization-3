@@ -27,15 +27,19 @@ module.exports = StateManager => {
         }
     };
 
-    StateManager.prototype.loadCurrentCity = function loadCurrentCity(id) {
-        if(!id) {
-            id = this.load('currentCityId');
-        } else {
-            this.save(id, 'currentCityId');
-        }
+    StateManager.prototype.loadCurrentCity = function loadCurrentCity() {
+        const id = this.load('currentCityId');
         if(id) {
             this.currentCity = this.getCity(id);
             return this.currentCity;
+        }
+    };
+
+    StateManager.prototype.setCurrentCity = function setCurrentCity(id) {
+        if(typeof id === 'string'){
+            this.currentCity = this.getCity(id);
+        }else{
+            this.currentCity = id;
         }
     };
 

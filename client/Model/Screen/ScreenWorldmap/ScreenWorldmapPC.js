@@ -33,20 +33,26 @@ class ScreenWorldmap {
 
         this.worldmap = new Worldmap(mapProperties);
 
-        if(!stateManager.getCurrentLeader()) {
+        const currentLeader = stateManager.getCurrentLeader();
+        const currentWorldmap = stateManager.getCurrentWorldmap();
+        if(!currentLeader.name) {
             this.firstStartPanel = new FirstStartPanel();
             this.firstStartPanel.onClose(()=> {
                 delete this.firstStartPanel;
                 this.leaderCreationPanel = new LeaderCreationPanel();
                 this.leaderCreationPanel.onClose(params => {
-                    stateManager.newLeader(params);
-                    //clean map => new worldmap;
+                    stateManager.updateLeaderName(params.name);
+                    stateManager.updateLeaderLevel(0);
+                    if(currentWorldmap.cities.length){
+                        const newWorldmap = stateManager.newWorldmap({});
+                        stateManager.setCurrentWorldmap(newWorldmap);
+                    }
+                    stateManager.updateLeaderWorldmap(stateManager.currentWorldmap.id);
                     this.updateCities(model, mapProperties); //call when player level is updated
                     delete this.leaderCreationPanel;
                 });
             });
         }else{
-            stateManager.getCurrentLeader();
             this.updateCities(model, mapProperties); //call when player level is updated
         }
     }

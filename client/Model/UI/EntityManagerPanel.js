@@ -48,7 +48,8 @@ module.exports = class EntityManagerPanel {
 
     visit() {
         const cityId = this.currentEntity.id;
-        const model = stateManager.loadCurrentCity(cityId);
+        const model = stateManager.getCity(cityId);
+        stateManager.setCurrentCity(model);
         this.close();
         ee.emit('openScreen', 'ScreenMap', model);
     }
