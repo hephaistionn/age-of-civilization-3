@@ -6,7 +6,7 @@ module.exports = class MonitoringPanel {
     constructor() {
         this.opened = false;
         this.type = 'UI';
-        this.previewes = ['wood', 'stone', 'meat'];
+        this.previewes = ['wood', 'stone', 'meat', 'population'];
         this.updated = false;
         this.stateManager = stateManager;
     }

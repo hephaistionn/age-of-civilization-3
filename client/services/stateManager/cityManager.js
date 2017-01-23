@@ -41,18 +41,19 @@ module.exports = StateManager => {
         }else{
             this.currentCity = id;
         }
+        this.save(this.currentCity.id, 'currentCityId');
     };
 
     StateManager.prototype.updateStone = function updateStone(value) {
-        this.currentCity.resources.stone += value;
+        this.currentCity.states.stone += value;
     };
 
     StateManager.prototype.updateWood = function updateWood(value) {
-        this.currentCity.resources.wood += value;
+        this.currentCity.states.wood += value;
     };
 
     StateManager.prototype.updateMeat = function updateMeat(value) {
-        this.currentCity.resources.meat += value;
+        this.currentCity.states.meat += value;
     };
 
     StateManager.prototype.updatePopulation = function updatePopulation(value) {

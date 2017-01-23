@@ -120,46 +120,30 @@ class Entity {
 }
 
 Entity.construction = function construction() {
+    let eleId;
     const cost = this.cost;
-    const resources = stateManager.currentCity.resources;
+    const make = this.make;
     const states = stateManager.currentCity.states;
 
-    for(var resourceId in cost) {
-        const valueRequired = cost[resourceId];
-
-        if(resources[resourceId] !== undefined) {
-            const value = resources[resourceId];
-            if(valueRequired > value) {
-                return false;
-            }
-            resources[resourceId] -= valueRequired;
+    for(eleId in cost) {
+        if(cost[eleId] > states[eleId]) {
+            return false;
         }
-        if(states[resourceId] !== undefined) {
-            const value = states[resourceId];
-            if(valueRequired > value) {
-                return false;
-            }
-            states[resourceId] -= valueRequired;
-        }
+        states[eleId] -= cost[eleId];
     }
+
+    for(eleId in make) {
+        states[eleId] += make[eleId];
+    }
+
     return true;
 };
 
 Entity.available = function available() {
-    //Check if a Entity group is available in function to some criterias
     const require = this.require;
-    const isObject = 'object';
-    const cityState = stateManager.currentCity;
+    const states = stateManager.currentCity.states;
     for(var stateId in require) {
-        if(typeof require[stateId] === isObject) {
-            const requireChil = require[stateId];
-            const valueChil = cityState[stateId];
-            for(var stateIdChild in requireChil) {
-                if(requireChil[stateIdChild] > valueChil[stateIdChild]) {
-                    return false;
-                }
-            }
-        } else if(require[stateId] > cityState[stateId]) {
+        if(require[stateId] > states[stateId]) {
             return false;
         }
     }

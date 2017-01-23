@@ -143,13 +143,14 @@ class ScreenMap {
             }
         } else if(this.positioner.selected && !this.positioner.undroppable) {
             const entity = this.positioner.selected;
-            const built = entity.constructor.construction();
-            if(!built) return; //not enough resources
+            const available = entity.constructor.available();
+            if(!available) return; //not enough resources
             const params = {entityId: entity.constructor.name, x: entity.x, y: entity.y, z: entity.z, a: entity.a};
-            entity.onConstruct();
             this.map.newEntity(params);
+            entity.constructor.construction();
             this.positioner.unselectEnity();
             this.buildingMenu.updateCurrentCategory();
+            this.monitoringPanel.updated = true;
         } else if(this.roadPositioner.selected) {
             this.roadPositioner.moveEntity(x, z, this.map);
             const params = this.roadPositioner.getNewRoad();

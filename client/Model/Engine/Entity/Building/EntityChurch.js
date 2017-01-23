@@ -32,9 +32,7 @@ class EntityChurch extends Entity {
     }
 
     onConstruct() {
-        const states = stateManager.getCurrentCity().states;
-        this.workers = Math.min(states.population - states.workers, this.workplaces);
-        stateManager.updateWorkers(this.workers);
+
     }
 }
 
@@ -43,6 +41,7 @@ EntityChurch.description = 'This building increase the prosperity of your city';
 EntityChurch.tile_x = 2;
 EntityChurch.tile_z = 1;
 EntityChurch.cost = {wood: 5, stone: 5};
-EntityChurch.require = {states:{population: 4}};
+EntityChurch.require = {population: 4, wood: 5, stone: 5};
+EntityChurch.make = {workers:4,population:-4};
 EntityChurch.walkable = false;
 module.exports = EntityChurch;

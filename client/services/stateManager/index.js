@@ -45,7 +45,7 @@ class StateManager {
     }
 
     saveGame(app) {
-        if(this.currentLeader) return;
+        if(!this.currentLeader) return;
         const screen = app.getCurrentScreen();
         const currentScreenId = app.getCurrentScreenId();
         if(currentScreenId === 'ScreenWorldmap'){
@@ -55,7 +55,6 @@ class StateManager {
             screen.syncState(this.currentCity);
             this.save(this.currentCity);
         }
-        this.save(this.currentLeader);
     }
 }
 
