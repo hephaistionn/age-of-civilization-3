@@ -135,7 +135,7 @@ class Map {
             let height = this.tilesHeight[i];
             if(tilt > this.tiltMax) {
                 this.grid.setWalkableAt(x, z, 0);
-            } else if(height < 45) {
+            } else if(height < 41) {
                 this.grid.setWalkableAt(x, z, 0);
             }
         }

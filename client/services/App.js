@@ -71,7 +71,7 @@ class App {
 
         if(this.modelInstances[id]) {
             if(!params || this.params[id] === params) {
-                this.displayScreen(id);
+                this.displayScreen(id, params);
                 this._start();
             } else {
                 this.closeScreen(id);
@@ -83,8 +83,10 @@ class App {
         this.currentScreenId = id;
     }
 
-    displayScreen(id) {
+    displayScreen(id, params) {
         this.model = this.modelInstances[id];
+        if(this.model.beforeShow)
+            this.model.beforeShow(params);
         this.view = this.viewInstances[id];
         this.view.show(this.model);
     }
@@ -94,11 +96,11 @@ class App {
         this.view.hide(this.model);
     }
 
-    getCurrentScreen(){
+    getCurrentScreen() {
         return this.model;
     }
 
-    getCurrentScreenId(){
+    getCurrentScreenId() {
         return this.currentScreenId;
     }
 
@@ -108,13 +110,15 @@ class App {
 
     createScreen(id, params, cb) {
         //params.mapId = 'worldmap4';
-        const mapPath = 'map/'+params.mapId+'.png';
-        const areaMapPath = params.areaMapId ? 'map/'+params.areaMapId+'.png' : null;
+        const mapPath = 'map/' + params.mapId + '.png';
+        const areaMapPath = params.areaMapId ? 'map/' + params.areaMapId + '.png' : null;
         this.pixelMap.compute(mapPath, areaMapPath, (dataMap)=> {
             this.modelInstances[id] = new this.models[id](params, dataMap);
             this.params[id] = params;
             this.viewInstances[id] = new Screen();
             this.model = this.modelInstances[id];
+            if(this.model.beforeShow)
+                this.model.beforeShow(params);
             this.view = this.viewInstances[id];
             this.view.mount(this.model);
             cb();

@@ -2,7 +2,7 @@ module.exports = StateManager => {
 
     StateManager.prototype.newLeader = function newLeader(params) {
         params.id = this.computeUUID('leader_');
-        const leader = require('./../../Data/cityDefault')(params);
+        const leader = require('./../../Data/leaderDefault')(params);
         this.save(leader);
 
         //save all Leader created
@@ -30,16 +30,16 @@ module.exports = StateManager => {
 
     StateManager.prototype.loadCurrentLeader = function loadCurrentLeader() {
         const leadersId = this.load('LocalLeaders');
-        if(leadersId && leadersId.length){
+        if(leadersId && leadersId.length) {
             return this.getLeader(leadersId.pop());
         }
     };
 
-    StateManager.prototype.setCurrentLeader = function setCurrentLeader(model)  {
+    StateManager.prototype.setCurrentLeader = function setCurrentLeader(model) {
         const leadersId = this.load('LocalLeaders');
-        leadersId.splice(leadersId.indexOf(model.id),1);
+        leadersId.splice(leadersId.indexOf(model.id), 1);
         leadersId.push(model.id);
-        this.save(model,'LocalLeaders');
+        this.save(model, 'LocalLeaders');
         this.currentLeader = model;
     };
 
@@ -55,6 +55,11 @@ module.exports = StateManager => {
 
     StateManager.prototype.updateLeaderLevel = function updateLeaderLevel(level) {
         this.currentLeader.level = level;
+        this.save(this.currentLeader);
+    };
+
+    StateManager.prototype.incraseLeaderLevel = function incraseLeaderLevel() {
+        this.currentLeader.level += 1;
         this.save(this.currentLeader);
     };
 

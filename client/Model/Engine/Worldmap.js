@@ -15,6 +15,7 @@ class Worldmap {
         this.tilesColor = config.tilesColor;
         this.canvasColor = config.canvas;
         this.areaTiles = config.areaTiles;
+        this.citySpawns = config.citySpawns;
         this.cities = [];
         this.updatedCity = [];
         this.tiltMax = 40;
@@ -23,7 +24,7 @@ class Worldmap {
     }
 
     addCity(params) {
-        params.y = this.getHeightTile(params.x,params.z);
+        params.y = this.getHeightTile(params.x, params.z);
         const city = new EntityCity(params);
         this.cities.push(city);
         this.updateAreaMap();
@@ -48,28 +49,28 @@ class Worldmap {
 
         for(let i = 0; i < this.cities.length; i++) {
             const city = this.cities[i];
-            if(city.level > 0){
-                controlled.push(i+1);
-            }else{
-                free.push(i+1);
+            if(city.level > 0) {
+                controlled.push(i + 1);
+            } else {
+                free.push(i + 1);
             }
         }
 
         const data = this.areaTiles;
-        const length  = data.length;
+        const length = data.length;
         let codeArea;
-        for(let i = 0; i < length; i=i+4) {
+        for(let i = 0; i < length; i = i + 4) {
             codeArea = data[i];
-            if(controlled.indexOf(codeArea)!==-1){
-                data[i+1] = 255;
-            }else if(free.indexOf(codeArea)!==-1){
-                data[i+1] = 153;
-            } else{
-                data[i+1] = 50;
+            if(controlled.indexOf(codeArea) !== -1) {
+                data[i + 1] = 255;
+            } else if(free.indexOf(codeArea) !== -1) {
+                data[i + 1] = 153;
+            } else {
+                data[i + 1] = 50;
             }
         }
     }
- 
+
     update(dt) {
 
     }

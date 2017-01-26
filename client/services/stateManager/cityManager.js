@@ -36,39 +36,59 @@ module.exports = StateManager => {
     };
 
     StateManager.prototype.setCurrentCity = function setCurrentCity(id) {
-        if(typeof id === 'string'){
+        if(typeof id === 'string') {
             this.currentCity = this.getCity(id);
-        }else{
+        } else {
             this.currentCity = id;
         }
         this.save(this.currentCity.id, 'currentCityId');
     };
 
-    StateManager.prototype.updateStone = function updateStone(value) {
+    StateManager.prototype.cityGoalAchieved = function cityGoalAchieved() {
+        var goal = this.currentCity.goal;
+        var states = this.currentCity.states;
+        for(let eleId  in goal) {
+            if(states[eleId] < goal[eleId]) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+
+    StateManager.prototype.cityIsItCompleted = function cityIsItCompleted() {
+        return this.currentCity.completed;
+    };
+
+    StateManager.prototype.cityComplete = function cityComplete() {
+        this.currentCity.completed = true;
+    };
+
+    StateManager.prototype.cityAddStone = function updateStone(value) {
         this.currentCity.states.stone += value;
     };
 
-    StateManager.prototype.updateWood = function updateWood(value) {
+    StateManager.prototype.cityAddWood = function updateWood(value) {
         this.currentCity.states.wood += value;
     };
 
-    StateManager.prototype.updateMeat = function updateMeat(value) {
+    StateManager.prototype.cityAddMeat = function updateMeat(value) {
         this.currentCity.states.meat += value;
     };
 
-    StateManager.prototype.updatePopulation = function updatePopulation(value) {
+    StateManager.prototype.cityAddPopulation = function updatePopulation(value) {
         this.currentCity.states.population += value;
     };
 
-    StateManager.prototype.updateWorkers = function updateWorkers(value) {
+    StateManager.prototype.cityAddWorkers = function updateWorkers(value) {
         this.currentCity.states.workers += value;
     };
 
-    StateManager.prototype.updateExplorers = function updateExplorers(value) {
+    StateManager.prototype.cityAddExplorers = function updateExplorers(value) {
         this.currentCity.states.explorers += value;
     };
 
-    StateManager.prototype.updateTrade = function updateTrade(id) {
+    StateManager.prototype.cityUpdateTrade = function updateTrade(id) {
         const trade = this.currentCity.trade;
         if(trade[id] === CLOSE) {
             trade[id] = EXPORT;

@@ -15,7 +15,8 @@ const COMPONENTS = {
     WorldmapMenu: require('../UI/WorldmapMenu'),
     EntityManagerPanel: require('../UI/EntityManagerPanel'),
     FirstStartPanel: require('../UI/FirstStartPanel'),
-    LeaderCreationPanel: require('../UI/LeaderCreationPanel')
+    LeaderCreationPanel: require('../UI/LeaderCreationPanel'),
+    VictoryPanel: require('../UI/VictoryPanel')
 };
 
 class Screen {
@@ -62,7 +63,7 @@ class Screen {
     show(models) {
         const map = this.components.map || this.components.worldmap;
         if(map) {
-            map.refreshTexture(models.map||models.worldmap);
+            map.refreshTexture(models.map || models.worldmap);
         }
 
         let model;
@@ -109,7 +110,7 @@ class Screen {
 
         for(let id in models) {
             if(views[id]) {
-                if(models[id].updated === true){
+                if(models[id].updated === true) {
                     views[id].updateState(models[id]);
                     models[id].updated = false;
                 }

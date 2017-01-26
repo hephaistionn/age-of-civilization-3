@@ -14,11 +14,11 @@ class ScreenWorldmap {
 
     constructor(model, mapProperties) {
 
-        this.camera = new Camera({map:mapProperties, zoom: model.zoom||1});
+        this.camera = new Camera({map: mapProperties, zoom: model.zoom || 1});
 
         this.camera.move(
-            model.camera.x || mapProperties.nbTileX/2+10,
-            model.camera.z|| mapProperties.nbTileZ/2+10
+            model.camera.x || mapProperties.nbTileX / 2 + 10,
+            model.camera.z || mapProperties.nbTileZ / 2 + 10
         );
 
         this.light = new Light({
@@ -42,57 +42,55 @@ class ScreenWorldmap {
                 this.leaderCreationPanel = new LeaderCreationPanel();
                 this.leaderCreationPanel.onClose(params => {
                     stateManager.updateLeaderName(params.name);
-                    stateManager.updateLeaderLevel(0);
-                    if(currentWorldmap.cities.length){
+                    if(currentWorldmap.cities.length) {
                         const newWorldmap = stateManager.newWorldmap({});
                         stateManager.setCurrentWorldmap(newWorldmap);
                     }
                     stateManager.updateLeaderWorldmap(stateManager.currentWorldmap.id);
-                    this.updateCities(model, mapProperties); //call when player level is updated
+                    this.updateCities(model); //call when player level is updated
                     delete this.leaderCreationPanel;
                 });
             });
-        }else{
-            this.updateCities(model, mapProperties); //call when player level is updated
         }
     }
 
-    updateCities(model, mapProperties) {
-        for(let i = 0 ; i < model.cities.length; i++){
+    beforeShow(model) {
+        this.updateCities(model);
+    }
+
+    updateCities(model) {
+        for(let i = 0; i < model.cities.length; i++) {
             const cityModel = stateManager.getCity(model.cities[i]);
-            if(!this.worldmap.cities.find(city => {city.id === cityModel.id})){
+            if(!this.worldmap.cities.find(city => city.id === cityModel.id)) {
                 this.worldmap.addCity(cityModel); //city de type etablie
             }
         }
 
         const leaderId = stateManager.getCurrentLeader().id;
-        ///const level = stateManager.currentLeader.level;
-        const level = 2;
-        const spawns = mapProperties.citySpawns;
+        const level = stateManager.currentLeader.level;
+        const spawns = this.worldmap.citySpawns;
         const cities = stateManager.getCityNewCitiesByLevel(level);
         let currentIndex = model.cities.length;
-        for(let j = 0;  j<cities.length; j++){
+        for(let j = 0; j < cities.length; j++) {
             const newCity = cities[j];
             if(!this.worldmap.cities.find(city => city.name === newCity.name)) {
-                this.newCity(spawns[currentIndex*2], spawns[currentIndex*2 + 1], 0, newCity.name, leaderId);
+                this.newCity(spawns[currentIndex * 2], spawns[currentIndex * 2 + 1], 0, newCity.name, leaderId, newCity.goal);
                 currentIndex++;
             }
         }
     }
 
 
-    newCity(x, z, level, name, leaderId) {
+    newCity(x, z, level, name, leaderId, goal) {
         const params = stateManager.newCity({
             level: level, x: x, z: z, name: name,
-            type: 'mesopotamia', leader: leaderId
+            type: 'mesopotamia', leader: leaderId, goal: goal
         });
         this.worldmap.addCity(params);
     }
 
     update(dt) {
-        if(this.worldmap) {
-            this.worldmap.update(dt);
-        }
+        this.worldmap.update(dt);
     }
 
     mouseMovePress(x, z) {
@@ -113,7 +111,7 @@ class ScreenWorldmap {
     }
 
     mouseClick(x, z, model) {
-    if(model) {
+        if(model) {
             this.entityManagerPanel.open(model);
         }
     }

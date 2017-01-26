@@ -4,6 +4,7 @@ const stateManager = require('../../../services/stateManager');
 const BuildingMenu = require('../../UI/BuildingMenu');
 const MonitoringPanel = require('../../UI/MonitoringPanel');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
+const VictoryPanel = require('../../UI/VictoryPanel');
 
 const Map = require('../../Engine/Map');
 const Light = require('../../Engine/Light');
@@ -15,20 +16,21 @@ const Entity = require('../../Engine/Entity/Entity');
 
 let removeMode = false;
 let rotation = 0;
+let cycle = 0;
 
 class ScreenMap {
 
     constructor(model, mapProperties) {
 
         this.camera = new Camera({
-            map:mapProperties,
-            zoom: model.zoom||1.3,
-            zoomMax:1.8
+            map: mapProperties,
+            zoom: model.zoom || 1.3,
+            zoomMax: 1.8
         });
 
         this.camera.move(
-            model.camera.x || mapProperties.nbTileX/2+10,
-            model.camera.z|| mapProperties.nbTileZ/2+10
+            model.camera.x || mapProperties.nbTileX / 2 + 10,
+            model.camera.z || mapProperties.nbTileZ / 2 + 10
         );
 
         this.light = new Light({shadow: true});
@@ -70,9 +72,18 @@ class ScreenMap {
     }
 
     update(dt) {
-        if(this.map) {
-            this.map.update(dt);
+        this.map.update(dt);
+
+        if(cycle > 1000) {
+            cycle = 0;
+            if(stateManager.cityGoalAchieved() && !stateManager.cityIsItCompleted()) {
+                stateManager.incraseLeaderLevel();
+                stateManager.cityComplete();
+                this.victoryPanel = new VictoryPanel();
+                // l'objectif est indiqué sur la  worldmap,  quand la ville est  selectionné.
+            }
         }
+        cycle += dt
     }
 
     dismount() {
