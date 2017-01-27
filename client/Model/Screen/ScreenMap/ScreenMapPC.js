@@ -68,7 +68,12 @@ class ScreenMap {
             //rotation = 0;
             //this.positioner.selectEnity(entityId);
             //this.entityManagerPanel.close();
-        })
+        });
+
+        stateManager.cityOnLevelUpdated( level => {
+            console.log('level updated ', level);
+        });
+
     }
 
     update(dt) {
@@ -76,6 +81,7 @@ class ScreenMap {
 
         if(cycle > 1000) {
             cycle = 0;
+            stateManager.cityUpdateLevel();
             if(stateManager.cityGoalAchieved() && !stateManager.cityIsItCompleted()) {
                 stateManager.incraseLeaderLevel();
                 stateManager.cityComplete();

@@ -42,11 +42,6 @@ class ScreenWorldmap {
                 this.leaderCreationPanel = new LeaderCreationPanel();
                 this.leaderCreationPanel.onClose(params => {
                     stateManager.updateLeaderName(params.name);
-                    if(currentWorldmap.cities.length) {
-                        const newWorldmap = stateManager.newWorldmap({});
-                        stateManager.setCurrentWorldmap(newWorldmap);
-                    }
-                    stateManager.updateLeaderWorldmap(stateManager.currentWorldmap.id);
                     this.updateCities(model); //call when player level is updated
                     delete this.leaderCreationPanel;
                 });
@@ -55,15 +50,16 @@ class ScreenWorldmap {
     }
 
     beforeShow(model) {
-        this.updateCities(model);
+        const currentLeader = stateManager.getCurrentLeader();
+        if(currentLeader.name) {
+            this.updateCities(model);
+        }
     }
 
     updateCities(model) {
         for(let i = 0; i < model.cities.length; i++) {
             const cityModel = stateManager.getCity(model.cities[i]);
-            if(!this.worldmap.cities.find(city => city.id === cityModel.id)) {
-                this.worldmap.addCity(cityModel); //city de type etablie
-            }
+            this.worldmap.addOrUpdateCity(cityModel);
         }
 
         const leaderId = stateManager.getCurrentLeader().id;
@@ -80,13 +76,12 @@ class ScreenWorldmap {
         }
     }
 
-
     newCity(x, z, level, name, leaderId, goal) {
         const params = stateManager.newCity({
             level: level, x: x, z: z, name: name,
             type: 'mesopotamia', leader: leaderId, goal: goal
         });
-        this.worldmap.addCity(params);
+        this.worldmap.addOrUpdateCity(params);
     }
 
     update(dt) {

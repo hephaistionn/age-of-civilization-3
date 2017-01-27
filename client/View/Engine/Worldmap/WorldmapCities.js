@@ -33,7 +33,8 @@ module.exports = Worldmap=> {
         }
     };
 
-    Worldmap.prototype.updateStateOfOneCities = function updateStateOfOneCities(cityIndex) {
-        this.cities[cityIndex].updateState();
+    Worldmap.prototype.updateStateOfOneCities = function updateStateOfOneCities(model) {
+        const view = this.cities.find(view => view.model === model);
+        view.updateState();
     };
 };

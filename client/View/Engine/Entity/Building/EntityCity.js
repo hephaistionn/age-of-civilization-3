@@ -8,25 +8,47 @@ module.exports = class EntityCity {
 
     constructor(model, materialForce) {
         this.model = model;
-        let path;
-        if(model.level === 0){
+        this.updateMesh();
+        this.level = this.model.level;
+        this.updateState();
+    }
+
+    updateMesh(){
+        let path; // path = path.replace('@1', model.type).replace('@2', model.level);
+        if(this.model.level === 0){
             path = 'obj/flagA.obj';
         }else {
             path = 'obj/cityA.obj';
         }
 
-       // path = path.replace('@1', model.type).replace('@2', model.level);
-        this.element = THREE.getMesh(path, materialForce || material);
-        this.element.userData.model = model;
-        this.element.userData.parent = this;
-        this.element.frustumCulled = false;
-        this.element.matrixAutoUpdate = false;
-        this.element.castShadow = true;
-        this.element.name = 'EntityCity';
-        this.updateState();
+        if(this.element){
+            const mesh = THREE.getMesh(path, material);
+            mesh.userData.model = this.model;
+            mesh.userData.parent = this;
+            mesh.frustumCulled = false;
+            mesh.matrixAutoUpdate = false;
+            mesh.castShadow = true;
+            mesh.name = 'EntityCity';
+            const parent  = this.element.parent;
+            parent.remove(this.element);
+            parent.add(mesh);
+            this.element = mesh;
+        }else{
+            this.element = THREE.getMesh(path, material);
+            this.element.userData.model = this.model;
+            this.element.userData.parent = this;
+            this.element.frustumCulled = false;
+            this.element.matrixAutoUpdate = false;
+            this.element.castShadow = true;
+            this.element.name = 'EntityCity';
+        }
     }
 
     updateState() {
+        if(this.model.level  !== this.level){
+            this.level = this.model.level;
+            this.updateMesh();
+        }
         const matrixWorld = this.element.matrixWorld.elements;
         matrixWorld[12] = this.model.x * tileSize;
         matrixWorld[14] = this.model.z * tileSize;

@@ -21,6 +21,11 @@ class EntityCity {
         this.y = y;
     }
 
+    updateState(model){
+        this.level = model.level;
+        this.type = model.type;
+    }
+
     getTiles() {
         const xFirstTile = this.x - 1 / 2;
         const zFirstTile = this.z - 1 / 2;

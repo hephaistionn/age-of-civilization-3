@@ -23,11 +23,17 @@ class Worldmap {
         this.updated = false;
     }
 
-    addCity(params) {
-        params.y = this.getHeightTile(params.x, params.z);
-        const city = new EntityCity(params);
-        this.cities.push(city);
-        this.updateAreaMap();
+    addOrUpdateCity(params) {
+        const existingcity = this.cities.find(city => city.id === params.id);
+        if(!existingcity){
+            params.y = this.getHeightTile(params.x, params.z);
+            const city = new EntityCity(params);
+            this.cities.push(city);
+            this.updateAreaMap();
+        }else{
+            existingcity.updateState(params);
+            this.updatedCity.push(existingcity);
+        }
         this.updated = true;
     }
 

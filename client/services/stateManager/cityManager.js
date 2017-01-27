@@ -64,6 +64,28 @@ module.exports = StateManager => {
         this.currentCity.completed = true;
     };
 
+    StateManager.prototype.cityOnLevelUpdated = function cityOnLevelUpdated(callback) {
+        this.cbCityLevelUpdated = callback;
+    };
+
+    StateManager.prototype.cityUpdateLevel = function cityUpdateLevel() {
+        const states = this.currentCity.states;
+        let level = 0;
+        if(states.population > 0){
+            level = 1;
+            if(states.meat > 99 && states.population > 10){
+                level = 2;
+                if(states.stone > 400 && states.population > 200){
+                    level = 3;
+                }
+            }
+        }
+        if(level !== this.currentCity.level){
+            this.currentCity.level = level;
+            this.cbCityLevelUpdated(this.currentCity.level)
+        }
+    };
+
     StateManager.prototype.cityAddStone = function updateStone(value) {
         this.currentCity.states.stone += value;
     };
