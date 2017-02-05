@@ -6,16 +6,17 @@ const THREE = require('three');
 
 module.exports = class EntityTree {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
         this.element = THREE.getMesh('obj/treeB.obj', material);
-        this.element.userData.model = model;
+        this.element.userData.id = model._id;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
         this.element.name = 'EntityTree';
         this.updateState();
+        this.add(parent);
     }
 
     updateState() {
@@ -27,5 +28,13 @@ module.exports = class EntityTree {
         matrixWorld[2] = Math.sin(this.model.a);
         matrixWorld[8] = -matrixWorld[2];
         matrixWorld[10] = matrixWorld[0];
+    }
+
+    remove(parent) {
+        parent.render.scene.remove(this.element);
+    }
+
+    add(parent) {
+        parent.render.scene.add(this.element);
     }
 };

@@ -1,12 +1,11 @@
 module.exports = class BuildingMenu {
 
-    constructor(model) {
-        this.type = 'UI';
-
+    constructor(model, parent) {
         this.canvas = document.getElementById('D3');
 
         this.node = document.createElement('div');
         this.node.className = 'buildingMenu mobile';
+        this.node.id = model._id;
 
         this.nodeOverlay = document.createElement('div');
         this.nodeOverlay.className = 'nodeOverlay hide';
@@ -45,6 +44,7 @@ module.exports = class BuildingMenu {
         this.node.appendChild(this.nodeButtonClose);
 
         this.updateState(model);
+        this.add(parent);
 
     }
 
@@ -109,7 +109,11 @@ module.exports = class BuildingMenu {
         }
     }
 
-    update(dt) {
+    add(parent) {
+        parent.dom.appendChild(this.node);
+    }
 
+    remove(parent) {
+        parent.dom.removeChild(this.node);
     }
 };

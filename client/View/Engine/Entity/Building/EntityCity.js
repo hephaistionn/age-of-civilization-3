@@ -6,36 +6,37 @@ const material = require('../../Material/materialA');
 
 module.exports = class EntityCity {
 
-    constructor(model, materialForce) {
+    constructor(model, parent) {
         this.model = model;
         this.updateMesh();
         this.level = this.model.level;
         this.updateState();
+        this.add(parent);
     }
 
-    updateMesh(){
-        let path; // path = path.replace('@1', model.type).replace('@2', model.level);
-        if(this.model.level === 0){
+    updateMesh() {
+        let path; // path = path.replace('@1', model.geo).replace('@2', model.level);
+        if(this.model.level === 0) {
             path = 'obj/flagA.obj';
-        }else {
+        } else {
             path = 'obj/cityA.obj';
         }
 
-        if(this.element){
+        if(this.element) {
             const mesh = THREE.getMesh(path, material);
-            mesh.userData.model = this.model;
+            mesh.userData.id = model.id;
             mesh.userData.parent = this;
             mesh.frustumCulled = false;
             mesh.matrixAutoUpdate = false;
             mesh.castShadow = true;
             mesh.name = 'EntityCity';
-            const parent  = this.element.parent;
+            const parent = this.element.parent;
             parent.remove(this.element);
             parent.add(mesh);
             this.element = mesh;
-        }else{
+        } else {
             this.element = THREE.getMesh(path, material);
-            this.element.userData.model = this.model;
+            this.element.userData.id = this.model._id;
             this.element.userData.parent = this;
             this.element.frustumCulled = false;
             this.element.matrixAutoUpdate = false;
@@ -45,7 +46,7 @@ module.exports = class EntityCity {
     }
 
     updateState() {
-        if(this.model.level  !== this.level){
+        if(this.model.level !== this.level) {
             this.level = this.model.level;
             this.updateMesh();
         }
@@ -57,5 +58,14 @@ module.exports = class EntityCity {
         matrixWorld[2] = Math.sin(this.model.a);
         matrixWorld[8] = -matrixWorld[2];
         matrixWorld[10] = matrixWorld[0];
+    }
+
+    remove(parent) {
+        parent.render.scene.remove(this.element);
+    }
+
+    add(parent) {
+        if(parent)
+            parent.render.scene.add(this.element);
     }
 };

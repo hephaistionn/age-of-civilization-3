@@ -2,13 +2,12 @@ const stateManager = require('../../../services/stateManager');
 
 module.exports = class MonitoringPanelPC {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
-
-        this.type = 'UI';
 
         this.node = document.createElement('div');
         this.node.className = 'monitoringPanel pc';
+        this.node.id = model._id;
 
         this.nodePreviewContainer = document.createElement('div');
         this.nodePreviewContainer.className = 'previewContainer';
@@ -50,6 +49,7 @@ module.exports = class MonitoringPanelPC {
         this.nodeMonitoringPanel.appendChild(this.nodeButtonWorld);
 
         this.updateState(model);
+        this.add(parent);
     }
 
     createItem(id) {
@@ -100,6 +100,11 @@ module.exports = class MonitoringPanelPC {
         }
     }
 
-    update() {
+    add(parent) {
+        parent.dom.appendChild(this.node);
+    }
+
+    remove(parent) {
+        parent.dom.removeChild(this.node);
     }
 };

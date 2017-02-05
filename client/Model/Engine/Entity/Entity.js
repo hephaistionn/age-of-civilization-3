@@ -1,9 +1,4 @@
 const stateManager = require('../../../services/stateManager');
-const pf = require('../../../services/pathfinding');
-const finder = new pf.AStarFinder({
-    allowDiagonal: true,
-    dontCrossCorners: true
-});
 
 class Entity {
 
@@ -12,6 +7,7 @@ class Entity {
         this.y = 0;
         this.z = 0;
         this.a = 0;
+        this._id = 0;
         this.move(params.x || 0, params.y || 0, params.z || 0, params.a || 0);
     }
 
@@ -70,74 +66,22 @@ class Entity {
         }
     }
 
-    computePath(params) {
-        const map = params.map;
-        const grid = map.grid;
-        const tragetEntityId = params.tragetEntityId;
-        let x = Math.floor(params.x);
-        let z = Math.floor(params.z);
-        const nearests = map.getNearestEntities(tragetEntityId, x, z);
-        const sourceTiles = params.source.getTiles();
-        let length = nearests.length;
-        const paths = [];
-        for(let i = 0; i < length; i++) {
-            let entity = nearests[i];
-            let targetTiles = entity.getTiles();
-            let pathTarget = finder.findPathBetweenArea(sourceTiles, targetTiles, grid);
-            if(pathTarget.length > 0)
-                paths.push(pathTarget);
-        }
-        let path = paths[0];
-        for(let k = 1; k < paths.length; k++) {
-            if(path.length > paths[k].length) {
-                path = paths[k];
-            }
-        }
-        //compute height
-        if(path) {
-            length = path.length;
-            for(let k = 0; k < length; k += 3) {
-                x = path[k];
-                z = path[k + 1];
-                path[k + 2] = map.tilesHeight[map.nbTileX * z + x];
-            }
-            return path;
-            //return pf.Util.compressPath(path);
-        }
-    }
+    updateState() {
+        let eleId;
+        const cost = this.constructor.cost;
+        const make = this.constructor.make;
+        const states = stateManager.currentCity.states;
 
-    getPathLength() {
-        let distance = 0;
-        const l = this.path.length;
-        for(let i = 0; i < l - 3; i += 3) {
-            let dX1 = this.path[i + 3] - this.path[i];
-            let dZ1 = this.path[i + 4] - this.path[i + 1];
-            distance += Math.sqrt(dX1 * dX1 + dZ1 * dZ1);
+        for(eleId in cost) {
+            states[eleId] -= cost[eleId];
         }
-        return distance;
+
+        for(eleId in make) {
+            states[eleId] += make[eleId];
+        }
     }
 
 }
-
-Entity.construction = function construction() {
-    let eleId;
-    const cost = this.cost;
-    const make = this.make;
-    const states = stateManager.currentCity.states;
-
-    for(eleId in cost) {
-        if(cost[eleId] > states[eleId]) {
-            return false;
-        }
-        states[eleId] -= cost[eleId];
-    }
-
-    for(eleId in make) {
-        states[eleId] += make[eleId];
-    }
-
-    return true;
-};
 
 Entity.available = function available() {
     const require = this.require;
@@ -149,5 +93,24 @@ Entity.available = function available() {
     }
     return true;
 };
+
+Entity.getNearestEntities = function getNearestEntities(x, z, max) {
+    max = max || 20;
+    function filterNearest(entity) {
+        return Math.abs(entity.x - x) < max && Math.abs(entity.z - z) < max;
+    }
+
+    function sortNearest(entityA, entityB) {
+        let dA = Math.abs(entityA.x - x) + Math.abs(entityA.z - z);
+        let dB = Math.abs(entityB.x - x) + Math.abs(entityB.z - z);
+        return dA - dB;
+    }
+
+    const nearest = this.instances.filter(filterNearest);
+    nearest.sort(sortNearest);
+    return nearest.splice(0, 3);
+};
+
+Entity.entity = true;
 
 module.exports = Entity;

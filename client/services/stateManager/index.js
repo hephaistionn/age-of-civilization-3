@@ -24,23 +24,23 @@ class StateManager {
 
     }
 
-    getCurrentWorldmap(){
+    getCurrentWorldmap() {
         return this.currentWorldmap;
     }
 
-    getCurrentCity(){
+    getCurrentCity() {
         return this.currentCity;
     }
 
-    getCurrentLeader(){
+    getCurrentLeader() {
         return this.currentLeader;
     }
 
-    getCurrentScreen(){
+    getCurrentScreen() {
         return this.load('currentScreen');
     }
 
-    setCurrentScreen(screenId){
+    setCurrentScreen(screenId) {
         this.save(screenId, 'currentScreen');
     }
 
@@ -48,14 +48,16 @@ class StateManager {
         if(!this.currentLeader) return;
         const screen = app.getCurrentScreen();
         const currentScreenId = app.getCurrentScreenId();
-        if(currentScreenId === 'ScreenWorldmap'){
+        if(currentScreenId === 'ScreenWorldmap') {
             screen.syncState(this.currentWorldmap);
             this.save(this.currentWorldmap);
-        }else{
+        } else {
             screen.syncState(this.currentCity);
             this.save(this.currentCity);
         }
     }
+
+
 }
 
 require('./cityManager')(StateManager);

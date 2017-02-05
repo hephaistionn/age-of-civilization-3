@@ -1,13 +1,12 @@
 const ee = require('../../services/eventEmitter');
 const stateManager = require('../../services/stateManager');
 
-module.exports = class WorldmapMenu {
+class WorldmapMenu {
 
     constructor(config) {
-        this.type = 'UI';
         this.constructMode = false;
         this.updated = false;
-
+        this._id = 0;
     }
 
     goCity() {
@@ -16,7 +15,10 @@ module.exports = class WorldmapMenu {
 
     back() {
         const model = stateManager.loadCurrentCity();
-        ee.emit('openScreen', 'ScreenMap', model);
+        ee.emit('openScreen', 'ScreenCity', model);
     }
 
-};
+}
+
+WorldmapMenu.ui = true;
+module.exports = WorldmapMenu;

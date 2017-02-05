@@ -1,18 +1,21 @@
 const ee = require('../../services/eventEmitter');
 const stateManager = require('../../services/stateManager');
 
-module.exports = class FirstStartPanel {
+class FirstStartPanel {
 
     constructor(config) {
-        this.type = 'UI';
         this.message = "welcome to Age of Civilization";
         this.picture = '';
         this.fct = null;
         this.updated = false;
+        this._id = 0;
     }
 
     onClose(fct) {
         this.close = fct;
     }
 
-};
+}
+
+FirstStartPanel.ui = true;
+module.exports = FirstStartPanel;

@@ -2,13 +2,12 @@ const stateManager = require('../../../services/stateManager');
 
 module.exports = class LeaderCreationPanel {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
-
-        this.type = 'UI';
 
         this.node = document.createElement('div');
         this.node.className = 'leaderCreationPanel pc nodeOverlay';
+        this.node.id = model._id;
 
         this.nodePanel = document.createElement('div');
         this.nodePanel.className = 'panel';
@@ -30,19 +29,25 @@ module.exports = class LeaderCreationPanel {
         this.nodeButtonOk.textContent = 'ok';
         this.nodeButtonOk.onclick = () => {
             const params = {
-                name : this.nodeInputName.value
+                name: this.nodeInputName.value
             };
             model.valide(params);
         };
         this.nodePanel.appendChild(this.nodeButtonOk);
 
         this.updateState(model);
+        this.add(parent);
     }
 
     updateState(model) {
 
     }
 
-    update() {
+    add(parent) {
+        parent.dom.appendChild(this.node);
+    }
+
+    remove(parent) {
+        parent.dom.removeChild(this.node);
     }
 };

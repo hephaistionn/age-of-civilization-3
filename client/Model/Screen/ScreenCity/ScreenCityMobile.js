@@ -5,20 +5,19 @@ const MonitoringPanel = require('../../UI/MonitoringPanel');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
 const EditorPanel = require('../../UI/EditorPanel');
 
-const Map = require('../../Engine/Map');
+const Ground = require('../../Engine/Ground');
 const Light = require('../../Engine/Light');
 const Camera = require('../../Engine/Camera');
 const Positioner = require('../../Engine/Positioner');
 const RoadPositioner = require('../../Engine/RoadPositioner');
 const Road = require('../../Engine/Entity/Road/EntityRoad');
-const Entity = require('../../Engine/Entity/Entity');
 
 const PixelMap = require('../../../services/PixelMap');
 let removeMode = false;
 let selected = false;
 let rotation = 0;
 
-class ScreenMap {
+class ScreenCity {
 
     constructor(model, mapProperties) {
 
@@ -38,7 +37,7 @@ class ScreenMap {
         this.entityManagerPanel = new EntityManagerPanel();
         this.editorPanel = new EditorPanel();
 
-        this.map = new Map(mapProperties, model.map);
+        this.ground = new Ground(mapProperties, model.map);
 
         this.positioner = new Positioner(mapProperties);
 
@@ -59,7 +58,7 @@ class ScreenMap {
                 this.editorPanel.showRoadeEditor();
             } else {
                 this.positioner.selectEnity(entityId);
-                this.positioner.moveEntity(this.camera.targetX, this.camera.targetZ, rotation, this.map);
+                this.positioner.moveEntity(this.camera.targetX, this.camera.targetZ, rotation, this.ground);
                 this.editorPanel.showEntityEditor();
             }
 
@@ -74,7 +73,7 @@ class ScreenMap {
                 if(!built) return; //not enough resources
                 this.positioner.unselectEnity();
                 entity.onConstruct();
-                this.map.newEntity(params);
+                this.ground.newEntity(params);
             }
             this.buildingMenu.open();
         });
@@ -90,13 +89,13 @@ class ScreenMap {
             if(rotation >= Math.PI * 2) rotation = 0;
             var x = this.positioner.x;
             var z = this.positioner.z;
-            this.positioner.moveEntity(x, z, rotation, this.map);
+            this.positioner.moveEntity(x, z, rotation, this.ground);
         });
     }
 
     update(dt) {
-        if(this.map) {
-            this.map.update(dt);
+        if(this.ground) {
+            this.ground.update(dt);
         }
     }
 
@@ -112,13 +111,13 @@ class ScreenMap {
 
     touchMoveOnMap(x, z) {
         if(this.roadPositioner && this.roadPositioner.selected) {
-            this.roadPositioner.rolloutSelectedEntity(x, z, this.map);
+            this.roadPositioner.rolloutSelectedEntity(x, z, this.ground);
         }
     }
 
     touchDragg(x, z, screenX, screenY) {
         if(this.positioner.selected) {
-            this.positioner.moveEntity(x, z, rotation, this.map);
+            this.positioner.moveEntity(x, z, rotation, this.ground);
         }
     }
 
@@ -129,9 +128,9 @@ class ScreenMap {
     touchStartOnMap(x, z, model) {
         if(removeMode) {
             if(model) {
-                this.map.clearTile(x, z, model);
-            }else if(this.map.entityGroups['EntityRoad'].length!==0) {
-                this.map.updateEntity('EntityRoad',null, {tiles:[Math.floor(x),Math.floor(z)],walkable:[1],length:1});
+                this.ground.clearTile(x, z, model);
+            }else if(this.ground.entityGroups['EntityRoad'].length!==0) {
+                this.ground.updateEntity('EntityRoad',null, {tiles:[Math.floor(x),Math.floor(z)],walkable:[1],length:1});
             }
         }else if(this.roadPositioner && this.roadPositioner.selected) {
             this.roadPositioner.mouseDown(x, z);
@@ -148,10 +147,10 @@ class ScreenMap {
         if(params) {
             const built = Road.construction(params);
             if(!built) return; //not enough resources
-            if(this.map.entityGroups['EntityRoad'].length===0){
-                this.map.newEntity({entityId: 'EntityRoad'});
+            if(this.ground.entityGroups['EntityRoad'].length===0){
+                this.ground.newEntity({entityId: 'EntityRoad'});
             }
-            this.map.updateEntity('EntityRoad', null, params);
+            this.ground.updateEntity('EntityRoad', null, params);
         }
     }
 
@@ -162,21 +161,21 @@ class ScreenMap {
     }
 
     newEntity(params) {
-        params.map = this.map;
-        this.map.newEntity(params);
+        params.map = this.ground;
+        this.ground.newEntity(params);
     }
 
     removeEntity(entity) {
-        this.map.removeEntity(entity);
+        this.ground.removeEntity(entity);
     }
 
     syncState(model) {
         model.camera.x = this.camera.x;
         model.camera.z = this.camera.z;
         model.camera.zoom = this.camera.zoom;
-        this.map.syncState(model.map);
+        this.ground.syncState(model.map);
     }
 
 }
 
-module.exports = ScreenMap;
+module.exports = ScreenCity;

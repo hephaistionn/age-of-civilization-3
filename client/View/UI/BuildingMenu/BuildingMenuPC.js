@@ -1,12 +1,11 @@
 module.exports = class BuildingMenu {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
-
-        this.type = 'UI';
 
         this.node = document.createElement('div');
         this.node.className = 'buildingMenu pc';
+        this.node.id = model._id;
 
         this.nodeCategoriesContainer = document.createElement('div');
         this.nodeCategoriesContainer.className = 'categoriesContainer';
@@ -25,6 +24,7 @@ module.exports = class BuildingMenu {
             this.nodeCategoriesContainer.appendChild(nodeButtonCategory);
         }
         this.updateState(model);
+        this.add(parent);
     }
 
     updateState(model) {
@@ -33,7 +33,7 @@ module.exports = class BuildingMenu {
             this.update
         }*/
 
-        this.collapse( model.isCollapsed);
+        this.collapse(model.isCollapsed);
 
         model.displayed ? this.open() : this.close();
 
@@ -109,9 +109,9 @@ module.exports = class BuildingMenu {
     }
 
     collapse(collapsed) {
-        if(collapsed){
+        if(collapsed) {
             this.node.className = 'buildingMenu pc collapse';
-        }else{
+        } else {
             this.node.className = 'buildingMenu pc';
         }
     }
@@ -130,6 +130,11 @@ module.exports = class BuildingMenu {
         this.blurCategory();
     }
 
-    update() {
+    add(parent) {
+        parent.dom.appendChild(this.node);
+    }
+
+    remove(parent) {
+        parent.dom.removeChild(this.node);
     }
 };

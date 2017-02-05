@@ -1,6 +1,6 @@
 const ee = require('../../services/eventEmitter');
 
-module.exports = class EditorPanel {
+class EditorPanel {
 
     constructor() {
         this.displayed = false;
@@ -8,8 +8,7 @@ module.exports = class EditorPanel {
         this.roadeEditor = false;
         this.eraseEditor = false;
         this.updated = false;
-        this.type = 'UI';
-
+        this._id = 0;
     }
 
     open() {
@@ -59,4 +58,7 @@ module.exports = class EditorPanel {
     }
 
 
-};
+}
+
+EditorPanel.ui = true;
+module.exports = EditorPanel;

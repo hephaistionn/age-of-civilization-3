@@ -3,6 +3,7 @@ module.exports = StateManager => {
     const IMPORT = 2;
     const EXPORT = 1;
     const CLOSE = 0;
+    let cycle = 0;
 
     StateManager.prototype.newCity = function newCity(params) {
         params.id = this.computeUUID('city_');
@@ -60,8 +61,14 @@ module.exports = StateManager => {
         return this.currentCity.completed;
     };
 
+    StateManager.prototype.cityOnCompleted = function cityOnCompleted(callback) {
+        this.callbackCompleted = callback;
+    };
+
+
     StateManager.prototype.cityComplete = function cityComplete() {
         this.currentCity.completed = true;
+        this.callbackCompleted();
     };
 
     StateManager.prototype.cityOnLevelUpdated = function cityOnLevelUpdated(callback) {
@@ -71,16 +78,16 @@ module.exports = StateManager => {
     StateManager.prototype.cityUpdateLevel = function cityUpdateLevel() {
         const states = this.currentCity.states;
         let level = 0;
-        if(states.population > 0){
+        if(states.population > 0) {
             level = 1;
-            if(states.meat > 99 && states.population > 10){
+            if(states.meat > 99 && states.population > 10) {
                 level = 2;
-                if(states.stone > 400 && states.population > 200){
+                if(states.stone > 400 && states.population > 200) {
                     level = 3;
                 }
             }
         }
-        if(level !== this.currentCity.level){
+        if(level !== this.currentCity.level) {
             this.currentCity.level = level;
             this.cbCityLevelUpdated(this.currentCity.level)
         }
@@ -120,6 +127,18 @@ module.exports = StateManager => {
             trade[id] = CLOSE;
         }
     };
+
+    StateManager.prototype.cityUpdate = function cityUpdate(dt) {
+        if(cycle > 1000) {
+            cycle = 0;
+            this.cityUpdateLevel();
+            if(this.cityGoalAchieved() && !this.cityIsItCompleted()) {
+                this.incraseLeaderLevel();
+                this.cityComplete();
+            }
+        }
+        cycle += dt
+    }
 
 
 };

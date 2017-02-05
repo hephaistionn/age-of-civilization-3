@@ -1,23 +1,26 @@
 const THREE = require('../../services/threejs');
 const isMobile = require('../../services/mobileDetection')();
 
-const COMPONENTS = {
-    Map: require('../Engine/Map'),
-    Light: require('../Engine/Light'),
-    Camera: require('../Engine/Camera'),
-    Render: require('../Engine/Render'),
-    Positioner: require('./../Engine/Positioner'),
-    RoadPositioner: require('./../Engine/RoadPositioner'),
-    Worldmap: require('../Engine/Worldmap'),
-    BuildingMenu: require('../UI/BuildingMenu'),
-    EditorPanel: require('../UI/EditorPanel'),
-    MonitoringPanel: require('../UI/MonitoringPanel'),
-    WorldmapMenu: require('../UI/WorldmapMenu'),
-    EntityManagerPanel: require('../UI/EntityManagerPanel'),
-    FirstStartPanel: require('../UI/FirstStartPanel'),
-    LeaderCreationPanel: require('../UI/LeaderCreationPanel'),
-    VictoryPanel: require('../UI/VictoryPanel')
-};
+const COMPONENTS = require('../Engine/Entity/listEntity');
+COMPONENTS.Ground = require('../Engine/Ground');
+COMPONENTS.Light = require('../Engine/Light');
+COMPONENTS.Camera = require('../Engine/Camera');
+COMPONENTS.Render = require('../Engine/Render');
+COMPONENTS.Positioner = require('../Engine/Positioner');
+COMPONENTS.RoadPositioner = require('../Engine/RoadPositioner');
+COMPONENTS.Worldmap = require('../Engine/Worldmap');
+COMPONENTS.BuildingMenu = require('../UI/BuildingMenu');
+COMPONENTS.EditorPanel = require('../UI/EditorPanel');
+COMPONENTS.MonitoringPanel = require('../UI/MonitoringPanel');
+COMPONENTS.WorldmapMenu = require('../UI/WorldmapMenu');
+COMPONENTS.EntityManagerPanel = require('../UI/EntityManagerPanel');
+COMPONENTS.FirstStartPanel = require('../UI/FirstStartPanel');
+COMPONENTS.LeaderCreationPanel = require('../UI/LeaderCreationPanel');
+COMPONENTS.VictoryPanel = require('../UI/VictoryPanel');
+
+const CAMERA = 1;
+const GROUND = 2;
+const POSITIONER = 3;
 
 class Screen {
 
@@ -32,118 +35,98 @@ class Screen {
         this.pressX = 0;
         this.pressZ = 0;
         this.events = {};
-        this.components = {};
+        this.components = new Map();
     }
 
     mount(model) {
-        for(let id in model) {
-            this.newComponent(id, model[id]);
-        }
+        this.update(0, model);
         this.initObservers();
     }
 
-    dismount(model) {
+    dismount() {
+        this.update(0);
         this.removeObservers();
-        for(let id in model) {
-            this.removeComponent(id)
-        }
     }
 
-    hide(models) {
-        let model;
-        this.removeObservers();
-        for(let id in models) {
-            model = models[id];
-            if(model.type === 'UI') {
-                this.dom.removeChild(this.components[id].node)
+    hide(model) {
+        const none = 'none';
+        for(let i = 0; i < this.dom.childNodes.length; i++) {
+            if(model.components.has(parseInt(this.dom.childNodes[i].id))) {
+                this.dom.childNodes[i].style.display = none;
             }
         }
+        this.removeObservers();
     }
 
-    show(models) {
-        const map = this.components.map || this.components.worldmap;
-        if(map) {
-            map.refreshTexture(models.map || models.worldmap);
-        }
-
-        let model;
-        for(let id in models) {
-            model = models[id];
-            if(model.type === 'UI') {
-                this.dom.appendChild(this.components[id].node);
+    show(model) {
+        const empty = '';
+        for(let i = 0; i < this.dom.childNodes.length; i++) {
+            if(model.components.has(parseInt(this.dom.childNodes[i].id))) {
+                this.dom.childNodes[i].style.display = empty;
             }
         }
         this.initObservers();
+        //this.components.get(GROUND).refreshTexture(model.get(GROUND));
     }
 
-    newComponent(id, model) {
-        this.components[id] = new COMPONENTS[model.constructor.name](model);
-
-        if(model.type === 'UI') {
-            this.dom.appendChild(this.components[id].node);
-        } else {
-            this.render.addChild(this.components[id]);
-        }
-    }
-
-    removeComponent(id) {
-        if(this.components[id].type === 'UI') {
-            if(this.components[id].node.parentNode) {
-                this.dom.removeChild(this.components[id].node)
+    update(dt, model) {
+        if(!model) {
+            const views = this.components;
+            for(let id of views.keys()) {
+                views.get(id).remove(this);
+                views.delete(id);
             }
-        } else {
-            this.components[id].remove();
-            this.render.removeChild(this.components[id])
+            return;
         }
-        delete this.components[id];
-    }
 
-    update(dt, models) {
-
+        const models = model.components;
         const views = this.components;
 
-        for(let id in views) {
-            if(models[id] === undefined) {
-                this.removeComponent(id);
+        for(let id of models.keys()) {
+            if(!views.has(id)) {
+                views.set(id, new COMPONENTS[models.get(id).constructor.name](models.get(id), this));
+            } else {
+                if(models.get(id).updated) {
+                    views.get(id).updateState(models.get(id));
+                    models.get(id).updated = false;
+                }
+                if(views.get(id).update) {
+                    views.get(id).update(dt);
+                }
             }
         }
 
-        for(let id in models) {
-            if(views[id]) {
-                if(models[id].updated === true) {
-                    views[id].updateState(models[id]);
-                    models[id].updated = false;
-                }
-                views[id].update(dt);
-            } else {
-                this.newComponent(id, models[id]);
+        for(let id of views.keys()) {
+            if(!models.has(id)) {
+                views.get(id).remove(this);
+                views.delete(id);
             }
         }
+
         this.render.update();
     }
 
     getPointOnMap(screenX, screenY, recursive) {
         var components = this.components;
+        if(!components.has(CAMERA)) return;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouse, components.camera.element);
+        this.raycaster.setFromCamera(this.mouse, components.get(CAMERA).element);
         let intersects;
-        let tileSize;
-        if(components.map) {
-            intersects = this.raycaster.intersectObjects(components.map.clickableArea, recursive);
-            tileSize = components.map.tileSize;
+        if(recursive) {
+            intersects = this.raycaster.intersectObjects(this.render.scene.children, recursive);
         } else {
-            intersects = this.raycaster.intersectObjects(components.worldmap.touchSurface, recursive);
-            tileSize = components.worldmap.tileSize;
+            intersects = this.raycaster.intersectObjects(components.get(GROUND).clickableArea, recursive);
         }
+        const tileSize = components.get(GROUND).tileSize;
         if(intersects.length) {
             const point = intersects[0].point;
             point.x /= tileSize;
             point.z /= tileSize;
             const mesh = intersects[0].object;
-            if(mesh.userData.model) {
+            if(mesh.userData.id) {////////////////
                 return {
-                    model: mesh.userData.model,
+                    id: mesh.userData.id,
                     x: point.x,
                     z: point.z
                 }
@@ -160,23 +143,16 @@ class Screen {
         var components = this.components;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
-        const camera = components.camera.element;
-        this.raycaster.setFromCamera(this.mouse, components.camera.element);
-        let intersects;
-        let tileSize;
-        if(components.map) {
-            intersects = this.raycaster.intersectObjects(components.map.clickableArea, recursive);
-            tileSize = components.map.tileSize;
-        } else {
-            intersects = this.raycaster.intersectObjects(components.worldmap.touchSurface, recursive);
-            tileSize = components.worldmap.tileSize;
-        }
+        const camera = components.get(CAMERA);
+        this.raycaster.setFromCamera(this.mouse, camera.element);
+        const intersects = this.raycaster.intersectObjects(this.render.scene.children, recursive);
+        const tileSize = components.get(GROUND).tileSize;
         if(intersects.length) {
             const point = intersects[0].point;
             point.x /= tileSize;
             point.z /= tileSize;
-            point.x -= camera.matrixWorld.elements[12] / components.camera.tileSize;
-            point.z -= camera.matrixWorld.elements[14] / components.camera.tileSize;
+            point.x -= camera.element.matrixWorld.elements[12] / camera.tileSize;
+            point.z -= camera.element.matrixWorld.elements[14] / camera.tileSize;
             return point;
         }
     }
@@ -184,8 +160,8 @@ class Screen {
     touchSelected(screenX, screenY) {
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
-        this.raycaster.setFromCamera(this.mouse, this.components.camera.element);
-        const intersects = this.raycaster.intersectObjects([this.components.positioner.element], true);
+        this.raycaster.setFromCamera(this.mouse, this.components.get(CAMERA).element);
+        const intersects = this.raycaster.intersectObjects([this.components.get(POSITIONER).element], true);
         if(intersects.length) {
             return true;
         } else {
@@ -201,4 +177,3 @@ if(isMobile) {
 }
 
 module.exports = Screen;
-

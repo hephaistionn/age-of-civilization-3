@@ -4,7 +4,7 @@ require('./Shape');
 require('./PlaneBufferGeometry');
 require('./AttributeLoader');
 require('./loadTexture');
-require('./renderer');
+//require('./renderer');
 require('./SimplifyModifier');
 require('./SubdivisionModifier');
 

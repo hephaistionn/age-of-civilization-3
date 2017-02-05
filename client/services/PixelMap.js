@@ -9,14 +9,14 @@ module.exports = class PixelMap {
         return this.loadImage(url, (context, canvas)=> {
             const dataMap = this.getDataMap(context);
             dataMap.canvas = canvas;
-            if(urlArea){
+            if(urlArea) {
                 this.loadImage(urlArea, (contextArea)=> {
                     const dataArea = this.getDataArea(contextArea);
                     dataMap.citySpawns = dataArea.citySpawns;
                     dataMap.areaTiles = dataArea.areaTiles;
                     cb(dataMap);
                 });
-            }else{
+            } else {
                 cb(dataMap);
             }
         })
@@ -45,11 +45,11 @@ module.exports = class PixelMap {
         const citySpawns = [];
         let areaNumber = 0;
         for(let i = 0; i < size; i++) {
-            if(imageData[i*4 + 2] > 10){
-                areaNumber = imageData[i*4];
-                citySpawns[2*(areaNumber-1)] = i % context.width;
-                citySpawns[2*(areaNumber-1) + 1] = Math.floor(i / context.width)-1; 
-                imageData[i*4 + 2] = 0;
+            if(imageData[i * 4 + 2] > 10) {
+                areaNumber = imageData[i * 4];
+                citySpawns[2 * (areaNumber - 1)] = i % context.width;
+                citySpawns[2 * (areaNumber - 1) + 1] = Math.floor(i / context.width) - 1;
+                imageData[i * 4 + 2] = 0;
             }
         }
         data.areaTiles = imageData;
@@ -74,8 +74,8 @@ module.exports = class PixelMap {
             dataHeights[i] = imageData[index + 3];
             dataResources[i] = imageData[index] > 240 ? imageData[index] : 0;
         }
-        this.extrapolation(imageData, data.nbPointX,  data.nbPointZ);
-        this.addGrid(imageData, data.nbPointX,  data.nbPointZ);
+        this.extrapolation(imageData, data.nbPointX, data.nbPointZ);
+        this.addGrid(imageData, data.nbPointX, data.nbPointZ);
 
         data.pointsHeights = dataHeights;
         data.tilesResource = this.pixelByTile(dataResources, data.nbTileX, data.nbTileZ, data.nbPointX);
@@ -86,11 +86,11 @@ module.exports = class PixelMap {
         return data;
     }
 
-    addGrid(dataColor, sizeX, sizeZ){
+    addGrid(dataColor, sizeX, sizeZ) {
         for(let x = 0; x < sizeX; x++) {
             for(let z = 0; z < sizeZ; z++) {
                 const i = (z * sizeX + x) * 4;
-                if(x % 2 === 1 && z % 2 === 0||x % 2===0 && z % 2===1){
+                if(x % 2 === 1 && z % 2 === 0 || x % 2 === 0 && z % 2 === 1) {
                     dataColor[i] = dataColor[i] * 0.8;
                     dataColor[i + 1] = dataColor[i + 1] * 0.8;
                     dataColor[i + 2] = dataColor[i + 2] * 0.8;
@@ -99,7 +99,7 @@ module.exports = class PixelMap {
         }
     }
 
-    extrapolation(dataColor, sizeX, sizeZ ) {
+    extrapolation(dataColor, sizeX, sizeZ) {
         function average(x, z, data) {
             let cnt = 0;
             let RSum = 0;
@@ -110,7 +110,7 @@ module.exports = class PixelMap {
                     const xt = x + dx;
                     const zt = z + dz;
                     if(xt > -1 && xt < sizeX && zt > -1 && zt < sizeZ && (dx != 0 || dz != 0)) {
-                        const i = (zt * sizeX + xt)*4;
+                        const i = (zt * sizeX + xt) * 4;
                         const red = data[i];
                         if(red <= 240) {
                             cnt++;
@@ -123,7 +123,7 @@ module.exports = class PixelMap {
                     }
                 }
             }
-            const i = (z * sizeX + x)*4;
+            const i = (z * sizeX + x) * 4;
             data[i] = cnt === 0 ? 0 : RSum / cnt;
             data[i + 1] = cnt === 0 ? 163 : GSum / cnt;
             data[i + 2] = cnt === 0 ? 70 : BSum / cnt;
@@ -131,11 +131,11 @@ module.exports = class PixelMap {
 
         for(let x = 0; x < sizeX; x++) {
             for(let z = 0; z < sizeZ; z++) {
-                const i = (z * sizeX + x)*4;
+                const i = (z * sizeX + x) * 4;
                 if(dataColor[i] > 240) {
                     average(x, z, dataColor);
                 }
-                dataColor[i+3] = 255;
+                dataColor[i + 3] = 255;
             }
         }
     }

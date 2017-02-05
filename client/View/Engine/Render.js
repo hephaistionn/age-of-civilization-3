@@ -1,11 +1,12 @@
 const THREE = require('../../services/threejs');
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('D3')});
 
 module.exports = class Scene {
 
     constructor(canvas) {
         this.canvas = canvas;
         this.camera = null;
-        this.renderer = new THREE.WebGLRenderer({canvas: this.canvas});
+        this.renderer = renderer;
         this.renderer.setClearColor(0x000000);
         this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
         this.scene = new THREE.Scene();
@@ -20,25 +21,6 @@ module.exports = class Scene {
 
     resize(width, height) {
         this.renderer.setSize(width, height);
-    }
-
-    addChild(component) {
-        if(component.element) {
-            this.scene.add(component.element);
-        } else {
-            this.scene.add(component);
-        }
-        if(component.constructor.name === 'Camera') {
-            this.camera = component.element;
-            this.scene.camera = component.element;
-        }
-    }
-
-    removeChild(component) {
-        this.scene.remove(component.element);
-        if(component.constructor.name === 'Camera') {
-            this.camera = null;
-        }
     }
 
     dismount() {

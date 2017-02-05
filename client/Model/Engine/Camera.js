@@ -6,12 +6,10 @@ class Camera {
         this.z = config.z || 20; //camera position
         this.iX = 0; //camera position before drag
         this.iZ = 0; //camera position before drag
-        this.targetX = config.targetX || 0;
-        this.targetY = config.targetY || 0;
-        this.targetZ = config.targetZ || 0;
-        this.offsetX = this.targetX - this.x;
-        this.offsetY = this.targetY - this.y;
-        this.offsetZ = this.targetZ - this.z;
+        this.offsetX = config.offsetX || -20;
+        this.offsetY = config.offsetY || -24;
+        this.offsetZ = config.offsetZ || -20;
+        this.move(this.x, this.y, this.z);
         this.pressX = 0;
         this.pressZ = 0;
         this.minX = 0 + this.offsetX;
@@ -20,10 +18,11 @@ class Camera {
         this.maxZ = 0 - this.offsetZ;
         this.zoomInit = 1;
         this.moveReady = false;
-        this.zoom = config.zoom||1;
+        this.zoom = config.zoom || 1;
         this.zoomMax = config.zoomMax || 1.5;
         this.zoomMin = config.zoomMin || .7;
         this.updated = false;
+        this._id = 1;
         if(config.map)this.setMapBorder(config.map);
     }
 
@@ -69,7 +68,6 @@ class Camera {
         this.zoomInit = this.zoom;
     }
 
-
     scale(delta) {
         if(this.zoom < this.zoomMin && delta < 0 || this.zoom > this.zoomMax && delta > 0) return;
         this.zoom = this.zoomInit + delta;
@@ -77,19 +75,18 @@ class Camera {
     }
 
     mouseWheel(delta) {
-        if(this.zoom > this.zoomMax && delta < 0 || this.zoom < this.zoomMin && delta >0) return;
-        this.zoom -= delta/100;
+        if(this.zoom > this.zoomMax && delta < 0 || this.zoom < this.zoomMin && delta > 0) return;
+        this.zoom -= delta / 100;
         this.updated = true;
     }
 
     setMapBorder(dataMap) {
-        const margin  = 8;
-        this.minX = 0 - this.offsetX+margin;
-        this.minZ = 0 - this.offsetZ+margin;
-        this.maxX = dataMap.nbTileX - this.offsetX -margin;
-        this.maxZ = dataMap.nbTileZ - this.offsetZ -margin;
+        const margin = 8;
+        this.minX = 0 - this.offsetX + margin;
+        this.minZ = 0 - this.offsetZ + margin;
+        this.maxX = dataMap.nbTileX - this.offsetX - margin;
+        this.maxZ = dataMap.nbTileZ - this.offsetZ - margin;
     }
-
 
     limiter() {
         this.x = this.x <= this.minX ? this.minX : this.x;

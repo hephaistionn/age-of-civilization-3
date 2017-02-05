@@ -1,55 +1,70 @@
-const pathfinding = {
-    'Grid': require('./core/Grid'),
-    'Util': require('./core/Util'),
-    'AStarFinder': require('./finders/AStarFinder')
-};
+const Grid = require('./core/Grid');
+const Util = require('./core/Util');
+const AStarFinder = require('./finders/AStarFinder');
+let ENTITIES;
+let currentGround;
 
-pathfinding.AStarFinder.prototype.findPathBetweenArea = function(source, target, grid) {
-    let i, x, y = 0;
-    let l = source.length;
-    for(i = 0; i < l; i += 2) {
-        grid.setWalkableAt(source[i], source[i + 1], 1);
+const finder = new AStarFinder({
+    allowDiagonal: true,
+    dontCrossCorners: true
+});
+
+function init(ground, entities) {
+    ENTITIES = entities;
+    currentGround = ground;
+}
+
+function computePath(params) {
+    const grid = currentGround.grid;
+    let x = Math.floor(params.x);
+    let z = Math.floor(params.z);
+    const nearests = ENTITIES[params.target].getNearestEntities(x, z);
+    const sourceTiles = params.source.getTiles();
+    let length = nearests.length;
+    const paths = [];
+    for(let i = 0; i < length; i++) {
+        let entity = nearests[i];
+        let targetTiles = entity.getTiles();
+        let pathTarget = finder.findPathBetweenArea(sourceTiles, targetTiles, grid);
+        if(pathTarget.length > 0)
+            paths.push(pathTarget);
     }
-    l = target.length;
-    for(i = 0; i < l; i += 2) {
-        grid.setWalkableAt(target[i], target[i + 1], 1);
-    }
-
-    const sourceX1 = source[0];
-    const sourceZ1 = source[1];
-    const sourceX2 = source[source.length - 2];
-    const sourceZ2 = source[source.length - 1];
-    const targetX1 = target[0];
-    const targetZ1 = target[1];
-    const targetX2 = target[target.length - 2];
-    const targetZ2 = target[target.length - 1];
-
-    let path = this.findPath(sourceX1, sourceZ1, targetX1, targetZ1, grid);
-
-    const result = [0];
-    result.pop();//optimisation
-    l = path.length;
-    for(i = 0; i < l; i += 2) {
-        x = path[i];
-        y = path[i + 1];
-        if(x < sourceX1 || x > sourceX2 || y < sourceZ1 || y > sourceZ2) {
-            if(x < targetX1 || x > targetX2 || y < targetZ1 || y > targetZ2) {
-                result.push(x);
-                result.push(y);
-                result.push(0);
-            }
+    let path = paths[0];
+    for(let k = 1; k < paths.length; k++) {
+        if(path.length > paths[k].length) {
+            path = paths[k];
         }
     }
-    l = source.length;
-    for(i = 0; i < l; i += 2) {
-        grid.setWalkableAt(source[i], source[i + 1], 0);
+    //compute height
+    if(path) {
+        length = path.length;
+        for(let k = 0; k < length; k += 3) {
+            x = path[k];
+            z = path[k + 1];
+            path[k + 2] = currentGround.tilesHeight[currentGround.nbTileX * z + x];
+        }
+        return path;
+        //return pf.Util.compressPath(path);
     }
-    l = target.length;
-    for(i = 0; i < l; i += 2) {
-        grid.setWalkableAt(target[i], target[i + 1], 0);
-    }
+}
 
-    return result;
+function getPathLength(path) {
+    let distance = 0;
+    const l = path.length;
+    for(let i = 0; i < l - 3; i += 3) {
+        let dX1 = path[i + 3] - path[i];
+        let dZ1 = path[i + 4] - path[i + 1];
+        distance += Math.sqrt(dX1 * dX1 + dZ1 * dZ1);
+    }
+    return distance;
+}
+
+
+const pathfinding = {
+    'Grid': Grid,
+    'init': init,
+    'computePath': computePath,
+    'getPathLength': getPathLength
 };
 
 module.exports = pathfinding;

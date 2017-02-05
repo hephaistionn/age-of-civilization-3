@@ -1,19 +1,35 @@
-const THREE = require('../../../services/threejs');
-const materialGround = require('./../Material/materialGround');
-const materialWater = require('./../Material/materialWater');
-const materialBorder = require('./../Material/materialBorder');
-const ee = require('../../../services/eventEmitter');
+const THREE = require('./../../services/threejs');
+const ENTITIES = require('./Entity/listEntity');
+const materialGround = require('./Material/materialGround');
+const materialWater = require('./Material/materialWater');
+const materialBorder = require('./Material/materialBorder');
+const config = require('./config');
 
-module.exports = Map=> {
+class Ground {
 
-    Map.prototype.createGround = function createGround(model) {
+    constructor(model, parent) {
+
+        this.element = new THREE.Object3D();
+        this.element.matrixAutoUpdate = false;
+        this.element.frustumCulled = false;
+        this.element.userData.id = model.id;
+        this.element.name = 'map';
+
+        this.tileByChunk = config.tileByChunk;
+        this.tileSize = config.tileSize;
+        this.tileHeight = config.tileHeight;
+        this.nbPointX = model.nbPointX;
+        this.nbPointZ = model.nbPointZ;
+        this.pointsNormal = model.pointsNormal;
+
+        this.createGround(model);
+        this.add(parent);
+    }
+
+    createGround(model) {
         this.materialGround = materialGround;
         this.materialBorder = materialBorder;
         this.materialWater = materialWater;
-        this.materialGround.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
-        this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
-        this.materialBorder.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
-        this.materialBorder.uniforms.textureSize.value = model.nbPointX * this.tileSize;
         //this.materialGround = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
 
         this.chunkMesh = this.drawChunkMesh(model.nbTileX, model.nbTileZ, model);
@@ -25,9 +41,11 @@ module.exports = Map=> {
         this.element.add(this.borderMesh);
 
         this.clickableArea = [this.chunkMesh];
-    };
 
-    Map.prototype.drawWaterMesh = function drawWater(model) {
+        this.refreshTexture(model);
+    }
+
+    drawWaterMesh(model) {
         const heightWater = 3;
         if(this.chunkMesh.geometry.boundingBox.min.y <= heightWater) {
 
@@ -64,9 +82,9 @@ module.exports = Map=> {
             waterMesh.name = 'water.';
             return waterMesh;
         }
-    };
+    }
 
-    Map.prototype.drawChunkMesh = function drawChunkMesh(nbXTiles, nbZTiles, model) {
+    drawChunkMesh(nbXTiles, nbZTiles, model) {
         const chunkGeo = this.createChunkGeo(nbXTiles, nbZTiles, model);
         chunkGeo.computeBoundingBox();
         const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
@@ -75,9 +93,9 @@ module.exports = Map=> {
         chunkMesh.matrixWorldNeedsUpdate = false;
         chunkMesh.receiveShadow = true;
         return chunkMesh;
-    };
+    }
 
-    Map.prototype.createChunkGeo = function createChunkGeo(nbXTiles, nbZTiles, model) {
+    createChunkGeo(nbXTiles, nbZTiles, model) {
         const xSize = nbXTiles * this.tileSize;
         const zSize = nbZTiles * this.tileSize;
 
@@ -90,14 +108,14 @@ module.exports = Map=> {
             vertices[i].y = pointsHeights / 255 * this.tileHeight;
         }
 
-         const modiferSimplify = new THREE.SimplifyModifier();
-        chunkGeometry = modiferSimplify.modify( chunkGeometry,Math.round(chunkGeometry.vertices.length*0.33) );
+        const modiferSimplify = new THREE.SimplifyModifier();
+        chunkGeometry = modiferSimplify.modify(chunkGeometry, Math.round(chunkGeometry.vertices.length * 0.33));
 
         chunkGeometry.computeVertexNormals();
         return chunkGeometry;
-    };
+    }
 
-    Map.prototype.drawBorderMesh = function drawBorderMesh(model) {
+    drawBorderMesh(model) {
         if(!this.borderMesh) { //can be redrawn
             this.borderMesh = this.createBorderMesh(model);
         }
@@ -105,25 +123,25 @@ module.exports = Map=> {
         const borderMesh = this.borderMesh;
         const nbX = model.nbPointX;
         const nbZ = model.nbPointZ;
-        const nbXm = nbX-1;
-        const nbZm = nbZ-1;
+        const nbXm = nbX - 1;
+        const nbZm = nbZ - 1;
         const topLeft = new Float32Array(nbX * 3);
         const topRight = new Float32Array(nbZ * 3);
-        const heightFactor = this.tileHeight/255;
+        const heightFactor = this.tileHeight / 255;
         let i;
 
         //compute border left
         let offset = nbX * (nbZ - 1 );
         for(i = 0; i < nbX; i++) {
-            topLeft[i * 3] = i*this.tileSize;      //x
-            topLeft[i * 3 + 1] = model.pointsHeights[offset+i] * heightFactor;  //y
-            topLeft[i * 3 + 2] = nbZm*this.tileSize;  //z
+            topLeft[i * 3] = i * this.tileSize;      //x
+            topLeft[i * 3 + 1] = model.pointsHeights[offset + i] * heightFactor;  //y
+            topLeft[i * 3 + 2] = nbZm * this.tileSize;  //z
         }
         //compute border right
         for(i = 0; i < nbZ; i++) {
-            topRight[i * 3] = nbXm*this.tileSize;     //x
-            topRight[i * 3 + 1] = model.pointsHeights[((nbZ-i) * nbX - 1)]* heightFactor;  //y
-            topRight[i * 3 + 2] = (nbZm - i)*this.tileSize;  //z
+            topRight[i * 3] = nbXm * this.tileSize;     //x
+            topRight[i * 3 + 1] = model.pointsHeights[((nbZ - i) * nbX - 1)] * heightFactor;  //y
+            topRight[i * 3 + 2] = (nbZm - i) * this.tileSize;  //z
         }
 
         let x, y, z;
@@ -141,18 +159,18 @@ module.exports = Map=> {
             pos[i * 3] = x;
             pos[i * 3 + 1] = y;
             pos[i * 3 + 2] = z;
-            col[i ] = 0;
+            col[i] = 0;
 
             pos[i * 3 + nbX * 3] = x;
             pos[i * 3 + nbX * 3 + 1] = y - 2;
             pos[i * 3 + nbX * 3 + 2] = z;
-            col[i + nbX ] = 1;
+            col[i + nbX] = 1;
 
 
             pos[i * 3 + nbX * 6] = x;
             pos[i * 3 + nbX * 6 + 1] = -10;
             pos[i * 3 + nbX * 6 + 2] = z;
-            col[i  + nbX * 2] = 1;
+            col[i + nbX * 2] = 1;
 
         }
 
@@ -168,7 +186,7 @@ module.exports = Map=> {
             pos[offsetX + i * 3] = x;
             pos[offsetX + i * 3 + 1] = y;
             pos[offsetX + i * 3 + 2] = z;
-            col[offsetX1 + i ] = 0;
+            col[offsetX1 + i] = 0;
 
 
             pos[offsetX + i * 3 + nbX * 3] = x;
@@ -214,9 +232,9 @@ module.exports = Map=> {
         borderMesh.geometry.attributes.color.needsUpdate = true;
         borderMesh.geometry.index.needsUpdate = true;
         return borderMesh;
-    };
+    }
 
-    Map.prototype.createBorderMesh = function createBorderMesh(model) {
+    createBorderMesh(model) {
         const nbX = model.nbPointX;
         const nbZ = model.nbPointZ;
         const size = (nbX + nbZ) * 3; //3 level of vertices;
@@ -235,13 +253,26 @@ module.exports = Map=> {
         this.element.add(mesh);
 
         return mesh;
-    };
+    }
 
-    Map.prototype.refreshTexture = function refreshTexture(model) {
+    refreshTexture(model) {
         this.materialGround.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
         this.materialGround.uniforms.textureSize.value = model.nbPointX * this.tileSize;
         this.materialBorder.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
         this.materialBorder.uniforms.textureSize.value = model.nbPointX * this.tileSize;
-    };
+    }
 
-};
+    updateState(model) {
+
+    }
+
+    remove(parent){
+        parent.render.scene.remove(this.element);
+    }
+
+    add(parent){
+        parent.render.scene.add(this.element);
+    }
+}
+
+module.exports = Ground;

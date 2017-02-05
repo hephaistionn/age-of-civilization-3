@@ -7,7 +7,7 @@ const tileHeight = config.tileHeight;
 
 class EntityRoad {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
 
         this.tileByChunk = 20;//config.tileByChunk;
@@ -28,9 +28,11 @@ class EntityRoad {
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = false;
+        this.element.userData.id = model._id;
         this.element.name = 'EntityRoad';
         this.initChunks(model);
         this.updateState();
+        this.add(parent);
     }
 
     initChunks() {
@@ -317,6 +319,15 @@ class EntityRoad {
                 }
             }
         }
+    }
+
+    remove(parent) {
+        parent.render.scene.remove(this.element);
+    }
+
+    add(parent) {
+        if(parent)
+            parent.render.scene.add(this.element);
     }
 }
 module.exports = EntityRoad;

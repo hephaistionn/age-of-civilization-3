@@ -7,19 +7,19 @@ class EntityRoad {
         this._grid = this._map.grid;
         this.walkable = null;
         this.index = null;
-        if(params.index){ //used when a map is reloaded
+        if(params.index) { //used when a map is reloaded
             const l = params.index.length;
             this.index = new Uint16Array(params.index);
             this.walkable = new Uint8Array(params.walkable);
             for(let i = 0; i < l; i++) {
                 this._grid.setWalkableAtByIndex(this.index[i], this.walkable[i]);
             }
-        }else{
+        } else {
             this.updateState(params);
         }
     }
 
-    updateState(params) {//on peut ajouter ou supprimer des tiles.
+    updateState(params) {
         if(!params) return;
         const tiles = params.tiles;
         const walkable = params.walkable;
@@ -62,5 +62,5 @@ EntityRoad.available = function available(roadType) {
 
 EntityRoad.walkable = true;
 EntityRoad.cost = [{}, {stone: 1}, {stone: 1}];
-EntityRoad.require = [{},{population:4},{population:8}];
+EntityRoad.require = [{}, {population: 4}, {population: 8}];
 module.exports = EntityRoad;

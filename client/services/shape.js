@@ -1,4 +1,3 @@
-
 module.exports = class Shape {
 
     constructor(path, scaling, height) {
@@ -39,7 +38,7 @@ module.exports = class Shape {
             }
         }
 
-        this.length = Math.floor(length*100)/100;
+        this.length = Math.floor(length * 100) / 100;
     }
 
     /**
@@ -74,7 +73,7 @@ module.exports = class Shape {
         let z = pointB[1] * a + pointA[1] * b;
 
         let length = distanceB - distanceA;
-        return [x, y, z, (pointB[0] - pointA[0]) / length, (pointB[1]-pointA[1] ) / length];
+        return [x, y, z, (pointB[0] - pointA[0]) / length, (pointB[1] - pointA[1] ) / length];
     }
 
 };

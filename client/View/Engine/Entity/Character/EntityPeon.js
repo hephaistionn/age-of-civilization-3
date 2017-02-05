@@ -8,16 +8,16 @@ const THREE = require('three');
 const animations = {
     walk: {
         duration: 800,
-        steps: new Uint8Array([0,1,2,3,0])
+        steps: new Uint8Array([0, 1, 2, 3, 0])
     }
 };
 
 class EntityPeon {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
         this.element = THREE.getMesh('obj/unityA/unityA.obj', material);
-        this.element.userData.model = model;
+        this.element.userData.id = model._id;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
@@ -30,24 +30,35 @@ class EntityPeon {
         this.moveProgress = model.timer * this.moveSpeed;
         this.currentAnimation = 'walk';
         this.updateState();
+        this.add(parent);
     }
 
     update(dt) {
         this.followPath(dt);
-        this.playAnimation( dt );
+        this.playAnimation(dt);
     }
 
     updateState() {
         const matrixWorld = this.element.matrixWorld.elements;
-        matrixWorld[12] = this.model.x * tileSize;
-        matrixWorld[14] = this.model.z * tileSize;
+        matrixWorld[12] = (this.model.x) * tileSize;
+        matrixWorld[14] = (this.model.z) * tileSize;
         matrixWorld[13] = this.model.y * tileHeight;
         matrixWorld[0] = Math.cos(this.model.a);
         matrixWorld[2] = Math.sin(this.model.a);
         matrixWorld[8] = -matrixWorld[2];
         matrixWorld[10] = matrixWorld[0];
     }
-};
+
+    remove(parent) {
+        parent.render.scene.remove(this.element);
+    }
+
+    add(parent) {
+        if(parent)
+            parent.render.scene.add(this.element);
+    }
+}
+;
 
 require('../decorator').followPath(EntityPeon);
 require('../decorator').playAnimation(EntityPeon);

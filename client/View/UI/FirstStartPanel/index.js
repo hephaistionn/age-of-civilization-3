@@ -2,13 +2,12 @@ const stateManager = require('../../../services/stateManager');
 
 module.exports = class FirstStartPanel {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
-
-        this.type = 'UI';
 
         this.node = document.createElement('div');
         this.node.className = 'firstStartPanel pc nodeOverlay';
+        this.node.id = model._id;
 
         this.nodePanel = document.createElement('div');
         this.nodePanel.className = 'panel';
@@ -26,12 +25,18 @@ module.exports = class FirstStartPanel {
         this.nodePanel.appendChild(this.nodeMessage);
 
         this.updateState(model);
+        this.add(parent);
     }
 
     updateState(model) {
 
     }
 
-    update() {
+    add(parent) {
+        parent.dom.appendChild(this.node);
+    }
+
+    remove(parent) {
+        parent.dom.removeChild(this.node);
     }
 };

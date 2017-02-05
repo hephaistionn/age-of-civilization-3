@@ -1,16 +1,31 @@
-const THREE = require('../../../services/threejs');
-const materialWorldmap = require('./../Material/materialWorldmap');
-const ee = require('../../../services/eventEmitter');
+const THREE = require('./../../services/threejs');
+const materialWorldmap = require('./Material/materialWorldmap');
+const config = require('./config');
 
-module.exports = Worldmap => {
+class Worldmap {
 
-    Worldmap.prototype.initGround = function initGround(model) {
+    constructor(model, parent) {
+
+        this.tileSize = config.tileSize;
+        this.tileHeight = config.tileHeight;
+        this.nbPointX = model.nbPointX;
+        this.nbPointZ = model.nbPointZ;
+        this.pointsNormal = model.pointsNormal;
+
+        this.element = this.initGround(model);
+        this.element.matrixAutoUpdate = false;
+        this.element.frustumCulled = false;
+        this.element.userData.id = model.id;
+        this.element.name = 'worldmap';
+
+        this.updateState(model);
+        this.add(parent);
+    }
+
+    initGround(model) {
         this.materialWorldmap = materialWorldmap;
-
-        this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
-        this.materialWorldmap.uniforms.textureSize.value = model.nbPointX * this.tileSize;
-        this.materialWater = new THREE.MeshBasicMaterial({color: 0x006699, transparent: true, opacity: 0.80 });
-        //this.materialWorldmap = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : true});
+        this.materialWater = new THREE.MeshBasicMaterial({color: 0x006699, transparent: true, opacity: 0.80});
+        //this.materialWorldmap = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : false});
 
         const nbPointX = model.nbPointX;
         const nbPointZ = model.nbPointZ;
@@ -28,14 +43,15 @@ module.exports = Worldmap => {
         mapMesh.matrixWorldNeedsUpdate = false;
         mapMesh.receiveShadow = true;
 
-        this.touchSurface = [mapMesh];
         this.waterMesh = waterMesh;
+        this.clickableArea = [mapMesh, waterMesh];
 
         this.initAreaMap(model);
+        this.refreshTexture(model);
         return mapMesh;
-    };
+    }
 
-    Worldmap.prototype.createWater = function createWater(nbTileX, nbTileZ) {
+    createWater(nbTileX, nbTileZ) {
         const xSize = nbTileX * this.tileSize * 4;
         const zSize = nbTileZ * this.tileSize * 4;
         const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
@@ -46,12 +62,13 @@ module.exports = Worldmap => {
         waterMesh.matrixAutoUpdate = false;
         waterMesh.matrixWorldNeedsUpdate = false;
         waterMesh.receiveShadow = true;
+        waterMesh.name = 'water';
         return waterMesh;
-    };
+    }
 
-    Worldmap.prototype.createSurface = function createSurface(nbXTiles, nbZTiles, model) {
+    createSurface(nbXTiles, nbZTiles, model) {
 
-        const  tileSize = this.tileSize/1;
+        const tileSize = this.tileSize / 1;
 
         const xSize = nbXTiles * tileSize;
         const zSize = nbZTiles * tileSize;
@@ -70,7 +87,7 @@ module.exports = Worldmap => {
         let face;
         for(let i = 0; i < lengthFace; i++) {
             face = chunkGeometry.faces[i];
-            if(vertices[face.a].y > 0.1 && vertices[face.b].y > 0.1 && vertices[face.c].y > 0.1 ) {
+            if(vertices[face.a].y > 0.1 && vertices[face.b].y > 0.1 && vertices[face.c].y > 0.1) {
                 filterdFaces.push(face.clone());
             }
         }
@@ -80,20 +97,21 @@ module.exports = Worldmap => {
         //modifierSubdivi.modify( chunkGeometry );
 
         const modiferSimplify = new THREE.SimplifyModifier();
-        chunkGeometry = modiferSimplify.modify( chunkGeometry,Math.round(chunkGeometry.vertices.length*0.6) );
+        chunkGeometry = modiferSimplify.modify(chunkGeometry, Math.round(chunkGeometry.vertices.length * 0.6));
 
         chunkGeometry.computeVertexNormals();
         return chunkGeometry;
-    };
+    }
 
-    Worldmap.prototype.refreshTexture = function refreshTexture(model) {
+    refreshTexture(model) {
+
         this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
         this.materialWorldmap.uniforms.textureSize.value = model.nbPointX * this.tileSize;
         this.updateAreaMap(model);
-    };
+    }
 
 
-    Worldmap.prototype.initAreaMap = function initAreaMap(model) {
+    initAreaMap(model) {
         this.cavasArea = document.createElement('canvas');
         this.cavasArea.width = model.nbPointX;
         this.cavasArea.height = model.nbPointZ;
@@ -101,15 +119,36 @@ module.exports = Worldmap => {
         this.contextArea.width = model.nbPointX;
         this.contextArea.height = model.nbPointZ;
         this.imageArea = this.contextArea.getImageData(0, 0, model.nbPointX, model.nbPointZ);
-    };
+    }
 
-    Worldmap.prototype.updateAreaMap = function updateAreaMap(model) {
+    updateAreaMap(model) {
         const l = model.areaTiles.length;
         for(let i = 0; i < l; i++) {
             this.imageArea.data[i] = model.areaTiles[i];
         }
+        //setTimeout(()=>{
         this.contextArea.putImageData(this.imageArea, 0, 0);
         this.materialWorldmap.uniforms.textureArea.value = THREE.loadTexture(this.cavasArea);
-    };
+        this.materialWorldmap.needsUpdate = true;
+        //},2000)
+    }
 
-};
+
+    updateState(model) {
+        this.updateAreaMap(model);
+    }
+
+    update(dt) {
+
+    }
+
+    remove(parent) {
+        parent.render.scene.remove(this.element);
+    }
+
+    add(parent) {
+        parent.render.scene.add(this.element);
+    }
+}
+
+module.exports = Worldmap;

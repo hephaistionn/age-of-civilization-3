@@ -7,16 +7,18 @@ const tileHeight = config.tileHeight;
 
 module.exports = class Positioner {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.element = new THREE.Object3D();
         this.element.matrixAutoUpdate = false;
         this.element.frustumCulled = false;
+        this.element.userData.id = model.id;
         this.selected = null;
         this.material = new THREE.MeshPhongMaterial({color: 0x0000ff});
         this.tileSize = config.tileSize;
         this.tileHeight = config.tileHeight;
         this.meshHelper = this.createHelper();
         this.previousA = 0; //used to check the  update rotation of selected entity;
+        this.add(parent);
     }
 
     updateState(model) {
@@ -29,7 +31,7 @@ module.exports = class Positioner {
             if(this.selected) {
                 this.element.remove(this.selected.element);
             }
-            this.selected = new ENTITIES[model.selected.constructor.name](model.selected, this.material);
+            this.selected = new ENTITIES[model.selected.constructor.name](model.selected, null, this.material);
             this.previousA = null; //to force helper redrawing
             this.ajustHelper(model.selected);
             this.material.color.setHex(model.undroppable ? 0xff0000 : 0x0000ff);
@@ -118,11 +120,11 @@ module.exports = class Positioner {
         positions[17] = -sizeZ;
     }
 
-    update(dt) {
-
+    remove(parent) {
+        parent.render.scene.remove(this.element);
     }
 
-    remove() {
-
+    add(parent) {
+        parent.render.scene.add(this.element);
     }
 };

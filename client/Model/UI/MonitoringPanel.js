@@ -1,14 +1,14 @@
 const ee = require('../../services/eventEmitter');
 const stateManager = require('../../services/stateManager');
 
-module.exports = class MonitoringPanel {
+class MonitoringPanel {
 
     constructor() {
         this.opened = false;
-        this.type = 'UI';
         this.previewes = ['wood', 'stone', 'meat', 'population'];
         this.updated = false;
         this.stateManager = stateManager;
+        this._id = 0;
     }
 
     open() {
@@ -28,10 +28,17 @@ module.exports = class MonitoringPanel {
         this.updated = true;
     }
 
+    update() {
+        this.updated = true;
+    }
+
     goWorldmap() {
         this.close();
         const model = stateManager.loadCurrentWorldmap();
         ee.emit('openScreen', 'ScreenWorldmap', model);
     }
 
-};
+}
+
+MonitoringPanel.ui = true;
+module.exports = MonitoringPanel;

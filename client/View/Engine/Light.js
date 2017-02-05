@@ -3,9 +3,11 @@ const config = require('./config');
 
 module.exports = class Light {
 
-    constructor(model) {
+    constructor(model, parent) {
 
         this.element = new THREE.Object3D();
+        this.element.userData.id = model.id;
+        this.element.name = 'lights';
 
         this.ambient = new THREE.AmbientLight(model.ambientColor);
 
@@ -15,8 +17,8 @@ module.exports = class Light {
             this.directionalLight.castShadow = true;
             this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-20, 20, 20, -20, 1, 1000));
             this.directionalLight.shadow.bias = 0.1;
-            this.directionalLight.shadow.mapSize.width = 512*2;
-            this.directionalLight.shadow.mapSize.height = 512*2;
+            this.directionalLight.shadow.mapSize.width = 512 * 2;
+            this.directionalLight.shadow.mapSize.height = 512 * 2;
         }
 
         this.element.add(this.ambient);
@@ -25,6 +27,7 @@ module.exports = class Light {
         this.tileSize = config.tileSize;
 
         this.updateState(model);
+        this.add(parent);
     }
 
     updateState(model) {
@@ -40,12 +43,12 @@ module.exports = class Light {
         this.directionalLight.target.matrixWorld.elements[14] = model.targetZ * this.tileSize;
     }
 
-    update(dt) {
-
+    remove(parent) {
+        parent.render.scene.remove(this.element);
     }
 
-    remove() {
-
+    add(parent) {
+        parent.render.scene.add(this.element);
     }
 
 };

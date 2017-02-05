@@ -3,10 +3,9 @@ window.addEventListener('load', () => {
     const ee = require('./services/eventEmitter');
     const App = require('./services/App');
     const ScreenWorldmap = require('./Model/Screen/ScreenWorldmap');
-    const ScreenMap = require('./Model/Screen/ScreenMap');
+    const ScreenCity = require('./Model/Screen/ScreenCity');
     const stateManager = require('./services/stateManager');
-    const app = new App(ScreenWorldmap, ScreenMap);
-
+    const app = new App(ScreenWorldmap, ScreenCity);
 
     ee.on('closeScreen', id => {
         app.closeScreen(id);
@@ -21,13 +20,12 @@ window.addEventListener('load', () => {
         ee.emit('save', app);
     });
 
-
     const currentCity = stateManager.getCurrentCity();
     const currentWorldmap = stateManager.getCurrentWorldmap();
     const currentScreen = stateManager.getCurrentScreen();
 
-    if(currentScreen === 'ScreenMap' && currentCity) {
-        app.openScreen('ScreenMap', currentCity);
+    if(currentScreen === 'ScreenCity' && currentCity) {
+        app.openScreen('ScreenCity', currentCity);
     } else {
         app.openScreen('ScreenWorldmap', currentWorldmap);
     }

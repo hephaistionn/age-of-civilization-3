@@ -14,6 +14,7 @@ module.exports = class RoadPositioner {
         this.startZ = 0;
         this.maxTile = 30;
         this.updated = false;
+        this._id = 0;
         this.road = {
             tiles: new Uint16Array(2 * this.maxTile),
             walkable: new Uint8Array(this.maxTile),

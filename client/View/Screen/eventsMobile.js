@@ -46,7 +46,7 @@ module.exports = Screen => {
         ee.emit('touchStart', point.x, point.z);
         this.selected = this.touchSelected(touch.clientX, touch.clientY);
         point = this.getPointOnMap(touch.clientX, touch.clientY, true);
-        ee.emit('touchStartOnMap', point.x, point.z, point.model);
+        ee.emit('touchStartOnMap', point.x, point.z, point.id);
     };
     Screen.prototype._touchEnd = function _touchEnd(e) {
         e.preventDefault();

@@ -2,8 +2,7 @@ const ee = require('../../services/eventEmitter');
 const stateManager = require('../../services/stateManager');
 const ENTITIES = require('../Engine/Entity/listEntity');
 
-
-module.exports = class BuildingMenu {
+class BuildingMenu {
 
     constructor(config) {
         this.categories = {
@@ -25,7 +24,7 @@ module.exports = class BuildingMenu {
         this.displayed = true;
         this.isCollapsed = true;
         this.updated = false;
-        this.type = 'UI';
+        this._id = 0;
     }
 
     open() {
@@ -41,12 +40,12 @@ module.exports = class BuildingMenu {
         this.updated = true;
     }
 
-    expand () {
+    expand() {
         this.isCollapsed = false;
         this.updated = true;
     }
 
-    collapse () {
+    collapse() {
         this.currentCategory = [];
         this.isCollapsed = true;
         this.updated = true;
@@ -103,4 +102,7 @@ module.exports = class BuildingMenu {
         this.openCategory(categoryId)
     }
 
-};
+}
+
+BuildingMenu.ui = true;
+module.exports = BuildingMenu;

@@ -13,7 +13,6 @@ let arrowTopPress = false;
 let arrowDownPress = false;
 let rKeyPress = false;
 
-
 module.exports = Screen => {
 
     Screen.prototype.initObservers = function initObservers() {
@@ -80,7 +79,7 @@ module.exports = Screen => {
         if(Math.abs(this.pressX - e.offsetX) + Math.abs(this.pressZ - e.offsetY) < 50) {
             const point = this.getPointOnMap(e.offsetX, e.offsetY, true);
             if(!point) return;
-            ee.emit('mouseClick', point.x, point.z, point.model);
+            ee.emit('mouseClick', point.x, point.z, point.id);
         } else {
             ee.emit('mouseUp', e.offsetX, e.offsetY);
         }

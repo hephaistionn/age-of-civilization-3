@@ -2,13 +2,12 @@ const stateManager = require('../../../services/stateManager');
 
 module.exports = class EntityManagerPanel {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
-
-        this.type = 'UI';
 
         this.node = document.createElement('div');
         this.node.className = 'entityManagerPanel pc nodeOverlay';
+        this.node.id = model._id;
 
         this.nodePanel = document.createElement('div');
         this.nodePanel.className = 'panel';
@@ -24,6 +23,7 @@ module.exports = class EntityManagerPanel {
         this.nodeVisitButton = null;
 
         this.updateState(model);
+        this.add(parent);
     }
 
     updateState(model) {
@@ -40,14 +40,14 @@ module.exports = class EntityManagerPanel {
         }
     }
 
-    createDescription(model){
+    createDescription(model) {
         this.nodeDescription = document.createElement('div');
         this.nodeDescription.className = 'description';
         this.nodeDescription.textContent = model.description;
         this.nodePanel.appendChild(this.nodeDescription);
     }
 
-    createVisiteButton(model){
+    createVisiteButton(model) {
         this.nodeVisitButton = document.createElement('div');
         this.nodeVisitButton.className = 'button visit';
         this.nodeVisitButton.textContent = 'Go to';
@@ -63,6 +63,11 @@ module.exports = class EntityManagerPanel {
         this.nodePanel.appendChild(this.nodeActionButton);
     }
 
-    update() {
+    add(parent) {
+        parent.dom.appendChild(this.node);
+    }
+
+    remove(parent) {
+        parent.dom.removeChild(this.node);
     }
 };

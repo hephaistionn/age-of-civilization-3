@@ -53,7 +53,7 @@ class App {
 
     closeScreen(id) {
         this._stop();
-        this.viewInstances[id].dismount(this.modelInstances[id]);
+        this.viewInstances[id].dismount();
         this.modelInstances[id].dismount();
         delete this.modelInstances[id];
         delete this.viewInstances[id];
@@ -92,7 +92,6 @@ class App {
     }
 
     hideScreen() {
-
         this.view.hide(this.model);
     }
 
@@ -160,9 +159,9 @@ class App {
             this.model.mouseDownRight(x, z);
     }
 
-    mouseClick(x, z, model) {
+    mouseClick(x, z, id) {
         if(this.model.mouseClick)
-            this.model.mouseClick(x, z, model);
+            this.model.mouseClick(x, z, id);
     }
 
     mouseUp(x, z) {
@@ -230,9 +229,9 @@ class App {
             this.model.newEntity(config);
     }
 
-    removeEntity(entity) {
+    removeEntity(entityId) {
         if(this.model.removeEntity)
-            this.model.removeEntity(entity);
+            this.model.removeEntity(entityId);
     }
 
     touchStart(x, y) {

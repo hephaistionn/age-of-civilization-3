@@ -1,12 +1,12 @@
 module.exports = class EditorPanel {
 
-    constructor(model) {
-        this.type = 'UI';
+    constructor(model, parent) {
 
         this.canvas = document.getElementById('D3');
 
         this.node = document.createElement('div');
         this.node.className = 'editorPanel';
+        this.node.id = model._id;
 
         this.nodeEntityEditor = document.createElement('div');
         this.nodeEntityEditor.className = 'editor hide';
@@ -20,13 +20,13 @@ module.exports = class EditorPanel {
         this.nodeEraseEditor.className = 'editor hide';
         this.node.appendChild(this.nodeEraseEditor);
 
-        const nodeEntityEditorConfirm  = document.createElement('div');
+        const nodeEntityEditorConfirm = document.createElement('div');
         nodeEntityEditorConfirm.className = 'button confirm';
         nodeEntityEditorConfirm.textContent = 'ok';
         nodeEntityEditorConfirm.onclick = model._onConfirm.bind(model);
         this.nodeEntityEditor.appendChild(nodeEntityEditorConfirm);
 
-        const nodeEntityEditorCancel  = document.createElement('div');
+        const nodeEntityEditorCancel = document.createElement('div');
         nodeEntityEditorCancel.className = 'button cancel';
         nodeEntityEditorCancel.textContent = 'cancel';
         nodeEntityEditorCancel.onclick = model._onCancel.bind(model);
@@ -40,25 +40,26 @@ module.exports = class EditorPanel {
             this.nodeEntityEditor.appendChild(nodeEntityEditorRotate);
         }
 
-        const nodeRoadeEditorConfirm  = document.createElement('div');
+        const nodeRoadeEditorConfirm = document.createElement('div');
         nodeRoadeEditorConfirm.className = 'button confirm';
         nodeRoadeEditorConfirm.textContent = 'ok';
         nodeRoadeEditorConfirm.onclick = model._onConfirm.bind(model);
         this.nodeRoadeEditor.appendChild(nodeRoadeEditorConfirm);
 
-        const nodeRoadeEditorCancel  = document.createElement('div');
+        const nodeRoadeEditorCancel = document.createElement('div');
         nodeRoadeEditorCancel.className = 'button cancel';
         nodeRoadeEditorCancel.textContent = 'cancel';
         nodeRoadeEditorCancel.onclick = model._onCancel.bind(model);
         this.nodeRoadeEditor.appendChild(nodeRoadeEditorCancel);
 
-        const nodeEraseEditorConfirm  = document.createElement('div');
+        const nodeEraseEditorConfirm = document.createElement('div');
         nodeEraseEditorConfirm.className = 'button confirm';
         nodeEraseEditorConfirm.textContent = 'ok';
         nodeEraseEditorConfirm.onclick = model._onConfirm.bind(model);
         this.nodeEraseEditor.appendChild(nodeEraseEditorConfirm);
 
         this.updateState(model);
+        this.add(parent);
 
     }
 
@@ -100,7 +101,12 @@ module.exports = class EditorPanel {
         }
     }
 
-    update(dt) {
 
+    add(parent) {
+        parent.dom.appendChild(this.node);
+    }
+
+    remove(parent) {
+        parent.dom.removeChild(this.node);
     }
 };

@@ -14,7 +14,14 @@ class Light {
         this.targetZ = 0;
         this.shadow = config.shadow || false;
         this.updated = true;
+        this._id = 0;
         this.move(config.x || this.x, config.z || this.y, config.z || this.z);
+        if(config.targetX || config.targetY || config.targetZ) {
+            this.moveTarget(config.targetX, config.targetY, config.targetZ);
+        }
+        if(config.scale) {
+            this.scaleOffset(config.scale);
+        }
     }
 
     move(x, y, z) {
@@ -37,6 +44,7 @@ class Light {
     }
 
     scaleOffset(factor) {
+        factor = -factor;
         let length = Math.sqrt(this.offsetX * this.offsetX + this.offsetY * this.offsetY + this.offsetZ * this.offsetZ);
         this.offsetX /= length;
         this.offsetY /= length;
@@ -44,7 +52,7 @@ class Light {
         this.offsetX *= factor;
         this.offsetY *= factor;
         this.offsetZ *= factor;
-        this.updated = false;
+        this.updated = true;
     }
 
     dismount() {
@@ -54,3 +62,28 @@ class Light {
 }
 
 module.exports = Light;
+
+var t = {
+    "id": "city_355dbfd5c",
+    "name": "Uruk",
+    "leader": "leader_84ecf0707",
+    "level": 1,
+    "type": "EntityCity",
+    "completed": false,
+    "mapId": "test",
+    "states": {"population": 8, "workers": 0, "explorers": 0, "wood": 160, "stone": 100, "meat": 100},
+    "trade": {"wood": 0, "stone": 0, "meat": 0},
+    "x": 10,
+    "y": 0.33725490196078434,
+    "z": 28,
+    "camera": {"x": 27.5, "z": 27.5, "zoom": 1.3},
+    "goal": {"population": 10, "meat": 100},
+    "entities": {
+        "EntityHouse": [{"x": 1.5, "y": 0.17254901960784313, "z": 10.5, "a": 0}, {
+            "x": 2.5,
+            "y": 0.17254901960784313,
+            "z": 8.5,
+            "a": 0
+        }]
+    }
+}

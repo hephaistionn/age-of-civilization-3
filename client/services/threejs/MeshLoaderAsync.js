@@ -17,9 +17,9 @@ function unstake(meshesTemp, meshRef) {
         meshEnded.frustumCulled = meshTemp.frustumCulled;
         meshEnded.matrixAutoUpdate = meshTemp.matrixAutoUpdate;
         meshEnded.castShadow = meshTemp.castShadow;
-        meshEnded.userData.model = meshTemp.userData.model;
+        meshEnded.userData.id = meshTemp.userData.id;
         meshEnded.name = meshTemp.name;
-        meshEnded.visible = meshTemp.visible; 
+        meshEnded.visible = meshTemp.visible;
         meshEnded.matrixWorld = meshTemp.matrixWorld;
         parentView = meshTemp.userData.parent;
         parentMesh = meshTemp.parent;

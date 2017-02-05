@@ -2,13 +2,12 @@ const stateManager = require('../../../services/stateManager');
 
 module.exports = class WorldmapMenu {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
-
-        this.type = 'UI';
 
         this.node = document.createElement('div');
         this.node.className = 'worldmapMenu pc';
+        this.node.id = model._id;
 
         this.nodeButtonBack = document.createElement('div');
         this.nodeButtonBack.className = 'button back';
@@ -17,10 +16,10 @@ module.exports = class WorldmapMenu {
         this.node.appendChild(this.nodeButtonBack);
 
         this.updateState(model);
+        this.add(parent);
     }
 
     updateState(model) {
-
         if(stateManager.currentCity) {
             this.showNode(this.nodeButtonBack);
         } else {
@@ -41,6 +40,11 @@ module.exports = class WorldmapMenu {
         }
     }
 
-    update() {
+    add(parent) {
+        parent.dom.appendChild(this.node);
+    }
+
+    remove(parent) {
+        parent.dom.removeChild(this.node);
     }
 };

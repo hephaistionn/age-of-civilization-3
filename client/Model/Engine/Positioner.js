@@ -13,24 +13,38 @@ module.exports = class Positioner {
         this.x = 0;
         this.z = 0;
         this.updated = false;
+        this.id = 3;
     }
 
-    moveEntity(x, z, a, map) {
+    moveEntity(x, z, a, ground) {
         this.x = x;
         this.z = z;
-        const y = map.getHeightTile(x, z);
+        const y = ground.getHeightTile(x, z);
         this.selected.move(x, y, z, a);
         const tiles = this.selected.getTiles();
-        this.undroppable = !map.isWalkable(tiles);
+        this.undroppable = !ground.isWalkable(tiles);
         this.updated = true;
     }
 
-    selectEnity(id) {
+    selectEntity(id) {
         this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: 0});
         this.updated = true;
     }
 
-    unselectEnity() {
+    getSelectEntity() {
+        if(this.selected && !this.undroppable && ENTITIES[this.selected.constructor.name].available()) {
+            return {
+                x: this.selected.x,
+                z: this.selected.z,
+                a: this.selected.a,
+                type: this.selected.constructor.name
+            }
+        }
+    }
+
+    unselectEntity() {
+        if(!this.selected) return;
+        this.selected.onRemove();
         this.selected = null;
         this.updated = true;
     }

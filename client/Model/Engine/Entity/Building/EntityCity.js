@@ -8,41 +8,27 @@ class EntityCity {
         this.z = params.z || 0;
         this.a = params.a || 0;
         this.level = params.level || 0;
-        this.type = params.type || 'mesopotamia';
+        this.geo = params.geo || 'mesopotamia';
         this.name = params.name || 'no name';
         this.leader = params.leader || 'free';
-        this.id = params.id;
+        this.cityId = params.id;
+        EntityCity.instances.push(this);
     }
 
-    move(x, y, z, a) {
-        this.a = a;
-        this.x = x;
-        this.z = z;
-        this.y = y;
-    }
-
-    updateState(model){
+    updateState(model) {
         this.level = model.level;
-        this.type = model.type;
     }
 
-    getTiles() {
-        const xFirstTile = this.x - 1 / 2;
-        const zFirstTile = this.z - 1 / 2;
-        const xLastTile = xFirstTile + 1;
-        const zLastTile = zFirstTile + 1;
-        const tiles = [];
-        for(let xi = xFirstTile; xi < xLastTile; xi++) {
-            for(let zi = zFirstTile; zi < zLastTile; zi++) {
-                tiles.push(xi);
-                tiles.push(zi);
-            }
-        }
-        return tiles;
+    onRemove() {
+        const index = EntityCity.instances.indexOf(this);
+        EntityCity.instances.splice(index, 1);
     }
 }
 
 EntityCity.selectable = true;
 EntityCity.description = 'This is a City';
+EntityCity.instances = [];
+EntityCity.tile_x = 1;
+EntityCity.tile_z = 1;
 
 module.exports = EntityCity;

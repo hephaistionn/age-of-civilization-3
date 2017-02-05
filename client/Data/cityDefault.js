@@ -4,7 +4,7 @@ module.exports = params => {
         name: params.name,
         leader: params.leader,
         level: params.level || 0,
-        type: params.type || 0,
+        geo: params.geo || 0,
         completed: false,
         mapId: 'test',
         states: {
@@ -25,6 +25,6 @@ module.exports = params => {
         z: params.z,
         camera: {x: 0, z: 0},
         goal: params.goal,
-        map: {}
+        entities: {}
     }
 };

@@ -3,22 +3,17 @@ const config = require('./config');
 
 module.exports = class Camera {
 
-    constructor(model) {
+    constructor(model, parent) {
         const canvas = document.getElementById('D3');
 
         //this.element = new THREE.PerspectiveCamera(12, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-        this.element = new THREE.OrthographicCamera(canvas.clientWidth / - 15, canvas.clientWidth / 15, canvas.clientHeight / 15, canvas.clientHeight / - 15, 1, 1000);
+        this.element = new THREE.OrthographicCamera(canvas.clientWidth / -15, canvas.clientWidth / 15, canvas.clientHeight / 15, canvas.clientHeight / -15, 1, 1000);
+        this.element.userData.id = model.id;
         this.target = new THREE.Vector3();
-
         this.tileSize = config.tileSize;
-
         this.updateState(model);
-
         this.element.lookAt(this.target);
-    }
-
-    update(dt) {
-
+        this.add(parent);
     }
 
     updateState(model) {
@@ -37,7 +32,12 @@ module.exports = class Camera {
         this.element.updateProjectionMatrix();
     }
 
-    remove() {
+    remove(parent) {
+        parent.render.camera = null;
+    }
 
+    add(parent) {
+        parent.render.camera = this.element;
+        parent.render.scene.camera = this.element;
     }
 };

@@ -1,24 +1,24 @@
 const ee = require('../../services/eventEmitter');
 const stateManager = require('../../services/stateManager');
 
-module.exports = class EntityManagerPanel {
+class EntityManagerPanel {
 
     constructor() {
         this.opened = false;
         this.yourCity = false;
-        this.type = 'UI';
         this.description = '';
         this.currentEntity = null;
         this.updated = false;
         this._onBuild = null;
+        this._id = 0;
     }
 
     open(entity) {
         if(!entity.constructor.selectable) return;
         this.description = entity.constructor.description;
-        if( entity.onAction) {
+        if(entity.onAction) {
             this.currentAction = entity.onAction.bind(entity);
-        }else {
+        } else {
             this.currentAction = null;
         }
         this.actionLabel = entity.constructor.actionLabel;
@@ -47,11 +47,14 @@ module.exports = class EntityManagerPanel {
     }
 
     visit() {
-        const cityId = this.currentEntity.id;
+        const cityId = this.currentEntity.cityId;
         const model = stateManager.getCity(cityId);
         stateManager.setCurrentCity(model);
         this.close();
-        ee.emit('openScreen', 'ScreenMap', model);
+        ee.emit('openScreen', 'ScreenCity', model);
     }
 
-};
+}
+
+EntityManagerPanel.ui = true;
+module.exports = EntityManagerPanel;

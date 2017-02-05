@@ -4,7 +4,7 @@ const config = require('./config');
 
 module.exports = class RoadPositioner {
 
-    constructor(model) {
+    constructor(model, parent) {
 
         this.MAX_TILES = 30;
         this.VERTEX_BY_TILE = 6;
@@ -28,8 +28,10 @@ module.exports = class RoadPositioner {
         mesh.frustumCulled = false;
         mesh.matrixWorldNeedsUpdate = false;
         mesh.receiveShadow = false;
+        mesh.userData.id = model.id;
         mesh.drawMode = THREE.TrianglesDrawMode;
         this.element = mesh;
+        this.add(parent);
     }
 
     updateState() {
@@ -113,11 +115,11 @@ module.exports = class RoadPositioner {
         }
     }
 
-    update(dt) {
-
+    remove(parent) {
+        parent.render.scene.remove(this.element);
     }
 
-    remove() {
-
+    add(parent) {
+        parent.render.scene.add(this.element);
     }
 };

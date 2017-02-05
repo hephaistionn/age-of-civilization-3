@@ -2,13 +2,12 @@ const stateManager = require('../../../services/stateManager');
 
 module.exports = class VictoryPanel {
 
-    constructor(model) {
+    constructor(model, parent) {
         this.model = model;
-
-        this.type = 'UI';
 
         this.node = document.createElement('div');
         this.node.className = 'victoryPanel pc nodeOverlay';
+        this.node.id = model._id;
 
         this.nodePanel = document.createElement('div');
         this.nodePanel.className = 'panel';
@@ -32,6 +31,7 @@ module.exports = class VictoryPanel {
         this.nodePanel.appendChild(this.nodeButtonWorld);
 
         this.updateState(model);
+        this.add(parent);
     }
 
     updateState(model) {
@@ -40,7 +40,12 @@ module.exports = class VictoryPanel {
         }
     }
 
-    update() {
+    add(parent) {
+        parent.dom.appendChild(this.node);
+    }
+
+    remove(parent) {
+        parent.dom.removeChild(this.node);
     }
 
 };
