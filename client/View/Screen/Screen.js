@@ -168,6 +168,14 @@ class Screen {
             return false
         }
     }
+
+    _resize(e) {
+        this.canvas.style = '';
+        const width = this.canvas.clientWidth;
+        const height = this.canvas.clientHeight;
+        this.components.get(CAMERA).resize(width, height);
+        this.render.resize(width, height);
+    }
 }
 
 if(isMobile) {

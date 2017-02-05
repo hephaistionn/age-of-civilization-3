@@ -48,14 +48,6 @@ module.exports = Screen => {
         window.removeEventListener('resize', this.events.__resize);
     };
 
-    Screen.prototype._resize = function _resize(e) {
-        this.canvas.style = '';
-        const width = this.canvas.clientWidth;
-        const height = this.canvas.clientHeight;
-        this.camera.resize(width, height);
-        this.render.resize(width, height);
-    };
-
     Screen.prototype._mouseDown = function _mouseDown(e) {
 
         if(event.button === 2) {
