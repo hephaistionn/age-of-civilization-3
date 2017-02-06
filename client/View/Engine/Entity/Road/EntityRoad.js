@@ -9,7 +9,7 @@ class EntityRoad {
 
     constructor(model, parent) {
         this.model = model;
-
+        return;
         this.tileByChunk = 20;//config.tileByChunk;
         this.tileSize = config.tileSize;
         this.nbTileX = this.model._map.nbTileX;
@@ -93,6 +93,7 @@ class EntityRoad {
     }
 
     updateState() {
+        return;
         const chunks = this.chunks;
         const grid = this.model._map.grid;
         const nodes = grid.nodes;
@@ -322,10 +323,12 @@ class EntityRoad {
     }
 
     remove(parent) {
+        return;
         parent.render.scene.remove(this.element);
     }
 
     add(parent) {
+        return;
         if(parent)
             parent.render.scene.add(this.element);
     }

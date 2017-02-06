@@ -2,20 +2,19 @@ const stateManager = require('../../../../services/stateManager');
 
 class EntityRoad {
 
-    constructor(params) {
-        this._map = params.map;
-        this._grid = this._map.grid;
+    constructor(ground, saved) {
+        debugger;
+        this._ground = ground;
+        this._grid = this._ground.grid;
         this.walkable = null;
         this.index = null;
-        if(params.index) { //used when a map is reloaded
-            const l = params.index.length;
-            this.index = new Uint16Array(params.index);
-            this.walkable = new Uint8Array(params.walkable);
+        if(saved && saved.index) { //used when a map is reloaded
+            const l = saved.index.length;
+            this.index = new Uint16Array(saved.index);
+            this.walkable = new Uint8Array(saved.walkable);
             for(let i = 0; i < l; i++) {
                 this._grid.setWalkableAtByIndex(this.index[i], this.walkable[i]);
             }
-        } else {
-            this.updateState(params);
         }
     }
 
@@ -30,37 +29,53 @@ class EntityRoad {
         const nodes = this._grid.getSpecialNodes();
         this.walkable = new Uint8Array(nodes.walkable);
         this.index = new Uint16Array(nodes.index);
+        this.updated = true;
+    }
+
+    pullState(newRoad) {
+        const cost = EntityRoad.roads[newRoad.type].cost;
+        const states = stateManager.currentCity.states;
+        for(var resourceId in cost) {
+            const valueRequired = cost[resourceId] * newRoad.length;
+            states[resourceId] -= valueRequired;
+        }
+    }
+
+    getSavedModel() {
+        if(this.walkable.length) {
+            return {
+                index: Array.from(this.index),
+                walkable: Array.from(this.walkable)
+            }
+        } else {
+            return null;
+        }
     }
 }
 
-EntityRoad.construction = function construction(newRoad) {
-    const roadType = newRoad.walkable[0];
-    const cost = this.cost[roadType];
-    const state = stateManager.currentCity.state;
-    for(var resourceId in cost) {
-        const valueRequired = cost[resourceId] * newRoad.length;
-        const value = state[resourceId];
-        if(valueRequired > value) {
+EntityRoad.available = function available(type, size) {
+    const require = EntityRoad.roads[type].require;
+    const cost = EntityRoad.roads[type].cost;
+    for(let prop in require) {
+        if(require[prop] > stateManager[prop]) {
             return false;
         }
-        state[resourceId] -= valueRequired;
     }
-    return true;
-};
-
-EntityRoad.available = function available(roadType) {
-    const require = this.require[roadType];
-    for(var stateId in require) {
-        const valueRequired = require[stateId];
-        const value = stateManager[stateId];
-        if(valueRequired > value) {
-            return false;
+    if(size) {
+        for(let prop in cost) {
+            const valueRequired = cost[prop] * (size || 1);
+            if(valueRequired > stateManager[prop]) {
+                return false;
+            }
         }
     }
     return true;
 };
 
 EntityRoad.walkable = true;
-EntityRoad.cost = [{}, {stone: 1}, {stone: 1}];
-EntityRoad.require = [{}, {population: 4}, {population: 8}];
+EntityRoad.roads = {
+    dirtRoad: {cost: {stone: 1}, require: {population: 4}, code: 2},
+    stoneRoad: {cost: {stone: 2}, require: {population: 16}, code: 3},
+    tileRoad: {cost: {stone: 4}, require: {population: 30}, code: 4}
+};
 module.exports = EntityRoad;

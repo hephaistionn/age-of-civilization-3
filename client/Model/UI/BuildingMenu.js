@@ -13,9 +13,8 @@ class BuildingMenu {
             state: [
                 'EntityHouse',
                 'EntityChurch',
-                'Road',
-                'EntityExplorer',
-                'Destroy',
+                'dirtRoad',
+                'stoneRoad',
                 'Destroy']
         };
         this.currentCategory = [];

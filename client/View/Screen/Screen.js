@@ -145,7 +145,7 @@ class Screen {
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         const camera = components.get(CAMERA);
         this.raycaster.setFromCamera(this.mouse, camera.element);
-        const intersects = this.raycaster.intersectObjects(this.render.scene.children, recursive);
+        const intersects = this.raycaster.intersectObjects(components.get(GROUND).clickableArea, recursive);
         const tileSize = components.get(GROUND).tileSize;
         if(intersects.length) {
             const point = intersects[0].point;

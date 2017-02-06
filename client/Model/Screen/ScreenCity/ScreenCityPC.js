@@ -11,12 +11,12 @@ const Ground = require('../../Engine/Ground');
 const Light = require('../../Engine/Light');
 const Camera = require('../../Engine/Camera');
 const Positioner = require('../../Engine/Positioner');
+const RoadPositioner = require('../../Engine/RoadPositioner');
 const Road = require('../../Engine/Entity/Road/EntityRoad');
 const ENTITIES = require('../../Engine/Entity/listEntity');
 
 
 let removeMode = false;
-let rotation = 0;
 let codeToEntities;
 
 
@@ -27,6 +27,7 @@ let monitoringPanel;
 let entityManagerPanel;
 let ground;
 let positioner;
+let roadPositioner;
 let road;
 
 
@@ -42,17 +43,20 @@ class ScreenCity extends Screen {
         monitoringPanel = new MonitoringPanel();
         entityManagerPanel = new EntityManagerPanel();
         ground = new Ground(mapProperties);
+        road = new Road(ground, model.road);
         positioner = new Positioner(mapProperties);
+        roadPositioner = new RoadPositioner(mapProperties);
         pathfinding.init(ground, ENTITIES);
 
         buildingMenu.onClickBuilding(entityId => {
             positioner.unselectEntity();
+            roadPositioner.unselectEntity();
             removeMode = false;
-            rotation = 0;
             if(entityId === 'Destroy') {
                 removeMode = true;
             } else {
                 positioner.selectEntity(entityId);
+                roadPositioner.selectEntity(entityId);
             }
         });
 
@@ -71,27 +75,27 @@ class ScreenCity extends Screen {
         this.add(entityManagerPanel);
         this.add(ground);
         this.add(positioner);
+        this.add(roadPositioner);
+        this.add(road);
 
         this.syncStateToEntity(model, mapProperties)
     }
 
     mouseMoveOnMap(x, z) {
-        if(positioner.selected) {
-            positioner.moveEntity(x, z, rotation, ground);
-        }
+        positioner.moveEntity(x, z, ground);
+        roadPositioner.moveEntity(x, z, ground);
     }
 
     mouseRotate() {
-        rotation += Math.PI / 2;
-        if(rotation >= Math.PI * 2) rotation = 0;
-        positioner.moveEntity(positioner.x, positioner.z, rotation, ground);
+        positioner.rotate();
     }
 
     mouseMoveOnMapPress(x, z) {
-
+        roadPositioner.rolloutSelectedEntity(x, z, ground);
     }
 
     mouseMovePress(x, z) {
+        if(roadPositioner.selected) return;
         camera.dragg(x, z);
         light.moveTarget(camera.targetX, camera.targetY, camera.targetZ);
     }
@@ -100,37 +104,32 @@ class ScreenCity extends Screen {
     }
 
     mouseDownRight() {
-        if(positioner.selected) {
-            positioner.unselectEntity();
-        }
+        positioner.unselectEntity();
+        roadPositioner.unselectEntity();
         buildingMenu.collapse();
         removeMode = false;
     }
 
     mouseDownOnMap(x, z) {
-
+        roadPositioner.mouseDown(x, z);
     }
 
     mouseClick(x, z, id) {
-        const params = positioner.getSelectEntity();
-        if(removeMode) {
-            if(id) {
-                this.get(id).restoreState();
-                this.removeEntity(id);
-                monitoringPanel.update();
-            }
-        } else if(params) {
-            const entity = this.newEntity(params);
-            entity.updateState();
-            positioner.unselectEntity();
+        if(removeMode && id) {
+            this.get(id).restoreState();
+            this.removeEntity(id);
             monitoringPanel.update();
         } else if(id) {
             entityManagerPanel.open(this.get(id));
+        }else {
+            this.buildEntity();
+            this.buildRoad();
         }
     }
 
     mouseUp() {
         camera.cleatMove();
+        this.buildRoad();
     }
 
 
@@ -153,6 +152,24 @@ class ScreenCity extends Screen {
         this.remove(entity);
     }
 
+    buildEntity(){
+        const params = positioner.getSelectEntity();
+        if(!params) return;
+        const entity = this.newEntity(params);
+        entity.pullState();
+        positioner.unselectEntity();
+        monitoringPanel.update();
+    }
+
+    buildRoad(){
+        let params = roadPositioner.getSelectEntity();
+        if(!params) return;
+        debugger;
+        road.updateState(params);
+        road.pullState(params);
+        positioner.unselectEntity();
+        monitoringPanel.update();
+    }
 
     syncCodeEntity() {
         codeToEntities = new Map();
@@ -201,6 +218,7 @@ class ScreenCity extends Screen {
         model.camera.x = camera.x;
         model.camera.z = camera.z;
         model.camera.zoom = camera.zoom;
+        model.road = road.getSavedModel();
         this.syncEntityToState(model);
     }
 
@@ -219,11 +237,7 @@ class ScreenCity extends Screen {
             const entitySaved = {};
             for(let props in entity) {
                 if(props[0] === hiddenProps)continue;
-                if(entity[props] instanceof Uint16Array || entity[props] instanceof Uint8Array) {
-                    entitySaved[props] = Array.from(entity[props])
-                } else {
-                    entitySaved[props] = entity[props];
-                }
+                entitySaved[props] = entity[props];
             }
             model.entities[type].push(entitySaved);
         }

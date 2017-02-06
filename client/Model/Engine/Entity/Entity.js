@@ -31,7 +31,6 @@ class Entity {
         this.x = xFirstTile + xNbTile / 2;
         this.z = zFirstTile + zNbTile / 2;
         this.y = y;
-
     }
 
     getTiles() {
@@ -66,7 +65,7 @@ class Entity {
         }
     }
 
-    updateState() {
+    pullState() {
         let eleId;
         const cost = this.constructor.cost;
         const make = this.constructor.make;

@@ -9,7 +9,6 @@ module.exports = class RoadPositioner {
         this.nbPointX = config.nbPointX;
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
-        this.road = null;
         this.startX = 0;
         this.startZ = 0;
         this.maxTile = 30;
@@ -23,19 +22,22 @@ module.exports = class RoadPositioner {
     }
 
     moveEntity(x, z, map) {
+        if(!this.selected) return;
         x = Math.floor(x);
         z = Math.floor(z);
         this.road.tiles[0] = x;
         this.road.tiles[1] = z;
-        this.road.walkable[0] = this.selected;
         if(!map.grid.isWalkableAt(x, z)) {
             this.road.walkable[0] = 0;
+        } else {
+            this.road.walkable[0] = EntityRoad.roads[this.selected].code;
         }
         this.road.length = 1;
         this.updated = true;
     }
 
     rolloutSelectedEntity(x, z, map) {
+        if(!this.selected) return;
         const tile1x = this.startX;
         const tile1z = this.startZ;
         const tile2x = Math.floor(x);
@@ -73,12 +75,12 @@ module.exports = class RoadPositioner {
 
         const length = Math.min(ctn / 2, tiles.length);
 
-
+        const code = EntityRoad.roads[this.selected].code;
         for(let i = 0; i < length; i++) {
             if(!map.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1])) {
                 walkable[i] = 0;
             } else {
-                walkable[i] = this.selected;
+                walkable[i] = code;
             }
         }
         this.road.length = length;
@@ -86,24 +88,28 @@ module.exports = class RoadPositioner {
     }
 
     mouseDown(x, z) {
+        if(!this.selected) return;
         this.startX = Math.floor(x);
         this.startZ = Math.floor(z);
     }
 
-    getNewRoad() {
-        if(this.road.length) {
+    getSelectEntity() {
+        if(this.road.length && EntityRoad.available(this.selected, this.road.length)) {
             const result = {
                 tiles: this.road.tiles,
                 walkable: this.road.walkable,
-                length: this.road.length
+                length: this.road.length,
+                type: this.selected
             };
             this.road.length = 0;
             this.updated = true;
+            this.selected = null;
             return result;
         }
     }
 
-    selectEnity(id) {
+    selectEntity(id) {
+        if(!EntityRoad.roads[id] || !EntityRoad.available(id)) return;
         if(!this.selected || this.selected !== id) {
             this.selected = id;
         } else {
@@ -112,7 +118,8 @@ module.exports = class RoadPositioner {
         this.updated = true;
     }
 
-    unselectEnity() {
+    unselectEntity() {
+        if(!this.selected) return;
         this.road.length = 0;
         this.selected = null;
         this.updated = true;
