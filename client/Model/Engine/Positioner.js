@@ -36,6 +36,7 @@ module.exports = class Positioner {
             return {
                 x: this.selected.x,
                 z: this.selected.z,
+                y: this.selected.y,
                 a: this.selected.a,
                 type: this.selected.constructor.name
             }

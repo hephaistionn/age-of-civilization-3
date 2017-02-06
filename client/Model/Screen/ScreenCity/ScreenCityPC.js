@@ -117,6 +117,7 @@ class ScreenCity extends Screen {
             if(id) {
                 this.get(id).restoreState();
                 this.removeEntity(id);
+                monitoringPanel.update();
             }
         } else if(params) {
             const entity = this.newEntity(params);

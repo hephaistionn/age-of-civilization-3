@@ -81,6 +81,16 @@ class Entity {
         }
     }
 
+    restoreState() {
+        let eleId;
+        const make = this.constructor.make;
+        const states = stateManager.currentCity.states;
+
+        for(eleId in make) {
+            states[eleId] -= make[eleId];
+        }
+    }
+
 }
 
 Entity.available = function available() {
