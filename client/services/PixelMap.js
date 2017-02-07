@@ -78,7 +78,6 @@ module.exports = class PixelMap {
         this.addGrid(imageData, data.nbPointX, data.nbPointZ);
 
         data.pointsHeights = dataHeights;
-        data.pointsNormal = this.computeNormals(dataHeights, data.nbPointX, data.nbPointZ);
         data.tilesResource = this.pixelByTile(dataResources, data.nbTileX, data.nbTileZ, data.nbPointX);
         data.tilesColor = imageData;
         data.tilesHeight = this.averageByTile(dataHeights, data.nbTileX, data.nbTileZ, data.nbPointX);
@@ -92,9 +91,9 @@ module.exports = class PixelMap {
             for(let z = 0; z < sizeZ; z++) {
                 const i = (z * sizeX + x) * 4;
                 if(x % 2 === 1 && z % 2 === 0 || x % 2 === 0 && z % 2 === 1) {
-                    dataColor[i] = dataColor[i] * 0.8;
-                    dataColor[i + 1] = dataColor[i + 1] * 0.8;
-                    dataColor[i + 2] = dataColor[i + 2] * 0.8;
+                    dataColor[i] = dataColor[i] * 0.85;
+                    dataColor[i + 1] = dataColor[i + 1] * 0.85;
+                    dataColor[i + 2] = dataColor[i + 2] * 0.85;
                 }
             }
         }
@@ -200,66 +199,6 @@ module.exports = class PixelMap {
             }
         }
         return tiles;
-    }
-
-    computeNormals(dataHeights, nbPointX, nbPointZ) {
-        const points = new Int8Array(nbPointX * nbPointZ * 3);
-        let i = 0;
-        for(let z = 0; z < nbPointZ; z++) {
-            for(let x = 0; x < nbPointX; x++) {
-
-                const Ax = 0;
-                const Ay = dataHeights[z * nbPointX + x] / 255;
-                const Az = 0;
-
-                const Bx = 0;
-                const By = z - 1 < 0 ? Ay : dataHeights[(z - 1) * nbPointX + x] / 255;
-                const Bz = -1;
-
-                const Cx = -1;
-                const Cy = x - 1 < 0 ? Ay : dataHeights[z * nbPointX + (x - 1)] / 255;
-                const Cz = 0;
-
-                const Dx = 0;
-                const Dy = z + 1 > nbPointZ - 1 ? Ay : dataHeights[(z + 1) * nbPointX + x] / 255;
-                const Dz = 1;
-
-                const Ex = 1;
-                const Ey = x + 1 > nbPointX - 1 ? Ay : dataHeights[z * nbPointX + (x + 1)] / 255;
-                const Ez = 0;
-
-                const v1x = Bx - Ax;
-                const v1y = By - Ay;
-                const v1z = Bz - Az;
-                const v2x = Cx - Ax;
-                const v2y = Cy - Ay;
-                const v2z = Cz - Az;
-                const v3x = Dx - Ax;
-                const v3y = Dy - Ay;
-                const v3z = Dz - Az;
-                const v4x = Ex - Ax;
-                const v4y = Ey - Ay;
-                const v4z = Ez - Az;
-
-                const nor1x = v1y * v2z - v1z * v2y;
-                const nor1y = v1z * v2x - v1x * v2z;
-                const nor1z = v1x * v2y - v1y * v2x;
-                const nor2x = v3y * v4z - v3z * v4y;
-                const nor2y = v3z * v4x - v3x * v4z;
-                const nor2z = v3x * v4y - v3y * v4x;
-
-                let dx = nor1x + nor2x;
-                let dy = nor1y + nor2y;
-                let dz = nor1z + nor2z;
-
-                const length = Math.sqrt(dx * dx + dz * dz + dy * dy);
-                points[i++] = Math.floor(127 * dx / length);
-                points[i++] = Math.floor(127 * dy / length);
-                points[i++] = Math.floor(127 * dz / length);
-
-            }
-        }
-        return points;
     }
 
 };

@@ -104,7 +104,6 @@ class Worldmap {
     }
 
     refreshTexture(model) {
-
         this.materialWorldmap.uniforms.texture.value = THREE.loadTexture(model.canvasColor);
         this.materialWorldmap.uniforms.textureSize.value = model.nbPointX * this.tileSize;
         this.updateAreaMap(model);
@@ -126,11 +125,13 @@ class Worldmap {
         for(let i = 0; i < l; i++) {
             this.imageArea.data[i] = model.areaTiles[i];
         }
-        //setTimeout(()=>{
         this.contextArea.putImageData(this.imageArea, 0, 0);
-        this.materialWorldmap.uniforms.textureArea.value = THREE.loadTexture(this.cavasArea);
-        this.materialWorldmap.needsUpdate = true;
-        //},2000)
+        if(this.materialWorldmap.uniforms.textureArea.value) {
+            this.materialWorldmap.uniforms.textureArea.value.needsUpdate = true;
+        } else {
+            this.materialWorldmap.uniforms.textureArea.value = THREE.loadTexture(this.cavasArea);
+        }
+
     }
 
 

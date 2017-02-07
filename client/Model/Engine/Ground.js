@@ -11,7 +11,6 @@ class Ground {
         this.nbTileZ = config.nbTileZ;
         this.tiltMax = config.tiltMax || 50;
         this.pointsHeights = config.pointsHeights;
-        this.pointsNormal = config.pointsNormal;
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
         this.tilesColor = config.tilesColor;
