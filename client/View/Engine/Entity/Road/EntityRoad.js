@@ -4,25 +4,26 @@ const UVpath = require('../../../../services/threejs/UVpath');
 const config = require('../../config');
 const tileSize = config.tileSize;
 const tileHeight = config.tileHeight;
+const GROUND = 2;
 
 class EntityRoad {
 
     constructor(model, parent) {
         this.model = model;
-        return;
         this.tileByChunk = 20;//config.tileByChunk;
         this.tileSize = config.tileSize;
-        this.nbTileX = this.model._map.nbTileX;
-        this.nbTileZ = this.model._map.nbTileZ;
+        this.nbTileX = this.model._ground.nbTileX;
+        this.nbTileZ = this.model._ground.nbTileZ;
         this.tileHeight = config.tileHeight;
-        this.nbPointX = this.model._map.nbTileX + 1;
-        this.nbPointZ = this.model._map.nbTileZ + 1;
-        this.pointsHeights = this.model._map.pointsHeights;
-        this.pointsNormal = this.model._map.pointsNormal;
+        this.nbPointX = this.model._ground.nbTileX + 1;
+        this.nbPointZ = this.model._ground.nbTileZ + 1;
+        this.pointsHeights = this.model._ground.pointsHeights;
+        this.pointsNormal = this.model._ground.pointsNormal;
         this.MAX_TILES = 75;
         this.VERTEX_BY_TILE = 6;
         this.MAX_VERTEX = this.VERTEX_BY_TILE * this.MAX_TILES;
         this.materialRoad = materialRoad;
+        //this.materialRoad= new THREE.MeshBasicMaterial( { color: 0xff0000});
 
         this.element = new THREE.Object3D();
         this.element.frustumCulled = false;
@@ -93,9 +94,8 @@ class EntityRoad {
     }
 
     updateState() {
-        return;
         const chunks = this.chunks;
-        const grid = this.model._map.grid;
+        const grid = this.model._grid;
         const nodes = grid.nodes;
         const sizeNode = grid.sizeNode;
         const tileSize = this.tileSize;
@@ -284,51 +284,11 @@ class EntityRoad {
 
     }
 
-    updateVisible(model) {
-        this.element.visible = true;
-        const flags = model.entityGroups.EntityExplorer;
-        const nbFlag = flags.length;
-        const chunks = this.chunks;
-        const xLength = chunks.length;
-        const zLength = chunks[0].length;
-
-        for(let x = 0; x < xLength; x++) {
-            for(let z = 0; z < zLength; z++) {
-
-                const roadGeometry = chunks[x][z];
-
-                const position = roadGeometry.attributes.position.array;
-                const revealed = roadGeometry.attributes.revealed.array;
-                roadGeometry.attributes.revealed.needsUpdate = true;
-
-                const l = revealed.length;
-                for(let k = 0; k < l; k++) {
-                    const px = position[k * 3] / this.tileSize;
-                    const pz = position[k * 3 + 2] / this.tileSize;
-                    for(let j = 0; j < nbFlag; j++) {
-                        const fx = flags[j].x;
-                        const fz = flags[j].z;
-                        const dx = px - fx;
-                        const dz = pz - fz;
-                        if(Math.sqrt(dx * dx + dz * dz) < flags[j].radius) {
-                            revealed[k] = 1;
-                            break;
-                        } else {
-                            revealed[k] = 0;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     remove(parent) {
-        return;
         parent.render.scene.remove(this.element);
     }
 
     add(parent) {
-        return;
         if(parent)
             parent.render.scene.add(this.element);
     }

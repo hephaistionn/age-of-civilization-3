@@ -20,7 +20,6 @@ class Ground {
         this.tileHeight = config.tileHeight;
         this.nbPointX = model.nbPointX;
         this.nbPointZ = model.nbPointZ;
-        this.pointsNormal = model.pointsNormal;
 
         this.createGround(model);
         this.add(parent);
@@ -109,7 +108,7 @@ class Ground {
         }
 
         const modiferSimplify = new THREE.SimplifyModifier();
-        chunkGeometry = modiferSimplify.modify(chunkGeometry, Math.round(chunkGeometry.vertices.length * 0.33));
+        chunkGeometry = modiferSimplify.modify(chunkGeometry, Math.round(chunkGeometry.vertices.length * 0.20));
 
         chunkGeometry.computeVertexNormals();
         return chunkGeometry;

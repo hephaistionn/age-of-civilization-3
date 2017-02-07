@@ -164,7 +164,6 @@ class ScreenCity extends Screen {
     buildRoad(){
         let params = roadPositioner.getSelectEntity();
         if(!params) return;
-        debugger;
         road.updateState(params);
         road.pullState(params);
         positioner.unselectEntity();

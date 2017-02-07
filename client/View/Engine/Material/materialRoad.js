@@ -2,12 +2,10 @@ const THREE = require('./../../../services/threejs');
 
 const vertShader = "" +
     "attribute float type; \n" +
-    "attribute float revealed; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "varying vec2 vUv; \n" +
     "varying vec3 vecNormal; \n" +
     "varying float vType; \n" +
-    "varying float vRevealed; \n" +
     "#ifdef USE_SHADOWMAP \n" +
     "	#if NUM_DIR_LIGHTS > 0 \n" +
     "		uniform mat4 directionalShadowMatrix[ NUM_DIR_LIGHTS ]; \n" +
@@ -27,7 +25,6 @@ const vertShader = "" +
     "#endif \n" +
     "vUv = uv; \n" +
     "vType = type; \n" +
-    "vRevealed = revealed; \n" +
     "gl_Position = projectionMatrix * viewMatrix * worldPosition; \n" +
     "} ";
 
@@ -74,19 +71,19 @@ const fragShader = "" +
     "varying vec3 vecNormal; \n" +
     "varying vec3 vAbsolutePosition; \n" +
     "varying float vType; \n" +
-    "varying float vRevealed; \n" +
     "uniform sampler2D textureLayout; \n" +
     "uniform sampler2D textureA; \n" +
     "uniform sampler2D textureB; \n" +
     "uniform vec3 ambientLightColor; \n" +
     "" +
     "void main(void) { \n" +
-    "if(vRevealed > 0.1) {" +
     "vec2 UVT = vec2(vAbsolutePosition.x, vAbsolutePosition.z)/10.0; \n" +
     "vec3 filter = texture2D( textureLayout, vUv ).xyz; \n" +
-    "vec3 colorFinal = texture2D( textureA, UVT ).xyz; \n" +
-    " if(vType>2.5){ \n" +
-    "   colorFinal = texture2D( textureB, UVT ).xyz; \n" +
+   /// "vec3 colorFinal = texture2D( textureA, UVT ).xyz; \n" +
+    "vec3 colorFinal = vec3(0.26,  0.17, 0.19); \n" +
+    " if(vType==3.0){ \n" +
+   // "   colorFinal = texture2D( textureB, UVT ).xyz; \n" +
+    "     colorFinal = vec3(0.62,  0.54, 0.49); \n"  +
     "}" +
     "vec3 sumLights = vec3(0.0, 0.0, 0.0); \n" +
     "" +
@@ -103,10 +100,7 @@ const fragShader = "" +
     "" +
     "sumLights = ambientLightColor + sumLights; \n" +
     "" +
-    "gl_FragColor = vec4(colorFinal * sumLights , filter.x); \n" +
-    "}else{" +
-    "gl_FragColor = vec4(0.0); \n" +
-    "}" +
+    "gl_FragColor = vec4(colorFinal * sumLights , filter.x*0.5); \n" +
     "} ";
 
 const uniforms = THREE.UniformsUtils.merge([
@@ -116,7 +110,7 @@ const uniforms = THREE.UniformsUtils.merge([
 
 uniforms.textureA = {type: 't', value: THREE.loadTexture("pic/tile_0.jpg")};
 uniforms.textureB = {type: 't', value: THREE.loadTexture("pic/soil_1.jpg")};
-uniforms.textureLayout = {type: 't', value: THREE.loadTexture("pic/path_opacity_2.png")};
+uniforms.textureLayout = {type: 't', value: THREE.loadTexture("pic/path_opacity_4.png")};
 uniforms.textureLayout.value.flipY = false;
 uniforms.textureLayout.value.minFilter = THREE.NearestFilter;
 uniforms.textureLayout.value.repeat = false;

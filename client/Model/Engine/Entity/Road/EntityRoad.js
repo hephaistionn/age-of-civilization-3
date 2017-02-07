@@ -3,7 +3,6 @@ const stateManager = require('../../../../services/stateManager');
 class EntityRoad {
 
     constructor(ground, saved) {
-        debugger;
         this._ground = ground;
         this._grid = this._ground.grid;
         this.walkable = null;
