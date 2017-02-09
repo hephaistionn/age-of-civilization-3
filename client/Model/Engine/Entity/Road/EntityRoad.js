@@ -41,7 +41,7 @@ class EntityRoad {
     }
 
     getSavedModel() {
-        if(this.walkable.length) {
+        if(this.index && this.index.length) {
             return {
                 index: Array.from(this.index),
                 walkable: Array.from(this.walkable)
