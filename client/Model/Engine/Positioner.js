@@ -13,7 +13,7 @@ module.exports = class Positioner {
         this.x = 0;
         this.z = 0;
         this.updated = false;
-        this.id = 3;
+        this._id = 3;
     }
 
     moveEntity(x, z, ground) {

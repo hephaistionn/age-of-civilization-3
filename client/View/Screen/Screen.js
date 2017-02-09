@@ -158,6 +158,7 @@ class Screen {
     }
 
     touchSelected(screenX, screenY) {
+        if(!this.components.has(POSITIONER)) return false;
         this.mouse.x = ( screenX / this.canvas.width ) * 2 - 1;
         this.mouse.y = -( screenY / this.canvas.height ) * 2 + 1;
         this.raycaster.setFromCamera(this.mouse, this.components.get(CAMERA).element);

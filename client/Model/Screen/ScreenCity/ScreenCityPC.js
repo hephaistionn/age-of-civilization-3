@@ -15,10 +15,8 @@ const RoadPositioner = require('../../Engine/RoadPositioner');
 const Road = require('../../Engine/Entity/Road/EntityRoad');
 const ENTITIES = require('../../Engine/Entity/listEntity');
 
-
 let removeMode = false;
 let codeToEntities;
-
 
 let camera;
 let light;
@@ -29,7 +27,6 @@ let ground;
 let positioner;
 let roadPositioner;
 let road;
-
 
 class ScreenCity extends Screen {
 
@@ -58,6 +55,7 @@ class ScreenCity extends Screen {
                 positioner.selectEntity(entityId);
                 roadPositioner.selectEntity(entityId);
             }
+            buildingMenu.close();
         });
 
         stateManager.cityOnLevelUpdated(level => {
@@ -78,7 +76,7 @@ class ScreenCity extends Screen {
         this.add(roadPositioner);
         this.add(road);
 
-        this.syncStateToEntity(model, mapProperties)
+        this.syncStateToEntity(model, mapProperties);
     }
 
     mouseMoveOnMap(x, z) {
@@ -125,11 +123,13 @@ class ScreenCity extends Screen {
             this.buildEntity();
             this.buildRoad();
         }
+        buildingMenu.open();
     }
 
     mouseUp() {
         camera.cleatMove();
         this.buildRoad();
+        buildingMenu.open();
     }
 
 
@@ -166,7 +166,7 @@ class ScreenCity extends Screen {
         if(!params) return;
         road.updateState(params);
         road.pullState(params);
-        positioner.unselectEntity();
+        roadPositioner.unselectEntity();
         monitoringPanel.update();
     }
 

@@ -42,7 +42,6 @@ class EntityRoad {
         }
 
         if(model.index) {
-            debugger;
             const grid = model._grid;
             const nodes = grid.nodes;
             const index = model.index;

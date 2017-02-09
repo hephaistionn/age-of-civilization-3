@@ -1,131 +1,149 @@
 const ee = require('../../../services/eventEmitter');
 const stateManager = require('../../../services/stateManager');
+const Screen = require('../Screen');
 
 const Camera = require('../../Engine/Camera');
 const Light = require('../../Engine/Light');
 const Worldmap = require('../../Engine/Worldmap');
-const Positioner = require('../../Engine/Positioner');
-
 const WorldmapMenu = require('../../UI/WorldmapMenu');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
 const FirstStartPanel = require('../../UI/FirstStartPanel');
 const LeaderCreationPanel = require('../../UI/LeaderCreationPanel');
-const EditorPanel = require('../../UI/EditorPanel');
+const ENTITIES = require('../../Engine/Entity/listEntity');
 
-class ScreenWorldmap {
+let camera;
+let light;
+let worldmapMenu;
+let entityManagerPanel;
+let worldmap;
+let firstStartPanel;
+let leaderCreationPanel;
+let cities = [];
 
-    constructor(model, mapProperties) {
+class ScreenWorldmap extends Screen {
 
-        this.camera = new Camera({map:mapProperties, zoom: model.zoom||1});
+    initComponents(model, mapProperties) {
 
-        this.camera.move(
-            model.camera.x || mapProperties.nbTileX/2+10,
-            model.camera.z|| mapProperties.nbTileZ/2+10
-        );
-
-        this.light = new Light({
-            offsetX: -10,
-            offsetY: -40,
-            offsetZ: -10,
-            ambient: 0x776666
-        });
-        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-
-        this.worldmapMenu = new WorldmapMenu();
-        this.entityManagerPanel = new EntityManagerPanel();
-        this.editorPanel = new EditorPanel();
-        this.positioner = new Positioner(mapProperties);
-
-        this.worldmap = new Worldmap(mapProperties);
-        model.cities.map(cityId => {
-            const city = stateManager.getCity(cityId);
-            this.worldmap.addCity(city);
+        camera = new Camera({map: mapProperties, zoom: model.camera.zoom || 0.8, zoomMax: 1.8,
+            x: model.camera.x || mapProperties.nbTileX / 2 + 10, y: 24, z: model.camera.z || mapProperties.nbTileZ / 2 + 10
         });
 
-        this.worldmapMenu.onConstructMode(() => {
-            this.positioner.selectEnity('EntityCity');
-            this.positioner.moveEntity(this.camera.targetX, this.camera.targetZ, 0, this.worldmap);
-            this.editorPanel.open();
-            this.editorPanel.showEntityEditor();
-        });
+        light = new Light({shadow: true, targetX: camera.targetX, targetY: camera.targetY, targetZ: camera.targetZ});
 
-        this.editorPanel.onConfirm(() => {
-            if(this.positioner.selected && !this.positioner.undroppable) {
-                const entity = this.positioner.selected;
-                this.newCity(entity.x, entity.y, entity.z, 1, 'myCity', stateManager.getCurrentLeader().id);
-                this.positioner.unselectEnity();
-                this.worldmapMenu.stopConstructMode();
-            }
-        });
+        worldmapMenu = new WorldmapMenu();
+        entityManagerPanel = new EntityManagerPanel();
 
-        this.editorPanel.onCancel(() => {
-            this.positioner.unselectEnity();
-            this.worldmapMenu.stopConstructMode();
-        });
+        worldmap = new Worldmap(mapProperties);
 
-        if(!stateManager.getCurrentLeader()) {
-            this.firstStartPanel = new FirstStartPanel();
-            this.firstStartPanel.onClose(()=> {
-                delete this.firstStartPanel;
-                this.leaderCreationPanel = new LeaderCreationPanel();
-                this.leaderCreationPanel.onClose(params => {
-                    stateManager.newLeader(params);
-                    //clean map => new worldmap;
-                    delete this.leaderCreationPanel;
+        this.add(camera);
+        this.add(light);
+        this.add(worldmapMenu);
+        this.add(entityManagerPanel);
+        this.add(worldmap);
+
+        const currentLeader = stateManager.getCurrentLeader();
+        if(!currentLeader.name) {
+            firstStartPanel = new FirstStartPanel();
+            this.add(firstStartPanel);
+            firstStartPanel.onClose(()=> {
+                leaderCreationPanel = new LeaderCreationPanel();
+                this.add(leaderCreationPanel);
+                this.remove(firstStartPanel);
+                leaderCreationPanel.onClose(params => {
+                    stateManager.updateLeaderName(params.name);
+                    this.remove(leaderCreationPanel);
+                    this.updateCities(model); //call when player level is updated
                 });
             });
         }
     }
 
-    newCity(x, y, z, level, name, leaderId) {
+    beforeShow(model) {
+        const currentLeader = stateManager.getCurrentLeader();
+        if(currentLeader.name) {
+            this.updateCities(model)
+        }
+    }
+
+    updateCities(model) {
+        for(let i = 0; i < model.cities.length; i++) {
+            const params = stateManager.getCity(model.cities[i]);
+            if(!cities.find(city => city.name === params.name)) {
+                this.loadCity(params);
+            }
+        }
+
+        const leaderId = stateManager.getCurrentLeader().id;
+        const level = stateManager.currentLeader.level;
+        const spawns = worldmap.citySpawns;
+        const nextCities = stateManager.getCityNewCitiesByLevel(level);
+        let currentIndex = model.cities.length;
+        for(let j = 0; j < nextCities.length; j++) {
+            const newCity = nextCities[j];
+            if(!cities.find(city => city.name === newCity.name)) {
+                this.newCity(spawns[currentIndex * 2], spawns[currentIndex * 2 + 1], 0, newCity.name, leaderId, newCity.goal);
+                currentIndex++;
+            }
+        }
+
+    }
+
+    newCity(x, z, level, name, leaderId, goal) {
         const params = stateManager.newCity({
-            level: level, x: x, y: y, z: z, name: name,
-            type: 'mesopotamia', leader: leaderId
+            level: level, x: x, z: z, name: name,
+            y: worldmap.getHeightTile(x, z),
+            leader: leaderId, goal: goal
         });
-        this.worldmap.addCity(params);
+        const city = this.newEntity(params);
+        cities.push(city);
+        worldmap.updateAreaMap(cities);
+    }
+
+    loadCity(params) {
+        const city = this.newEntity(params);
+        cities.push(city);
+        worldmap.updateAreaMap(cities)
+    }
+
+    newEntity(params) {
+        const entity = new ENTITIES.EntityCity(params);
+        this.add(entity);
+        return entity;
     }
 
     update(dt) {
-        if(this.worldmap) {
-            this.worldmap.update(dt);
-        }
+        worldmap.update(dt);
     }
 
     touchMove(x, z) {
-        this.camera.dragg(x, z);
-        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
-    }
-
-    touchDragg(x, z, screenX, screenY) {
-        if(this.positioner.selected) {
-            this.positioner.moveEntity(x, z, rotation, this.worldmap);
-        }
+        camera.dragg(x, z);
+        light.moveTarget(camera.targetX, camera.targetY, camera.targetZ);
     }
 
     touchEnd() {
-        this.camera.cleatMove();
+        camera.cleatMove();
     }
 
-    touchStartOnMap(x, z, model) {
-        if(model) {
-            this.entityManagerPanel.open(model);
+    touchStartOnMap(x, z, id) {
+        if(id) {
+            entityManagerPanel.open(this.get(id));
         }
     }
 
     zoom(delta) {
-        this.camera.scale(delta);
-        this.light.scaleOffset(-this.camera.offsetY);
-        this.light.moveTarget(this.camera.targetX, this.camera.targetY, this.camera.targetZ);
+        camera.scale(delta);
+        light.scaleOffset(camera.offsetY);
+        light.moveTarget(camera.targetX, camera.targetY, camera.targetZ);
     }
 
     dismount() {
-        this.camera = null;
+
     }
 
     syncState(model) {
-        model.camera.x = this.camera.x;
-        model.camera.z = this.camera.z;
-        model.camera.zoom = this.camera.zoom;
+        model.camera.x = camera.x;
+        model.camera.z = camera.z;
+        model.camera.zoom = camera.zoom;
     }
 
 }

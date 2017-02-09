@@ -103,7 +103,6 @@ module.exports = class RoadPositioner {
             };
             this.road.length = 0;
             this.updated = true;
-            this.selected = null;
             return result;
         }
     }
