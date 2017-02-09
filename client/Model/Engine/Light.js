@@ -12,6 +12,7 @@ class Light {
         this.targetX = 0;
         this.targetY = 0;
         this.targetZ = 0;
+        this.zoom = 1|| config.zoom;
         this.shadow = config.shadow || false;
         this.updated = true;
         this._id = 0;
@@ -30,6 +31,11 @@ class Light {
         this.z = z;
         this.targetX = this.offsetX + this.x;
         this.targetZ = this.offsetZ + this.x;
+        this.updated = true;
+    }
+
+    scale(value){
+        this.zoom = value;
         this.updated = true;
     }
 

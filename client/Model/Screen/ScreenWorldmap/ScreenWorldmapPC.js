@@ -139,8 +139,7 @@ class ScreenWorldmap extends Screen {
 
     mouseWheel(delta) {
         camera.mouseWheel(delta);
-        light.scaleOffset(camera.offsetY);
-        light.moveTarget(camera.targetX, camera.targetY, camera.targetZ);
+        light.scale(camera.zoom);
     }
 
     dismount() {

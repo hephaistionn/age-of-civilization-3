@@ -69,9 +69,10 @@ class Camera {
     }
 
     scale(delta) {
-        if(this.zoom < this.zoomMin && delta < 0 || this.zoom > this.zoomMax && delta > 0) return;
-        this.zoom = this.zoomInit + delta;
-        this.move(x, y, z);
+        const computeZoom = this.zoomInit + delta;
+        if((computeZoom < this.zoomMin && delta < 0) || (computeZoom > this.zoomMax && delta >0 )) return;
+        this.zoom = computeZoom;
+        this.updated = true;
     }
 
     mouseWheel(delta) {
@@ -81,7 +82,7 @@ class Camera {
     }
 
     setMapBorder(dataMap) {
-        const margin = 8;
+        const margin = 2;
         this.minX = 0 - this.offsetX + margin;
         this.minZ = 0 - this.offsetZ + margin;
         this.maxX = dataMap.nbTileX - this.offsetX - margin;
