@@ -4,7 +4,7 @@ const tileHeight = config.tileHeight;
 const THREE = require('three');
 const material = require('../../Material/materialA');
 
-module.exports = class EntityCity {
+module.exports = class City {
 
     constructor(model, parent) {
         this.model = model;
@@ -29,7 +29,7 @@ module.exports = class EntityCity {
             mesh.frustumCulled = false;
             mesh.matrixAutoUpdate = false;
             mesh.castShadow = true;
-            mesh.name = 'EntityCity';
+            mesh.name = 'City';
             const parent = this.element.parent;
             parent.remove(this.element);
             parent.add(mesh);
@@ -41,7 +41,7 @@ module.exports = class EntityCity {
             this.element.frustumCulled = false;
             this.element.matrixAutoUpdate = false;
             this.element.castShadow = true;
-            this.element.name = 'EntityCity';
+            this.element.name = 'City';
         }
     }
 

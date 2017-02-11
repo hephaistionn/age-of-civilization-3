@@ -2,7 +2,7 @@ const Entity = require('../Entity');
 const ee = require('../../../../services/eventEmitter');
 const pathfinding = require('../../../../services/pathfinding');
 
-class EntityPeon extends Entity {
+class Peon extends Entity {
 
     constructor(params) {
         super(params);
@@ -23,9 +23,9 @@ class EntityPeon extends Entity {
     }
 }
 
-EntityPeon.selectable = true;
-EntityPeon.description = 'I will go to an home to transmit my knowledge';
-EntityPeon.tile_x = 1;
-EntityPeon.tile_z = 1;
-EntityPeon.walkable = 1;
-module.exports = EntityPeon;
+Peon.selectable = true;
+Peon.description = 'I will go to an home to transmit my knowledge';
+Peon.tile_x = 1;
+Peon.tile_z = 1;
+Peon.walkable = 1;
+module.exports = Peon;

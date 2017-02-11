@@ -9,10 +9,10 @@ class BuildingMenu {
             resource: ['Destroy'],
             factory: ['Destroy'],
             service: ['Destroy'],
-            culture: ['EntityChurch', 'Destroy'],
+            culture: ['Market', 'Destroy'],
             state: [
-                'EntityHouse',
-                'EntityChurch',
+                'House',
+                'Market',
                 'dirtRoad',
                 'stoneRoad',
                 'Destroy']

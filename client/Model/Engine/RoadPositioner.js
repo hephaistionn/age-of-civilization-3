@@ -1,4 +1,4 @@
-const EntityRoad = require('./Entity/Road/EntityRoad');
+const Road = require('./Entity/Road/Road');
 
 module.exports = class RoadPositioner {
 
@@ -30,7 +30,7 @@ module.exports = class RoadPositioner {
         if(!map.grid.isWalkableAt(x, z)) {
             this.road.walkable[0] = 0;
         } else {
-            this.road.walkable[0] = EntityRoad.roads[this.selected].code;
+            this.road.walkable[0] = Road.roads[this.selected].code;
         }
         this.road.length = 1;
         this.updated = true;
@@ -75,7 +75,7 @@ module.exports = class RoadPositioner {
 
         const length = Math.min(ctn / 2, tiles.length);
 
-        const code = EntityRoad.roads[this.selected].code;
+        const code = Road.roads[this.selected].code;
         for(let i = 0; i < length; i++) {
             if(!map.grid.isWalkableAt(tiles[i * 2], tiles[i * 2 + 1])) {
                 walkable[i] = 0;
@@ -94,7 +94,7 @@ module.exports = class RoadPositioner {
     }
 
     getSelectEntity() {
-        if(this.road.length && EntityRoad.available(this.selected, this.road.length)) {
+        if(this.road.length && Road.available(this.selected, this.road.length)) {
             const result = {
                 tiles: this.road.tiles,
                 walkable: this.road.walkable,
@@ -108,7 +108,7 @@ module.exports = class RoadPositioner {
     }
 
     selectEntity(id) {
-        if(!EntityRoad.roads[id] || !EntityRoad.available(id)) return;
+        if(!Road.roads[id] || !Road.available(id)) return;
         if(!this.selected || this.selected !== id) {
             this.selected = id;
         } else {

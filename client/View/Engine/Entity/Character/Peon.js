@@ -12,7 +12,7 @@ const animations = {
     }
 };
 
-class EntityPeon {
+class Peon {
 
     constructor(model, parent) {
         this.model = model;
@@ -21,7 +21,7 @@ class EntityPeon {
         this.element.userData.parent = this;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
-        this.element.name = 'EntityPeon';
+        this.element.name = 'Peon';
         this.element.castShadow = true;
         this.absolute = true; //parent is word not chunk
         this.animations = animations;
@@ -60,7 +60,7 @@ class EntityPeon {
 }
 ;
 
-require('../decorator').followPath(EntityPeon);
-require('../decorator').playAnimation(EntityPeon);
+require('../decorator').followPath(Peon);
+require('../decorator').playAnimation(Peon);
 
-module.exports = EntityPeon;
+module.exports = Peon;

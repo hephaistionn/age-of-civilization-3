@@ -13,7 +13,7 @@ const Light = require('../../Engine/Light');
 const Camera = require('../../Engine/Camera');
 const Positioner = require('../../Engine/Positioner');
 const RoadPositioner = require('../../Engine/RoadPositioner');
-const Road = require('../../Engine/Entity/Road/EntityRoad');
+const Road = require('../../Engine/Entity/Road/Road');
 const ENTITIES = require('../../Engine/Entity/listEntity');
 
 let removeMode = false;

@@ -4,7 +4,7 @@ const tileHeight = config.tileHeight;
 const material = require('../../Material/materialA');
 const THREE = require('three');
 
-module.exports = class EntityTree {
+module.exports = class Tree {
 
     constructor(model, parent) {
         this.model = model;
@@ -14,7 +14,7 @@ module.exports = class EntityTree {
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
-        this.element.name = 'EntityTree';
+        this.element.name = 'Tree';
         this.updateState();
         this.add(parent);
     }

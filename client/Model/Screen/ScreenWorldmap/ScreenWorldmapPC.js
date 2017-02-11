@@ -105,7 +105,7 @@ class ScreenWorldmap extends Screen {
     }
 
     newEntity(params) {
-        const entity = new ENTITIES.EntityCity(params);
+        const entity = new ENTITIES.City(params);
         this.add(entity);
         return entity;
     }

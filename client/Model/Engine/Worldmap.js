@@ -1,4 +1,4 @@
-const EntityCity = require('./Entity/Building/EntityCity');
+const City = require('./Entity/Building/City');
 
 class Worldmap {
 

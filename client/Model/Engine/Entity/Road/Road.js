@@ -1,6 +1,6 @@
 const stateManager = require('../../../../services/stateManager');
 
-class EntityRoad {
+class Road {
 
     constructor(ground, saved) {
         this._ground = ground;
@@ -32,7 +32,7 @@ class EntityRoad {
     }
 
     pullState(newRoad) {
-        const cost = EntityRoad.roads[newRoad.type].cost;
+        const cost = Road.roads[newRoad.type].cost;
         const states = stateManager.currentCity.states;
         for(var resourceId in cost) {
             const valueRequired = cost[resourceId] * newRoad.length;
@@ -52,9 +52,9 @@ class EntityRoad {
     }
 }
 
-EntityRoad.available = function available(type, size) {
-    const require = EntityRoad.roads[type].require;
-    const cost = EntityRoad.roads[type].cost;
+Road.available = function available(type, size) {
+    const require = Road.roads[type].require;
+    const cost = Road.roads[type].cost;
     for(let prop in require) {
         if(require[prop] > stateManager[prop]) {
             return false;
@@ -71,10 +71,10 @@ EntityRoad.available = function available(type, size) {
     return true;
 };
 
-EntityRoad.walkable = true;
-EntityRoad.roads = {
+Road.walkable = true;
+Road.roads = {
     dirtRoad: {cost: {stone: 1}, require: {population: 4}, code: 2},
     stoneRoad: {cost: {stone: 2}, require: {population: 16}, code: 3},
     tileRoad: {cost: {stone: 4}, require: {population: 30}, code: 4}
 };
-module.exports = EntityRoad;
+module.exports = Road;

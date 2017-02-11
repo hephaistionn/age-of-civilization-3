@@ -68,28 +68,3 @@ class Light {
 }
 
 module.exports = Light;
-
-var t = {
-    "id": "city_355dbfd5c",
-    "name": "Uruk",
-    "leader": "leader_84ecf0707",
-    "level": 1,
-    "type": "EntityCity",
-    "completed": false,
-    "mapId": "test",
-    "states": {"population": 8, "workers": 0, "explorers": 0, "wood": 160, "stone": 100, "meat": 100},
-    "trade": {"wood": 0, "stone": 0, "meat": 0},
-    "x": 10,
-    "y": 0.33725490196078434,
-    "z": 28,
-    "camera": {"x": 27.5, "z": 27.5, "zoom": 1.3},
-    "goal": {"population": 10, "meat": 100},
-    "entities": {
-        "EntityHouse": [{"x": 1.5, "y": 0.17254901960784313, "z": 10.5, "a": 0}, {
-            "x": 2.5,
-            "y": 0.17254901960784313,
-            "z": 8.5,
-            "a": 0
-        }]
-    }
-}

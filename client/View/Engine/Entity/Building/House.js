@@ -4,17 +4,17 @@ const tileHeight = config.tileHeight;
 const material = require('../../Material/materialA');
 const THREE = require('three');
 
-module.exports = class EntityChurch {
+module.exports = class House {
 
     constructor(model, parent, materialForce) {
         this.model = model;
-        this.element = THREE.getMesh('obj/buildingB.obj', materialForce || material);
+        this.element = THREE.getMesh('obj/buildingA.obj', materialForce || material);
         this.element.userData.id = model._id;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;
         this.element.matrixAutoUpdate = false;
         this.element.castShadow = true;
-        this.element.name = 'EntityChurch';
+        this.element.name = 'House';
         this.updateState();
         this.add(parent);
     }

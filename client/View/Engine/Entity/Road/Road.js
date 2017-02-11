@@ -5,7 +5,7 @@ const tileSize = config.tileSize;
 const tileHeight = config.tileHeight;
 const GROUND = 2;
 
-class EntityRoad {
+class Road {
 
     constructor(model) {
         this.model = model;
@@ -75,4 +75,4 @@ class EntityRoad {
 
     }
 }
-module.exports = EntityRoad;
+module.exports = Road;
