@@ -166,6 +166,11 @@ class ScreenCity extends Screen {
         this.remove(entity);
     }
 
+    getEntity(entityId, callback) {
+        const entity = this.get(entityId);
+        callback(entity);
+    }
+
     buildEntity() {
         const params = positioner.getSelectEntity();
         if(!params) return;
@@ -188,6 +193,7 @@ class ScreenCity extends Screen {
         for(let id in ENTITIES) {
             if(ENTITIES[id].code) {
                 codeToEntities.set(ENTITIES[id].code, id);
+                codeToEntities.set(ENTITIES[id].code - 1, id);
             }
         }
     }
@@ -209,6 +215,7 @@ class ScreenCity extends Screen {
         for(let i = 0; i < length; i++) {
             let value = resources[i];
             if(value === 0) continue;
+            if(!codeToEntities.get(value)) continue;
             params.type = codeToEntities.get(value);
             params.z = Math.floor(i / ground.nbTileX);
             params.x = i % ground.nbTileX;

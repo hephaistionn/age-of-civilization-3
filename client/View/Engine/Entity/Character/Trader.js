@@ -7,30 +7,26 @@ const materialWood = require('../../Material/materialA');
 const THREE = require('three');
 
 const animations = {
-    walk: {duration: 800, steps: new Uint8Array([0, 1, 2, 3, 0])}
+    work: {duration: 5000, steps: new Uint8Array([0, 0, 1, 1, 0, 0])}
 };
 
-class Peon {
+class Trader {
 
     constructor(model, parent) {
         this.model = model;
         this.element = new THREE.Object3D();
         this.element.matrixAutoUpdate = false;
         this.element.frustumCulled = false;
-        this.element.name = 'Peon';
+        this.element.name = 'Trader';
         this.add(parent);
         this.loadMesh(model);
         this.animations = animations;
-        this.shape = new Shape(model.path || [], tileSize, tileHeight);
-        this.moveSpeed = model._speed * tileSize;
-        this.moveProgress = model.timer * this.moveSpeed;
-        this.currentAnimation = 'walk';
+        this.currentAnimation = 'work';
         this.updateState(model);
 
     }
 
     update(dt) {
-        this.followPath(dt);
         this.playAnimation(dt);
     }
 
@@ -66,7 +62,6 @@ class Peon {
     }
 }
 
-require('../decorator').followPath(Peon);
-require('../decorator').playAnimation(Peon);
+require('../decorator').playAnimation(Trader);
 
-module.exports = Peon;
+module.exports = Trader;

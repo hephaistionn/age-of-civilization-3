@@ -6,28 +6,19 @@ class Market extends Entity {
 
     constructor(params) {
         super(params);
-        this.power = params.power || 0;
-        this._cycle = params._cycle || 2000;
-        this.timer = params.timer || 0;
+        this.food = params.food || 0;
+        ee.emit('newEntity', {sourceId: this._id, type: 'Trader'});
         Market.instances.push(this);
     }
 
-    update() {
-        this.power += 1;
-        if(this.power >= 2) {
+    store(value) {
+        this.food += value;
+    }
 
-            ee.emit('newEntity', {
-                power: 5,
-                x: this.x,
-                y: this.y,
-                z: this.z,
-                a: 0,
-                target: 'House',
-                source: this,
-                type: 'Peon'
-            });
-            this.power = 0;
-        }
+    getWorkerSlot(step) {
+        const x = this.x + (step === 2 ? 0.2 : 0);
+        const z = this.z + 0.4;
+        return {x: x, y: this.y, z: z, a: Math.PI / 2}
     }
 
     onRemove() {
@@ -39,7 +30,7 @@ class Market extends Entity {
 
 Market.selectable = true;
 Market.description = 'This building increase the prosperity of your city';
-Market.tile_x = 2;
+Market.tile_x = 1;
 Market.tile_z = 1;
 Market.cost = {wood: 5, stone: 5};
 Market.require = {population: 4, wood: 5, stone: 5};

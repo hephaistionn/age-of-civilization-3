@@ -32,8 +32,13 @@ class ScreenCity extends Screen {
 
     initComponents(model, mapProperties) {
 
-        camera = new Camera({map: mapProperties, zoom: model.camera.zoom || 1.3, zoomMax: 1.8,
-            x: model.camera.x || mapProperties.nbTileX / 2 + 20, y: 24, z: model.camera.z || mapProperties.nbTileZ / 2 + 20
+        camera = new Camera({
+            map: mapProperties,
+            zoom: model.camera.zoom || 1.3,
+            zoomMax: 3,
+            x: model.camera.x || mapProperties.nbTileX / 2 + 20,
+            y: 24,
+            z: model.camera.z || mapProperties.nbTileZ / 2 + 20
         });
         light = new Light({shadow: true, targetX: camera.targetX, targetY: camera.targetY, targetZ: camera.targetZ});
         buildingMenu = new BuildingMenu();
@@ -119,7 +124,7 @@ class ScreenCity extends Screen {
             monitoringPanel.update();
         } else if(id) {
             entityManagerPanel.open(this.get(id));
-        }else {
+        } else {
             this.buildEntity();
             this.buildRoad();
         }
@@ -151,7 +156,12 @@ class ScreenCity extends Screen {
         this.remove(entity);
     }
 
-    buildEntity(){
+    getEntity(entityId, callback) {
+        const entity = this.get(entityId);
+        callback(entity);
+    }
+
+    buildEntity() {
         const params = positioner.getSelectEntity();
         if(!params) return;
         const entity = this.newEntity(params);
@@ -160,7 +170,7 @@ class ScreenCity extends Screen {
         monitoringPanel.update();
     }
 
-    buildRoad(){
+    buildRoad() {
         let params = roadPositioner.getSelectEntity();
         if(!params) return;
         road.updateState(params);
@@ -174,6 +184,10 @@ class ScreenCity extends Screen {
         for(let id in ENTITIES) {
             if(ENTITIES[id].code) {
                 codeToEntities.set(ENTITIES[id].code, id);
+                codeToEntities.set(ENTITIES[id].code - 1, id);
+                codeToEntities.set(ENTITIES[id].code - 2, id);
+                codeToEntities.set(ENTITIES[id].code - 3, id);
+                codeToEntities.set(ENTITIES[id].code - 4, id);
             }
         }
     }
@@ -194,13 +208,17 @@ class ScreenCity extends Screen {
         const params = {x: 0, y: 0, z: 0, a: 0};
         for(let i = 0; i < length; i++) {
             let value = resources[i];
+
             if(value === 0) continue;
+
             params.type = codeToEntities.get(value);
             params.z = Math.floor(i / ground.nbTileX);
             params.x = i % ground.nbTileX;
             params.y = ground.getHeightTile(params.x, params.z);
             params.a = Math.floor(Math.random() * 3.99) * Math.PI;
-            if(ground.grid.isWalkableAt(params.x, params.z)) {
+
+            if(!params.type) continue;
+            if(ground.grid.isWalkableAt(params.x, params.z) === 1) {
                 this.newEntity(params);
             }
         }
@@ -221,7 +239,7 @@ class ScreenCity extends Screen {
     }
 
     syncEntityToState(model) {
-        const hiddenProps = '_';
+        // const hiddenProps = '_';
         model.entities = {};
         for(let id of this.components.keys()) {
             const entity = this.components.get(id);
@@ -234,7 +252,7 @@ class ScreenCity extends Screen {
             }
             const entitySaved = {};
             for(let props in entity) {
-                if(props[0] === hiddenProps)continue;
+                // if(props[0] === hiddenProps)continue;
                 entitySaved[props] = entity[props];
             }
             model.entities[type].push(entitySaved);

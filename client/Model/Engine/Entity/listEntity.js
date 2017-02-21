@@ -11,11 +11,14 @@ module.exports = {
     WoodCutterHut: require('./Building/WoodCutterHut'),
 
     Tree: require('./Resource/Tree'),
+    TreeWeary: require('./Resource/TreeWeary'),
     Prey: require('./Resource/Prey'),
     Stone: require('./Resource/Stone'),
     Berry: require('./Resource/Berry'),
 
     Peon: require('./Character/Peon'),
+    WoodCutter: require('./Character/WoodCutter'),
+    Trader: require('./Character/Trader'),
 
     Road: require('./Road/Road')
 };

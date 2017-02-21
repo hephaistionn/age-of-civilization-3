@@ -14,12 +14,13 @@ function init(ground, entities) {
     currentGround = ground;
 }
 
-function computePath(params) {
+function computePath(source, targetType) {
     const grid = currentGround.grid;
-    let x = Math.floor(params.x);
-    let z = Math.floor(params.z);
-    const nearests = ENTITIES[params.target].getNearestEntities(x, z);
-    const sourceTiles = params.source.getTiles();
+    let x = Math.floor(source.x);
+    let z = Math.floor(source.z);
+    if(!targetType) return {};
+    const nearests = ENTITIES[targetType].getNearestEntities(x, z);
+    const sourceTiles = source.getTiles();
     let length = nearests.length;
     const paths = [];
     for(let i = 0; i < length; i++) {
@@ -29,10 +30,16 @@ function computePath(params) {
         if(pathTarget.length > 0)
             paths.push(pathTarget);
     }
+    if(paths.length === 0){
+        return {}
+    }
+
     let path = paths[0];
+    let targetId = nearests[0]._id;
     for(let k = 1; k < paths.length; k++) {
         if(path.length > paths[k].length) {
             path = paths[k];
+            targetId = nearests[k]._id
         }
     }
     //compute height
@@ -43,7 +50,11 @@ function computePath(params) {
             z = path[k + 1];
             path[k + 2] = currentGround.tilesHeight[currentGround.nbTileX * z + x];
         }
-        return path;
+        return {
+            path:path,
+            targetId:targetId,
+            sourceId: source._id
+        };
         //return pf.Util.compressPath(path);
     }
 }
@@ -59,12 +70,24 @@ function getPathLength(path) {
     return distance;
 }
 
+function revert(path) {
+    const l = path.length;
+    const  newPath = [];
+    for(let i = l-1; i > -1; i -= 3) {
+        newPath.push(path[i-2]);
+        newPath.push(path[i-1]);
+        newPath.push(path[i]);
+    }
+    return newPath;
+}
+
 
 const pathfinding = {
     'Grid': Grid,
     'init': init,
     'computePath': computePath,
-    'getPathLength': getPathLength
+    'getPathLength': getPathLength,
+    'revert' : revert
 };
 
 module.exports = pathfinding;

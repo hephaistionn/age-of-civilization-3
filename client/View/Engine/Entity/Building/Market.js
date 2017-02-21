@@ -8,7 +8,7 @@ module.exports = class Market {
 
     constructor(model, parent, materialForce) {
         this.model = model;
-        this.element = THREE.getMesh('obj/buildingB.obj', materialForce || material);
+        this.element = THREE.getMesh('obj/market_00.obj', materialForce || material);
         this.element.userData.id = model._id;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;

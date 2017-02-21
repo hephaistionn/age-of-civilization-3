@@ -1,11 +1,23 @@
 const Entity = require('../Entity');
 const stateManager = require('../../../../services/stateManager');
+const ee = require('../../../../services/eventEmitter');
 
 class House extends Entity {
 
     constructor(params) {
         super(params);
+        this.time = params.time || 0;
+        this.cycle = params.cycle || 2000;
+        this.timer = params.timer || 0;
         House.instances.push(this);
+    }
+
+    update() {
+        this.time += 1;
+        if(this.time >= 10) {
+            ee.emit('newEntity', {wood: 0, sourceId: this._id, type: 'Peon'});
+            this.time = 0;
+        }
     }
 
     onRemove() {

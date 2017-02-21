@@ -25,7 +25,10 @@ function unstake(meshesTemp, meshRef) {
         parentMesh = meshTemp.parent;
         parentMesh.remove(meshTemp);
         parentMesh.add(meshEnded);
-        parentView.element = meshEnded;
+        if(parentView){
+            parentView.element = meshEnded;
+        }
+
     }
 }
 

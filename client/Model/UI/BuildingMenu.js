@@ -13,6 +13,7 @@ class BuildingMenu {
             state: [
                 'House',
                 'Market',
+                'WoodCutterHut',
                 'dirtRoad',
                 'stoneRoad',
                 'Destroy']

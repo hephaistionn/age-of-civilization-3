@@ -1,8 +1,10 @@
-module.exports.followPath = function followPath(Component){
+const THREE = require('three');
 
-    Component.prototype.followPath = function followPath(dt){
+module.exports.followPath = function followPath(Component) {
 
-        if(this.shape.length === 0) return;
+    Component.prototype.followPath = function followPath(dt) {
+
+        if(!this.shape.length) return;
         this.moveProgress += dt * this.moveSpeed;
 
         this.moveProgress = Math.min(this.shape.length, this.moveProgress);
@@ -25,35 +27,70 @@ module.exports.followPath = function followPath(Component){
     Component.prototype.moveSpeed = 400;
 };
 
-module.exports.playAnimation = function playAnimation(Component){
+module.exports.playAnimation = function playAnimation(Component) {
 
-    Component.prototype.playAnimation = function playAnimation(dt){
+    Component.prototype.playAnimation = function playAnimation(dt) {
+        let mesh;
 
-        if(!this.element.morphTargetInfluences) return;
+        if(this.element.morphTargetInfluences) {
+            mesh = this.element;
+        } else if(this.element.children[0] && this.element.children[0].morphTargetInfluences) {
+            mesh = this.element.children[0];
+        } else if(this.element.children[1] && this.element.children[1].morphTargetInfluences) {
+            mesh = this.element.children[1];
+        } else {
+            return;
+        }
 
         const animation = this.animations[this.currentAnimation];
         const steps = animation.steps;
         const duration = animation.duration;
         const nbSteps = steps.length - 1;
-        const nbTarget = this.element.morphTargetInfluences.length;
+        const nbTarget = mesh.morphTargetInfluences.length;
 
         this.animProgress += dt / duration;
         if(this.animProgress > 1) {
-            this.animProgress = Math.min(this.animProgress,1) - 1;
+            this.animProgress = Math.min(this.animProgress, 1) - 1;
         }
 
-        const indexStep = Math.min(Math.floor(this.animProgress * nbSteps), nbSteps-1);
+        const indexStep = Math.min(Math.floor(this.animProgress * nbSteps), nbSteps - 1);
 
-        for(let i=0; i<nbTarget; i++){
-            this.element.morphTargetInfluences[i] = 0
+        for(let i = 0; i < nbTarget; i++) {
+            mesh.morphTargetInfluences[i] = 0
         }
 
         const ia = steps[indexStep];
-        const ib = steps[indexStep+1];
-        this.element.morphTargetInfluences[ib] = this.animProgress / (1/nbSteps) - indexStep;
-        this.element.morphTargetInfluences[ia] = 1 - this.element.morphTargetInfluences[ib];
+        const ib = steps[indexStep + 1];
+        mesh.morphTargetInfluences[ib] = this.animProgress / (1 / nbSteps) - indexStep;
+        mesh.morphTargetInfluences[ia] = 1 - mesh.morphTargetInfluences[ib];
 
     };
 
     Component.prototype.animProgress = 0;
+};
+
+
+module.exports.replaceMesh = function replaceMesh(Component) {
+
+    Component.prototype.previousGeo = null;
+
+    Component.prototype.replaceMesh = function replaceMesh(path, material, model) {
+        if(path === this.previousGeo) return;
+
+        this.previousGeo = path;
+
+        for(let i = 0; i < this.element.children.length; i++) {
+            if(this.element.children[i].name === model.constructor.name) {
+                this.element.remove(this.element.children[i]);
+            }
+        }
+        const mesh = THREE.getMesh(path, material);
+        mesh.userData.id = model.id;
+        mesh.frustumCulled = false;
+        mesh.matrixAutoUpdate = false;
+        mesh.castShadow = true;
+        mesh.name = model.constructor.name;
+        this.element.add(mesh)
+    };
+
 };

@@ -69,6 +69,7 @@ module.exports = class PixelMap {
         const dataHeights = new Uint8Array(size);
         const dataResources = new Uint8Array(size);
         let index = 0;
+
         for(let i = 0; i < size; i++) {
             index = i * 4;
             dataHeights[i] = imageData[index + 3];

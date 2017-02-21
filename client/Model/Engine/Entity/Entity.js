@@ -7,7 +7,7 @@ class Entity {
         this.y = 0;
         this.z = 0;
         this.a = 0;
-        this._id = 0;
+        this._id = parseInt(params._id, 10);
         this.move(params.x || 0, params.y || 0, params.z || 0, params.a || 0);
     }
 
@@ -30,6 +30,13 @@ class Entity {
 
         this.x = xFirstTile + xNbTile / 2;
         this.z = zFirstTile + zNbTile / 2;
+        this.y = y;
+    }
+
+    moveFree(x, y, z, a) {
+        this.a = a;
+        this.x = x;
+        this.z = z;
         this.y = y;
     }
 
@@ -59,7 +66,7 @@ class Entity {
 
     updateTimer(dt) {
         this.timer += dt;
-        if(this.timer > this._cycle) {
+        if(this.timer > this.cycle) {
             this.update();
             this.timer = 0;
         }

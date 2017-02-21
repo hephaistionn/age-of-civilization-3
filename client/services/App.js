@@ -37,6 +37,7 @@ class App {
 
         ee.on('newEntity', this.newEntity.bind(this));
         ee.on('removeEntity', this.removeEntity.bind(this));
+        ee.on('getEntity', this.getEntity.bind(this));
 
         ee.on('touchStart', this.touchStart.bind(this));
         ee.on('touchEnd', this.touchEnd.bind(this));
@@ -112,10 +113,11 @@ class App {
         const mapPath = 'map/' + params.mapId + '.png';
         const areaMapPath = params.areaMapId ? 'map/' + params.areaMapId + '.png' : null;
         this.pixelMap.compute(mapPath, areaMapPath, (dataMap)=> {
-            this.modelInstances[id] = new this.models[id](params, dataMap);
+            this.modelInstances[id] = new this.models[id]();
             this.params[id] = params;
-            this.viewInstances[id] = new Screen();
+            this.viewInstances[id] = new Screen(params, dataMap);
             this.model = this.modelInstances[id];
+            this.model.initComponents(params, dataMap)
             if(this.model.beforeShow)
                 this.model.beforeShow(params);
             this.view = this.viewInstances[id];
@@ -232,6 +234,11 @@ class App {
     removeEntity(entityId) {
         if(this.model.removeEntity)
             this.model.removeEntity(entityId);
+    }
+
+    getEntity(entityId, callback) {
+        if(this.model.getEntity)
+            this.model.getEntity(entityId, callback);
     }
 
     touchStart(x, y) {

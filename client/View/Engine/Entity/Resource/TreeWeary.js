@@ -4,11 +4,11 @@ const tileHeight = config.tileHeight;
 const material = require('../../Material/materialA');
 const THREE = require('three');
 
-module.exports = class Tree {
+module.exports = class TreeWeary {
 
     constructor(model, parent) {
         this.model = model;
-        this.element = THREE.getMesh('obj/tree_00.obj', material);
+        this.element = THREE.getMesh('obj/treeWeary_00.obj', material);
         this.element.userData.id = model._id;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;

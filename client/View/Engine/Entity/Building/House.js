@@ -8,7 +8,7 @@ module.exports = class House {
 
     constructor(model, parent, materialForce) {
         this.model = model;
-        this.element = THREE.getMesh('obj/buildingA.obj', materialForce || material);
+        this.element = THREE.getMesh('obj/house_00.obj', materialForce || material);
         this.element.userData.id = model._id;
         this.element.userData.parent = this;
         this.element.frustumCulled = false;
