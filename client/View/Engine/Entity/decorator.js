@@ -80,16 +80,11 @@ module.exports.replaceMesh = function replaceMesh(Component) {
         this.previousGeo = path;
 
         for(let i = 0; i < this.element.children.length; i++) {
-            if(this.element.children[i].name === model.constructor.name) {
+            if(this.element.children[i].name === model._id) {
                 this.element.remove(this.element.children[i]);
             }
         }
-        const mesh = THREE.getMesh(path, material);
-        mesh.userData.id = model.id;
-        mesh.frustumCulled = false;
-        mesh.matrixAutoUpdate = false;
-        mesh.castShadow = true;
-        mesh.name = model.constructor.name;
+        const mesh = THREE.getMesh(path, material, model._id);
         this.element.add(mesh)
     };
 

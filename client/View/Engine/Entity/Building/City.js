@@ -23,25 +23,12 @@ module.exports = class City {
         }
 
         if(this.element) {
-            const mesh = THREE.getMesh(path, material);
-            mesh.userData.id = model.id;
-            mesh.userData.parent = this;
-            mesh.frustumCulled = false;
-            mesh.matrixAutoUpdate = false;
-            mesh.castShadow = true;
-            mesh.name = 'City';
-            const parent = this.element.parent;
-            parent.remove(this.element);
-            parent.add(mesh);
+            const mesh = THREE.getMesh(path, material, model.id);
+            this.element.parent.remove(this.element);
+            this.element.parent.add(mesh);
             this.element = mesh;
         } else {
             this.element = THREE.getMesh(path, material);
-            this.element.userData.id = this.model._id;
-            this.element.userData.parent = this;
-            this.element.frustumCulled = false;
-            this.element.matrixAutoUpdate = false;
-            this.element.castShadow = true;
-            this.element.name = 'City';
         }
     }
 

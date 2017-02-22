@@ -14,19 +14,14 @@ class Peon {
 
     constructor(model, parent) {
         this.model = model;
-        this.element = new THREE.Object3D();
-        this.element.matrixAutoUpdate = false;
-        this.element.frustumCulled = false;
-        this.element.name = 'Peon';
-        this.add(parent);
-        this.loadMesh(model);
+        this.element = THREE.getMesh('obj/unityA/unityA.obj', material, model._id);
         this.animations = animations;
         this.shape = new Shape(model.path || [], tileSize, tileHeight);
         this.moveSpeed = model._speed * tileSize;
         this.moveProgress = model.timer * this.moveSpeed;
         this.currentAnimation = 'walk';
         this.updateState(model);
-
+        this.add(parent);
     }
 
     update(dt) {
@@ -43,17 +38,6 @@ class Peon {
         matrixWorld[2] = Math.sin(this.model.a);
         matrixWorld[8] = -matrixWorld[2];
         matrixWorld[10] = matrixWorld[0];
-        this.element.children[0].matrixWorld = this.element.matrixWorld;
-    }
-
-    loadMesh(model) {
-        const mesh = THREE.getMesh('obj/unityA/unityA.obj', material);
-        mesh.userData.id = model.id;
-        mesh.frustumCulled = false;
-        mesh.matrixAutoUpdate = false;
-        mesh.castShadow = true;
-        mesh.name = model.constructor.name;
-        this.element.add(mesh)
     }
 
     remove(parent) {

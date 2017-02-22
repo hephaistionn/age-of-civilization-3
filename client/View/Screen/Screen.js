@@ -124,9 +124,9 @@ class Screen {
             point.x /= tileSize;
             point.z /= tileSize;
             const mesh = intersects[0].object;
-            if(mesh.userData.id) {////////////////
+            if(mesh.name) {////////////////
                 return {
-                    id: mesh.userData.id,
+                    id: mesh.name,
                     x: point.x,
                     z: point.z
                 }

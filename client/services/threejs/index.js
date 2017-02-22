@@ -1,9 +1,10 @@
 const THREE = require('three');
-require('./MeshLoaderAsync.js');
+require('./MeshLoaderAsync');
 require('./Shape');
 require('./PlaneBufferGeometry');
 require('./AttributeLoader');
 require('./loadTexture');
+require('./Mesh');
 //require('./renderer');
 require('./SimplifyModifier');
 require('./SubdivisionModifier');

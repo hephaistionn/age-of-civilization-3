@@ -8,13 +8,7 @@ module.exports = class Berry {
 
     constructor(model, parent) {
         this.model = model;
-        this.element = THREE.getMesh('obj/berry_00.obj', material);
-        this.element.userData.id = model._id;
-        this.element.userData.parent = this;
-        this.element.frustumCulled = false;
-        this.element.matrixAutoUpdate = false;
-        this.element.castShadow = true;
-        this.element.name = 'Berry';
+        this.element = THREE.getMesh('obj/berry_00.obj', material, model._id);
         this.updateState();
         this.add(parent);
     }

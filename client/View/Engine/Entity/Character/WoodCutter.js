@@ -19,7 +19,6 @@ class WoodCutter {
         this.element = new THREE.Object3D();
         this.element.matrixAutoUpdate = false;
         this.element.frustumCulled = false;
-        this.element.name = 'WoodCutter';
         this.add(parent);
         this.updateMesh();
         this.animations = animations;
@@ -86,10 +85,7 @@ class WoodCutter {
     }
 
     addItem() {
-        const meshItem = THREE.getMesh('obj/wood_00.obj', materialWood);
-        meshItem.frustumCulled = false;
-        meshItem.castShadow = true;
-        meshItem.matrixAutoUpdate = false;
+        const meshItem = THREE.getMesh('obj/wood_00.obj', materialWood, '00');
         this.element.add(meshItem);
     }
 

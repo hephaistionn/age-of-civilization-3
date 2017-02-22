@@ -8,13 +8,7 @@ module.exports = class WoodCutterHut {
 
     constructor(model, parent, materialForce) {
         this.model = model;
-        this.element = THREE.getMesh('obj/woodCutterHut_00.obj', materialForce || material);
-        this.element.userData.id = model._id;
-        this.element.userData.parent = this;
-        this.element.frustumCulled = false;
-        this.element.matrixAutoUpdate = false;
-        this.element.castShadow = true;
-        this.element.name = 'Market';
+        this.element = THREE.getMesh('obj/woodCutterHut_00.obj', materialForce || material, model._id);
         this.updateState();
         this.add(parent);
     }
