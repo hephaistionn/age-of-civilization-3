@@ -9,7 +9,6 @@ class House extends Entity {
         this.time = params.time || 0;
         this.cycle = params.cycle || 2000;
         this.timer = params.timer || 0;
-        House.instances.push(this);
     }
 
     update() {
@@ -20,10 +19,6 @@ class House extends Entity {
         }
     }
 
-    onRemove() {
-        const index = House.instances.indexOf(this);
-        House.instances.splice(index, 1);
-    }
 }
 
 House.selectable = true;

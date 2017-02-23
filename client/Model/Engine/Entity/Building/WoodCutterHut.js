@@ -10,7 +10,6 @@ class WoodCutterHut extends Entity {
         this.workers = params.workers || 0;
         this.cycle = params.cycle || 2000;
         this.timer = params.timer || 0;
-        WoodCutterHut.instances.push(this);
     }
 
     update() {
@@ -25,12 +24,6 @@ class WoodCutterHut extends Entity {
         this.timer = 0;
         this.wood += value;
     }
-
-    onRemove() {
-        const index = WoodCutterHut.instances.indexOf(this);
-        WoodCutterHut.instances.splice(index, 1);
-    }
-
 }
 
 WoodCutterHut.selectable = true;

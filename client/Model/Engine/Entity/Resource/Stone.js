@@ -6,14 +6,7 @@ class Stone extends Entity {
         super(params);
         this.stone = 100;
         this.exp = false;
-        Stone.instances.push(this);
     }
-
-    onRemove() {
-        const index = Stone.instances.indexOf(this);
-        Stone.instances.splice(index, 1);
-    }
-
 }
 Stone.selectable = false;
 Stone.tile_x = 1;

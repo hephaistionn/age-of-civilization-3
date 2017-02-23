@@ -9,6 +9,7 @@ class Entity {
         this.a = 0;
         this._id = parseInt(params._id, 10);
         this.move(params.x || 0, params.y || 0, params.z || 0, params.a || 0);
+        this.constructor.instances.push(this);
     }
 
     move(x, y, z, a) {
@@ -97,6 +98,12 @@ class Entity {
         }
     }
 
+    onRemove() {
+        debugger;
+        const index = this.constructor.instances.indexOf(this);
+        this.constructor.instances.splice(index, 1);
+    }
+
 }
 
 Entity.available = function available() {
@@ -128,5 +135,6 @@ Entity.getNearestEntities = function getNearestEntities(x, z, max) {
 };
 
 Entity.entity = true;
+Entity.instances = [];
 
 module.exports = Entity;

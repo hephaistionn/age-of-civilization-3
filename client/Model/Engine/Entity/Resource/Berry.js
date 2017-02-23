@@ -6,14 +6,7 @@ class Berry extends Entity {
         super(params);
         this.berry = 100;
         this.exp = false;
-        Berry.instances.push(this);
     }
-
-    onRemove() {
-        const index = Berry.instances.indexOf(this);
-        Berry.instances.splice(index, 1);
-    }
-
 }
 Berry.selectable = false;
 Berry.tile_x = 1;

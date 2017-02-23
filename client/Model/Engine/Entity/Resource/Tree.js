@@ -7,7 +7,6 @@ class Tree extends Entity {
         super(params);
         this.wood = params.wood || 10000;
         this.exp = params.exp || false;
-        Tree.instances.push(this);
     }
 
     getResource(value) {
@@ -27,11 +26,6 @@ class Tree extends Entity {
         const x = this.x + Math.cos(a) * 0.35;
         const z = this.z + Math.sin(a) * 0.35;
         return {x: x, y: this.y, z: z, a: a+Math.PI}
-    }
-
-    onRemove() {
-        const index = Tree.instances.indexOf(this);
-        Tree.instances.splice(index, 1);
     }
 
 }

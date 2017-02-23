@@ -8,7 +8,6 @@ class Market extends Entity {
         super(params);
         this.food = params.food || 0;
         ee.emit('newEntity', {sourceId: this._id, type: 'Trader'});
-        Market.instances.push(this);
     }
 
     store(value) {
@@ -19,11 +18,6 @@ class Market extends Entity {
         const x = this.x + (step === 2 ? 0.2 : 0);
         const z = this.z + 0.4;
         return {x: x, y: this.y, z: z, a: Math.PI / 2}
-    }
-
-    onRemove() {
-        const index = Market.instances.indexOf(this);
-        Market.instances.splice(index, 1);
     }
 
 }
