@@ -15,8 +15,7 @@ class Worldmap {
         this.element = this.initGround(model);
         this.element.matrixAutoUpdate = false;
         this.element.frustumCulled = false;
-        this.element.userData.id = model.id;
-        this.element.name = 'worldmap';
+        this.element.name = model._id;
 
         this.updateState(model);
         this.add(parent);

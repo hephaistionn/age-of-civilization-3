@@ -87,7 +87,6 @@ class Ground {
         const chunkGeo = this.createChunkGeo(nbXTiles, nbZTiles, model);
         chunkGeo.computeBoundingBox();
         const chunkMesh = new THREE.Mesh(chunkGeo, this.materialGround);
-        chunkMesh.name = 'chunck';
         chunkMesh.matrixAutoUpdate = false;
         chunkMesh.matrixWorldNeedsUpdate = false;
         chunkMesh.receiveShadow = true;
@@ -265,11 +264,11 @@ class Ground {
 
     }
 
-    remove(parent){
+    remove(parent) {
         parent.render.scene.remove(this.element);
     }
 
-    add(parent){
+    add(parent) {
         parent.render.scene.add(this.element);
     }
 }

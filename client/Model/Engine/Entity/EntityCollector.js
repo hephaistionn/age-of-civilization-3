@@ -5,10 +5,10 @@ const pathfinding = require('../../../services/pathfinding');
 class EntityCollector {
 
     constructor(params) {
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
-        this.a = 0;
+        this.x = params.x || 0;
+        this.y = params.y || 0;
+        this.z = params.z || 0;
+        this.a = params.a || 0;
         this._id = parseInt(params._id, 10);
         this.state = params.state || 0;
         this.sourceId = params.sourceId;
@@ -65,9 +65,10 @@ class EntityCollector {
                 this.sourceId = dataPath.sourceId || null;
                 this.cycle = dataPath.path ? pathfinding.getPathLength(this.path) / this._speed : 0;
                 this.updated = true;
-                ee.emit('getEntity', this.targetId, entity => {
-                    entity.exp = true;
-                })
+                if(this.path)
+                    ee.emit('getEntity', this.targetId, entity => {
+                        entity.exp = true;
+                    })
             } else {
                 ee.emit('removeEntity', this._id);
             }

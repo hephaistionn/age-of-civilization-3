@@ -26,7 +26,7 @@ class Tree extends Entity {
         const a = Math.random() * Math.PI * 2;
         const x = this.x + Math.cos(a) * 0.35;
         const z = this.z + Math.sin(a) * 0.35;
-        return {x: x, y: this.y, z: z, a: a}
+        return {x: x, y: this.y, z: z, a: a+Math.PI}
     }
 
     onRemove() {

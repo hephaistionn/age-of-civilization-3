@@ -3,41 +3,33 @@ const tileSize = config.tileSize;
 const tileHeight = config.tileHeight;
 const THREE = require('three');
 const material = require('../../Material/materialA');
+const Entity = require('../Entity');
 
-module.exports = class City {
+module.exports = class City extends Entity {
 
-    constructor(model, parent) {
-        this.model = model;
-        this.updateMesh();
-        this.level = this.model.level;
-        this.updateState();
-        this.add(parent);
+    initMesh(model) {
+        this.element = new THREE.Object3D();
+        this.element.matrixAutoUpdate = false;
+        this.element.frustumCulled = false;
     }
 
-    updateMesh() {
+    updateMesh(model) {
         let path; // path = path.replace('@1', model.geo).replace('@2', model.level);
-        if(this.model.level === 0) {
-            path = 'obj/flagA.obj';
-        } else {
-            path = 'obj/cityA.obj';
+        switch(this.model.level) {
+            case 1:
+                path = 'obj/cityA.obj';
+                break;
+            default :
+                path = 'obj/flagA.obj';
         }
-
-        if(this.element) {
-            const mesh = THREE.getMesh(path, material, model.id);
-            this.element.parent.remove(this.element);
-            this.element.parent.add(mesh);
-            this.element = mesh;
-        } else {
-            this.element = THREE.getMesh(path, material);
-        }
+        this.element.remove(this.element.children[0]);
+        this.element.add(new THREE.getMesh(path, material, model._id));
     }
 
     updateState() {
-        if(this.model.level !== this.level) {
-            this.level = this.model.level;
-            this.updateMesh();
-        }
-        const matrixWorld = this.element.matrixWorld.elements;
+        this.level = this.model.level;
+        this.updateMesh(this.model);
+        const matrixWorld = this.element.children[0].matrixWorld.elements;
         matrixWorld[12] = this.model.x * tileSize;
         matrixWorld[14] = this.model.z * tileSize;
         matrixWorld[13] = this.model.y * tileHeight;
@@ -47,12 +39,4 @@ module.exports = class City {
         matrixWorld[10] = matrixWorld[0];
     }
 
-    remove(parent) {
-        parent.render.scene.remove(this.element);
-    }
-
-    add(parent) {
-        if(parent)
-            parent.render.scene.add(this.element);
-    }
 };

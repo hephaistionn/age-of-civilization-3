@@ -7,21 +7,22 @@ class WoodCutterHut extends Entity {
     constructor(params) {
         super(params);
         this.wood = params.wood || 0;
-        this.power = params.power || 6;
+        this.workers = params.workers || 0;
         this.cycle = params.cycle || 2000;
         this.timer = params.timer || 0;
         WoodCutterHut.instances.push(this);
     }
 
     update() {
-        this.power += 1;
-        if(this.power >= 6) {
+        if(this.workers === 0) {
             ee.emit('newEntity', {sourceId: this._id, type: 'WoodCutter'});
-            this.power = 0;
+            this.workers++;
         }
     }
 
     store(value) {
+        this.workers--;
+        this.timer = 0;
         this.wood += value;
     }
 

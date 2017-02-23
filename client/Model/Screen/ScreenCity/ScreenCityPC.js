@@ -152,6 +152,7 @@ class ScreenCity extends Screen {
 
     removeEntity(entityId) {
         const entity = this.get(entityId);
+        if(!entity) return;
         ground.setWalkableTile(entity, 1);
         this.remove(entity);
     }
