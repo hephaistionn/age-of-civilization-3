@@ -7,13 +7,8 @@ class Trader extends EntityWorker {
         super(params);
         this._maxStep = 2;
         this._cycleDuration = 5000;
-        Trader.instances.push(this);
     }
 
-    onRemove() {
-        const index = Trader.instances.indexOf(this);
-        Trader.instances.splice(index, 1);
-    }
 }
 
 Trader.selectable = true;

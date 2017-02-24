@@ -1,5 +1,4 @@
 const Entity = require('../Entity');
-const stateManager = require('../../../../services/stateManager');
 const ee = require('../../../../services/eventEmitter');
 
 class House extends Entity {

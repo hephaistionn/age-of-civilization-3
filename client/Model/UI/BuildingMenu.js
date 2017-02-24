@@ -14,6 +14,12 @@ class BuildingMenu {
                 'House',
                 'Market',
                 'WoodCutterHut',
+                'Attic',
+                'Barrack',
+                'HunterHut',
+                'LeaderHut',
+                'Repository',
+                'StoneMine',
                 'dirtRoad',
                 'stoneRoad',
                 'Destroy']

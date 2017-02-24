@@ -14,6 +14,7 @@ class EntityWorker {
         this.sourceId = params.sourceId;
         this.cycle = 1;
         this.timer = params.timer || 0;
+        this.constructor.instances.push(this);
     }
 
     moveFree(x, y, z, a) {
@@ -52,6 +53,11 @@ class EntityWorker {
 
     getTiles() {
         return [this.x - 0.5, this.x - 0.5];
+    }
+
+    onRemove() {
+        const index = this.constructor.instances.indexOf(this);
+        this.constructor.instances.splice(index, 1);
     }
 }
 

@@ -8,12 +8,6 @@ class Peon extends EntityCarrier {
         this._capacity = 5;
         this._speed = 0.001;
         this._targetType = 'Market';
-        Peon.instances.push(this);
-    }
-
-    onRemove() {
-        const index = Peon.instances.indexOf(this);
-        Peon.instances.splice(index, 1);
     }
 }
 

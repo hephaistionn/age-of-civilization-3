@@ -8,13 +8,8 @@ class WoodCutter extends EntityCollector {
         this._workDuration = 5000;
         this._speed = 0.001;
         this._targetType = 'Tree';
-        WoodCutter.instances.push(this);
     }
 
-    onRemove() {
-        const index = WoodCutter.instances.indexOf(this);
-        WoodCutter.instances.splice(index, 1);
-    }
 }
 
 WoodCutter.selectable = true;

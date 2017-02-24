@@ -17,6 +17,7 @@ class EntityCarrier {
         this.targetId = params.targetId ? params.targetId : null;
         this.cycle = params.cycle ? params.cycle : 1;
         this.timer = params.timer || 0;
+        this.constructor.instances.push(this);
     }
 
     move(x, y, z, a) {
@@ -73,6 +74,11 @@ class EntityCarrier {
 
     getTiles() {
         return [this.x - 0.5, this.x - 0.5];
+    }
+
+    onRemove() {
+        const index = this.constructor.instances.indexOf(this);
+        this.constructor.instances.splice(index, 1);
     }
 
 }

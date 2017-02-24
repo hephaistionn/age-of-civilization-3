@@ -99,7 +99,6 @@ class Entity {
     }
 
     onRemove() {
-        debugger;
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
     }

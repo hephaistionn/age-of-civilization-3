@@ -1,6 +1,5 @@
 const Entity = require('../Entity');
 const ee = require('../../../../services/eventEmitter');
-const stateManager = require('../../../../services/stateManager');
 
 class Market extends Entity {
 
