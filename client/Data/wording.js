@@ -1,6 +1,6 @@
 const codeCountry = 'fr';
 
-locales = {
+const locales = {
     fr: {
         wood: 'wood',
         stone: 'stone',
