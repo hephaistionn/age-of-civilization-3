@@ -1,6 +1,7 @@
 const THREE = require('../../services/threejs');
 const ENTITIES = require('./Entity/listEntity');
 const config = require('./config');
+const ee = require('../../services/eventEmitter');
 const tileSize = config.tileSize;
 const tileHeight = config.tileHeight;
 
@@ -37,6 +38,7 @@ module.exports = class Positioner {
             this.material.color.setHex(model.undroppable ? 0xff0000 : 0x0000ff);
             this.element.add(this.selected.element);
             this.element.add(this.meshHelper);
+            ee.emit('selectingEntity');
         } else {
             this.material.color.setHex(model.undroppable ? 0xff0000 : 0x0000ff);
             this.selected.updateState(model.selected);

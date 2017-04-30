@@ -20,5 +20,8 @@ module.exports = {
     WoodCutter: require('./Character/WoodCutter'),
     Trader: require('./Character/Trader'),
 
-    Road: require('./Road/Road')
+    Road: require('./Road/Road'),
+    RoadDirty: require('./Road/RoadDirty'),
+    RoadStone: require('./Road/RoadStone')
+
 };

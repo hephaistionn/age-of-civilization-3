@@ -7,6 +7,7 @@ const EditorPanel = require('../../UI/EditorPanel');
 const BuildingMenu = require('../../UI/BuildingMenu');
 const MonitoringPanel = require('../../UI/MonitoringPanel');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
+const HelpPanel = require('../../UI/HelpPanel');
 const VictoryPanel = require('../../UI/VictoryPanel');
 const Ground = require('../../Engine/Ground');
 const Light = require('../../Engine/Light');
@@ -23,6 +24,7 @@ let camera;
 let light;
 let buildingMenu;
 let monitoringPanel;
+let helpPanel;
 let entityManagerPanel;
 let editorPanel;
 let ground;
@@ -45,6 +47,7 @@ class ScreenCity extends Screen {
         light = new Light({shadow: true, targetX: camera.targetX, targetY: camera.targetY, targetZ: camera.targetZ});
         buildingMenu = new BuildingMenu();
         monitoringPanel = new MonitoringPanel();
+        helpPanel = new HelpPanel();
         entityManagerPanel = new EntityManagerPanel();
         ground = new Ground(mapProperties);
         road = new Road(ground, model.road);
@@ -63,7 +66,7 @@ class ScreenCity extends Screen {
                 positioner.selectEntity(entityId);
                 positioner.moveEntity(camera.targetX, camera.targetZ, ground);
                 roadPositioner.selectEntity(entityId);
-                editorPanel.showRoadeEditor();
+                editorPanel.showEntityEditor();
             }
             buildingMenu.close();
         });
@@ -80,6 +83,7 @@ class ScreenCity extends Screen {
         this.add(light);
         this.add(buildingMenu);
         this.add(monitoringPanel);
+        this.add(helpPanel);
         this.add(entityManagerPanel);
         this.add(editorPanel);
         this.add(ground);
@@ -125,6 +129,10 @@ class ScreenCity extends Screen {
         positioner.moveEntity(x, z, ground);
     }
 
+    selectedProjection(screenX, screenY) {
+        editorPanel.move(screenX, screenY);
+    }
+
     touchStart(x, z) {
 
     }
@@ -135,7 +143,7 @@ class ScreenCity extends Screen {
             this.get(id).restoreState();
             this.removeEntity(id);
             monitoringPanel.update();
-        } else if(id) {
+        } else if(id && !positioner.selected) {
             entityManagerPanel.open(this.get(id));
         } else {
             roadPositioner.mouseDown(x, z)
@@ -151,6 +159,10 @@ class ScreenCity extends Screen {
     zoom(delta) {
         camera.scale(delta);
         light.scale(camera.zoom);
+    }
+
+    showHelper(IdEntity) {
+        helpPanel.open(IdEntity);
     }
 
     newEntity(params) {

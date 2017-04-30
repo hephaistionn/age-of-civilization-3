@@ -1,14 +1,14 @@
-@import "./BuildingMenu/BuildingMenuMobile";
-@import "./BuildingMenu/BuildingMenuPC";
-@import "./EditorPanel/EditorPanel";
-@import "./MonitoringPanel/MonitoringPanelMobile";
-@import "./MonitoringPanel/MonitoringPanelPC";
-@import "./WorldmapMenu/WorldmapMenuMobile";
-@import "./WorldmapMenu/WorldmapMenuPC";
-@import "./EntityManagerPanel/EntityManagerPanelPC";
-@import "./FirstStartPanel/FirstStartPanelPC";
-@import "./LeaderCreationPanel/LeaderCreationPanelPC";
-@import "./VictoryPanel/VictoryPanelPC";
+@import "./BuildingMenu/style";
+@import "./EditorPanel/style";
+@import "./MonitoringPanel/style";
+@import "./WorldmapMenu/style";
+@import "./EntityManagerPanel/style";
+@import "./HelpPanel/style";
+@import "./FirstStartPanel/style";
+@import "./LeaderCreationPanel/style";
+@import "./VictoryPanel/style";
+@import "./icons";
+
 div {
   position: relative;
   -webkit-user-select: none;
@@ -21,7 +21,7 @@ div {
   background-size: cover;
 }
 
-.nodeOverlay{
+.nodeOverlay {
   position: fixed;
   top: 0;
   left: 0;

@@ -1,0 +1,147 @@
+.buildingMenu.pc {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+
+  .categoriesContainer {
+    position: absolute;
+    left: 0;
+    bottom: 190px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    z-index: 2;
+    .item {
+      cursor: pointer;
+      text-align: center;
+      width: 128px;
+      height: 128px;
+      margin: 0 20px 0 20px;
+      display: inline-block;
+      &:hover {
+
+      }
+
+      &.focus {
+
+      }
+    }
+  }
+
+  .buildingContainer {
+    position: absolute;
+    background: linear-gradient(180deg, #2b1d0e, #545218);
+    height: 190px;
+    bottom: 0;
+    width: 100%;
+    overflow-x: scroll;
+    left: 0;
+    padding: 0 30px 0 0;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .buildingContent {
+      position: absolute;
+      width: auto;
+      height: 190px;
+      left: 0;
+      top: 0;
+      white-space: nowrap;
+    }
+
+    .item {
+      background-image: url("pic/ui/item.png");
+      cursor: pointer;
+      text-align: center;
+      width: 270px;
+      height: 170px;
+      margin: 6px 0 0 30px;
+      display: inline-block;
+      color: white;
+      font-size: 13px;
+      .overflow {
+      }
+
+      .preview {
+        background-size: 128px;
+        background-repeat: no-repeat;
+        position: absolute;
+        width: 128px;
+        height: 128px;
+        top: 30px;
+        left: 14px;
+      }
+
+      .name {
+        position: absolute;
+        margin: 8px 14px;
+        color: black;
+      }
+
+      .helper {
+        position: absolute;
+        right: 0;
+        top: 0;
+        background-color: #381d15;
+        color: white;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+      }
+
+      .resources {
+        position: absolute;
+        top: 27px;
+        right: 10px;
+        width: 100px;
+        .resource {
+          position: relative;
+          height: 30px;
+          width: 100px;
+          .icon {
+            width: 30px;
+            height: 30px;
+          }
+          .value {
+            position: absolute;
+            top: 0;
+            left: 35px;
+            line-height: 30px;
+          }
+        }
+      }
+
+    }
+
+  }
+
+  /** ANIMATION CLOSE OPEN */
+
+  .categoriesContainer {
+    transition-property: transform;
+    transition-duration: 350ms;
+    transform: translateY(0px);
+  }
+  .buildingContainer {
+    transition-property: transform;
+    transition-duration: 350ms;
+    transform: translateY(0px);
+  }
+
+  &.hide {
+    display: none;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  &.collapse {
+    .categoriesContainer {
+      transform: translateY(190px);
+    }
+    .buildingContainer {
+      transform: translateY(190px);
+    }
+  }
+}

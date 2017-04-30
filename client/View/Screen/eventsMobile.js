@@ -16,6 +16,8 @@ module.exports = Screen => {
         this.canvas.addEventListener('touchmove', this.events.__touchMove);
         this.events.__resize = this._resize.bind(this);
         window.addEventListener('resize', this.__resize, false);
+        this.events.__selectingEntity = this._selectingEntity.bind(this);
+        ee.on('selectingEntity', this.events.__selectingEntity);
         this.selected = false;
         this.startSpace = 0;
         this.timer = null;
@@ -27,6 +29,7 @@ module.exports = Screen => {
         this.canvas.removeEventListener('touchcancel', this.events.__touchCancel);
         this.canvas.removeEventListener('touchleave', this.events.__touchleave);
         this.canvas.removeEventListener('touchmove', this.events.__touchMove);
+        ee.off('selectingEntity', this.events.__selectingEntity);
         window.removeEventListener('resize', this.events.__resize);
     };
 
@@ -82,11 +85,19 @@ module.exports = Screen => {
         if(!point) return;
         if(this.selected) {
             ee.emit('touchDragg', point.x, point.z, touch1.clientX, touch1.clientY);
+            this.projectSelected();
         } else {
             ee.emit('touchMoveOnMap', point.x, point.z, false);
             point = this.getPointOnMapCameraRelative(touch1.clientX, touch1.clientY, false);
             ee.emit('touchMove', point.x, point.z);
+            this.projectSelected();
         }
     };
+
+    Screen.prototype._selectingEntity = function _selectingEntity() {
+        this.projectSelected();
+    };
+
+
 
 };

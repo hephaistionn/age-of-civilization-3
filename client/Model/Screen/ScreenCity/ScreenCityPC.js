@@ -6,6 +6,7 @@ const Screen = require('../Screen');
 const BuildingMenu = require('../../UI/BuildingMenu');
 const MonitoringPanel = require('../../UI/MonitoringPanel');
 const EntityManagerPanel = require('../../UI/EntityManagerPanel');
+const HelpPanel = require('../../UI/HelpPanel');
 const VictoryPanel = require('../../UI/VictoryPanel');
 const Ground = require('../../Engine/Ground');
 const Light = require('../../Engine/Light');
@@ -23,6 +24,7 @@ let light;
 let buildingMenu;
 let monitoringPanel;
 let entityManagerPanel;
+let helpPanel;
 let ground;
 let positioner;
 let roadPositioner;
@@ -43,6 +45,7 @@ class ScreenCity extends Screen {
         light = new Light({shadow: true, targetX: camera.targetX, targetY: camera.targetY, targetZ: camera.targetZ});
         buildingMenu = new BuildingMenu();
         monitoringPanel = new MonitoringPanel();
+        helpPanel = new HelpPanel();
         entityManagerPanel = new EntityManagerPanel();
         ground = new Ground(mapProperties);
         road = new Road(ground, model.road);
@@ -75,6 +78,7 @@ class ScreenCity extends Screen {
         this.add(light);
         this.add(buildingMenu);
         this.add(monitoringPanel);
+        this.add(helpPanel);
         this.add(entityManagerPanel);
         this.add(ground);
         this.add(positioner);
@@ -115,6 +119,10 @@ class ScreenCity extends Screen {
 
     mouseDownOnMap(x, z) {
         roadPositioner.mouseDown(x, z);
+    }
+
+    showHelper(IdEntity) {
+        helpPanel.open(IdEntity);
     }
 
     mouseClick(x, z, id) {

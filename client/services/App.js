@@ -48,6 +48,8 @@ class App {
         ee.on('touchStartOnMap', this.touchStartOnMap.bind(this));
         ee.on('touchDragg', this.touchDragg.bind(this));
         ee.on('zoom', this.zoom.bind(this));
+        ee.on('showHelper', this.showHelper.bind(this));
+        ee.on('selectedProjection', this.selectedProjection.bind(this));
 
         window.addEventListener('beforeunload', this.exit.bind(this));
     }
@@ -284,6 +286,16 @@ class App {
     zoom(delta) {
         if(this.model.zoom)
             this.model.zoom(delta);
+    }
+
+    showHelper(delta) {
+        if(this.model.showHelper)
+            this.model.showHelper(delta);
+    }
+
+    selectedProjection(x, y) {
+        if(this.model.selectedProjection)
+            this.model.selectedProjection(x, y);
     }
 
 }

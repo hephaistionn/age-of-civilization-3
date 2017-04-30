@@ -6,10 +6,10 @@ class BuildingMenu {
 
     constructor(config) {
         this.categories = {
-            resource: ['Destroy'],
-            factory: ['Destroy'],
-            service: ['Destroy'],
-            culture: ['Market', 'Destroy'],
+            resource: ['House'],
+            factory: ['House'],
+            citizen: ['House'],
+            culture: ['Market'],
             state: [
                 'House',
                 'Market',
@@ -20,9 +20,8 @@ class BuildingMenu {
                 'LeaderHut',
                 'Repository',
                 'StoneMine',
-                'dirtRoad',
-                'stoneRoad',
-                'Destroy']
+                'RoadDirty',
+                'RoadStone']
         };
         this.currentCategory = [];
         this.currentCategoryId = '';
@@ -68,7 +67,8 @@ class BuildingMenu {
     updateCurrentCategory() {
         const category = this.categories[this.currentCategoryId];
         if(!category) return;
-        this.currentCategory = category.filter(this.filterEnableBuilding);
+        const filterList = category.filter(this.filterEnableBuilding);
+        this.currentCategory = filterList.map(id=>ENTITIES[id]);
     }
 
     filterEnableBuilding(entityId) {
@@ -83,6 +83,10 @@ class BuildingMenu {
             fct(entityId);
             this.updated = true;
         };
+    }
+
+    _onClickHelp(entityId) {
+        ee.emit('showHelper', entityId);
     }
 
     _onClickExpand() {

@@ -1,0 +1,53 @@
+.helpPanel.pc {
+  position: fixed;
+  z-index: 2;
+  .panel{
+    position: fixed;
+    background: #9E9E9E;
+    width: 600px;
+    height: 300px;
+    left: 50%;
+    top: 5%;
+    transform: translateX(-300px);
+
+    .preview{
+      position: relative;
+      width: 128px;
+      height: 128px;
+      margin: 20px;
+    }
+
+    .description {
+      position: relative;
+      margin: 20px;
+      width: 482px;
+    }
+
+    .button {
+      border: solid 1px black;
+      background-color: grey;
+      cursor: pointer;
+      text-align: center;
+      line-height: 40px;
+      width: 40px;
+      &:hover {
+        background-color: #4444ff;
+      }
+    }
+
+    .button.close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+    }
+
+  }
+
+  &.hide {
+    display: none;
+  }
+
+}

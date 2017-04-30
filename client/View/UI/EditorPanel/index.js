@@ -64,15 +64,13 @@ module.exports = class EditorPanel {
     }
 
     updateState(model) {
-
-
         this.hideNode(this.node);
         this.hideNode(this.nodeEntityEditor);
         this.hideNode(this.nodeRoadeEditor);
         this.hideNode(this.nodeEraseEditor);
-
         if(model.entityEditor) {
             this.showNode(this.nodeEntityEditor);
+            this.nodeEntityEditor.style.transform = 'translate(@xpx, @ypx)'.replace('@x', model.position.x).replace('@y', model.position.y);
         }
 
         if(model.roadeEditor) {

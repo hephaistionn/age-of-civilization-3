@@ -7,6 +7,10 @@ class EditorPanel {
         this.entityEditor = false;
         this.roadeEditor = false;
         this.eraseEditor = false;
+        this.position = {
+            x: 50,
+            y: 50
+        };
         this.updated = false;
         this._id = 0;
     }
@@ -47,6 +51,12 @@ class EditorPanel {
             this._hide();
             fct();
         };
+    }
+
+    move(x, y) {
+        this.position.x = x;
+        this.position.y = y;
+        this.updated = true;
     }
 
     _hide() {

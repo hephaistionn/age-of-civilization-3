@@ -1,4 +1,4 @@
-.monitoringPanel.mobile {
+.monitoringPanel.pc {
   position: fixed;
   width: 100%;
   top: 0;
@@ -9,29 +9,32 @@
     width: 600px;
     top: 0;
     left: 0;
-    height: 45px;
-    background-color: #333333;
+    height: 66px;
     margin: 0 auto;
-
     .item {
       position: relative;
       display: inline-block;
-      width: 70px;
-      height: 40px;
-      margin: 3px 10px 3px 10px;
-      background-color: #696868;
-      .name {
-        text-align: center;
+      width: 105px;
+      height: 30px;
+      margin: 14px 10px 3px 17px;
+      background: linear-gradient(90deg, rgba(37, 28, 22, 0.90), rgba(37, 28, 22, 0.0));
+      .icon {
+        position: absolute;
+        left: -18px;
+        top: -13px;
       }
       .value {
-        text-align: center;
+        position: absolute;
+        left:39px;
+        top: 0;
+        color: white;
+        font-size: 24px;
       }
 
     }
-
   }
 
-  .monitoringContainer {
+  .panel {
     position: fixed;
     background: #9E9E9E;
     width: 600px;
@@ -39,46 +42,40 @@
     left: 50%;
     top: 5%;
     transform: translateX(-300px);
-    .button.close {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-    }
   }
 
   .button {
-    border: solid 1px black;
-    background-color: grey;
     cursor: pointer;
     text-align: center;
-    line-height: 40px;
-    width: 40px;
     &:hover {
-      background-color: #4444ff;
     }
   }
 
-  .button.open {
-    position: fixed;
+  .button.close {
+    position: absolute;
     top: 16px;
     right: 20px;
     width: 40px;
     height: 40px;
     line-height: 40px;
   }
+  .button.open {
+    position: absolute;
+    width: 128px;
+    height: 128px;
+    background-image: url(pic/buttons/menu.png);
+    right: 17px;
+    top: 14px;
+  }
 
   .button.world {
     position: fixed;
     top: 80px;
     right: 20px;
-    width: 80px;
+    width: 70px;
     height: 40px;
     line-height: 40px;
   }
-
 
   .hide {
     display: none;

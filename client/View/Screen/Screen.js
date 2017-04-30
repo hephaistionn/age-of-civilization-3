@@ -1,5 +1,6 @@
 const THREE = require('../../services/threejs');
 const isMobile = require('../../services/mobileDetection')();
+const ee = require('../../services/eventEmitter');
 
 const COMPONENTS = require('../Engine/Entity/listEntity');
 COMPONENTS.Ground = require('../Engine/Ground');
@@ -12,6 +13,7 @@ COMPONENTS.Worldmap = require('../Engine/Worldmap');
 COMPONENTS.BuildingMenu = require('../UI/BuildingMenu');
 COMPONENTS.EditorPanel = require('../UI/EditorPanel');
 COMPONENTS.MonitoringPanel = require('../UI/MonitoringPanel');
+COMPONENTS.HelpPanel = require('../UI/HelpPanel');
 COMPONENTS.WorldmapMenu = require('../UI/WorldmapMenu');
 COMPONENTS.EntityManagerPanel = require('../UI/EntityManagerPanel');
 COMPONENTS.FirstStartPanel = require('../UI/FirstStartPanel');
@@ -128,10 +130,15 @@ class Screen {
                 return {
                     id: mesh.name,
                     x: point.x,
-                    z: point.z
+                    z: point.z,
+                    object: intersects[0].object
                 }
             } else {
-                return point;
+                return {
+                    x: point.x,
+                    z: point.z,
+                    object: intersects[0].object
+                };
             }
 
         } else {
@@ -177,6 +184,21 @@ class Screen {
         this.components.get(CAMERA).resize(width, height);
         this.render.resize(width, height);
     }
+
+    projectSelected() {
+        const positioner = this.components.get(POSITIONER);
+        const selected = positioner.selected;
+        if(selected) {
+            const width = window.innerWidth, height = window.innerHeight;
+            const widthHalf = width / 2, heightHalf = height / 2;
+            const pos = selected.element.matrixWorld.getPosition();
+            pos.project(this.components.get(CAMERA).element);
+            const x = ( pos.x * widthHalf ) + widthHalf;
+            const y = -( pos.y * heightHalf ) + heightHalf;
+            ee.emit('selectedProjection', x, y);
+        }
+    }
+
 }
 
 if(isMobile) {

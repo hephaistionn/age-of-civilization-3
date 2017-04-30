@@ -14,7 +14,7 @@ class EntityManagerPanel {
     }
 
     open(entity) {
-        if(!entity.constructor.selectable) return;
+        if(!entity || !entity.constructor.selectable) return;
         this.description = entity.constructor.description;
         if(entity.onAction) {
             this.currentAction = entity.onAction.bind(entity);

@@ -1,4 +1,5 @@
 const stateManager = require('../../../services/stateManager');
+const wording = require('../../../Data/wording');
 
 module.exports = class MonitoringPanelPC {
 
@@ -32,7 +33,6 @@ module.exports = class MonitoringPanelPC {
 
         this.nodeButtonOpen = document.createElement('div');
         this.nodeButtonOpen.className = 'button open';
-        this.nodeButtonOpen.textContent = 'monitoring';
         this.nodeButtonOpen.onclick = model.open.bind(model);
         this.node.appendChild(this.nodeButtonOpen);
 
@@ -56,14 +56,10 @@ module.exports = class MonitoringPanelPC {
         const node = document.createElement('div');
         node.className = 'item';
         const nodePic = document.createElement('div');
-        nodePic.className = 'picto id';
-        const nodeName = document.createElement('div');
-        nodeName.className = 'name';
-        nodeName.textContent = id;
+        nodePic.className = 'icon '+id;
         const nodeValue = document.createElement('div');
         nodeValue.className = 'value';
         node.appendChild(nodePic);
-        node.appendChild(nodeName);
         node.appendChild(nodeValue);
         return node;
     }

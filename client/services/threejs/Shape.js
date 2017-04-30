@@ -23,6 +23,8 @@ THREE.Shape = class Shape {
             }
         }
 
+        //cropper les 2 extrémite de 0.5 afin d'éviter la traversé des zones de spown
+
         this.length = length;
     }
 

@@ -17,7 +17,6 @@ class House extends Entity {
             this.time = 0;
         }
     }
-
 }
 
 House.selectable = true;
@@ -25,7 +24,7 @@ House.description = 'This building increase the enable places for your populatio
 House.tile_x = 1;
 House.tile_z = 1;
 House.walkable = 0;
-House.cost = {wood: 20};
+House.cost = {wood: 20, stone: 1};
 House.require = {wood: 20};
 House.make = {population: 4};
 House.instances = [];

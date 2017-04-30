@@ -73,8 +73,7 @@ Road.available = function available(type, size) {
 
 Road.walkable = true;
 Road.roads = {
-    dirtRoad: {cost: {stone: 1}, require: {population: 4}, code: 2},
-    stoneRoad: {cost: {stone: 2}, require: {population: 16}, code: 3},
-    tileRoad: {cost: {stone: 4}, require: {population: 30}, code: 4}
+    RoadDirty: require('./RoadDirty'),
+    RoadStone: require('./RoadStone')
 };
 module.exports = Road;
