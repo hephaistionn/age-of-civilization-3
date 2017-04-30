@@ -187,6 +187,7 @@ class Screen {
 
     projectSelected() {
         const positioner = this.components.get(POSITIONER);
+        if(!positioner) return;
         const selected = positioner.selected;
         if(selected) {
             const width = window.innerWidth, height = window.innerHeight;

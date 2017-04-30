@@ -75,6 +75,7 @@ module.exports = Screen => {
                 this.startSpace = space;
             } else {
                 ee.emit('zoom', (space - this.startSpace) / 200);
+                this.projectSelected();
                 return;
             }
         }
