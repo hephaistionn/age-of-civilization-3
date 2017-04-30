@@ -1,4 +1,4 @@
-.monitoringPanel.pc {
+.monitoringPanel {
   position: fixed;
   width: 100%;
   top: 0;
@@ -6,29 +6,29 @@
 
   .previewContainer {
     position: relative;
-    width: 600px;
-    top: 0;
+    width: 340px;
+    top: 5px;
     left: 0;
-    height: 66px;
+    height: 16px;
     margin: 0 auto;
     .item {
       position: relative;
       display: inline-block;
-      width: 105px;
-      height: 30px;
-      margin: 14px 10px 3px 17px;
+      width: 50px;
+      height: 16px;
+      margin: 0 8px 0 0;
       background: linear-gradient(90deg, rgba(37, 28, 22, 0.90), rgba(37, 28, 22, 0.0));
       .icon {
         position: absolute;
-        left: -18px;
-        top: -13px;
+        width: 16px;
+        height: 16px;
       }
       .value {
         position: absolute;
-        left:39px;
+        left:20px;
         top: 0;
         color: white;
-        font-size: 24px;
+        font-size: 14px;
       }
 
     }
@@ -37,11 +37,11 @@
   .panel {
     position: fixed;
     background: #9E9E9E;
-    width: 600px;
-    height: 90%;
+    width: 480px;
+    height: 300px;
     left: 50%;
     top: 5%;
-    transform: translateX(-300px);
+    transform: translateX(-240px);
   }
 
   .button {
@@ -53,28 +53,33 @@
 
   .button.close {
     position: absolute;
-    top: 16px;
-    right: 20px;
+    top: 0;
+    right: 0;
     width: 40px;
     height: 40px;
+    background: #381d15;
+    color: white;
     line-height: 40px;
   }
   .button.open {
     position: absolute;
-    width: 128px;
-    height: 128px;
+    width: 40px;
+    height: 40px;
     background-image: url(pic/buttons/menu.png);
-    right: 17px;
+    background-size: 40px;
+    right: 14px;
     top: 14px;
   }
 
   .button.world {
     position: fixed;
-    top: 80px;
-    right: 20px;
-    width: 70px;
+    top: 0px;
+    right: 56px;
+    width: 93px;
     height: 40px;
     line-height: 40px;
+    background-color: #381d15;
+    color: white;
   }
 
   .hide {

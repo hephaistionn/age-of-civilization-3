@@ -148,6 +148,7 @@ class ScreenCity extends Screen {
         } else {
             roadPositioner.mouseDown(x, z)
         }
+        buildingMenu.open();
     }
 
 

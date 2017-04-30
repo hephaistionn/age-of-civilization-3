@@ -6,15 +6,16 @@
   .categoriesContainer {
     position: absolute;
     left: 0;
-    bottom: 190px;
+    bottom: 140px;
     white-space: nowrap;
     overflow-x: hidden;
-    z-index: 2;
     .item {
       cursor: pointer;
       text-align: center;
-      width: 128px;
-      height: 128px;
+      width: 50px;
+      height: 50px;
+      background-size: 50px;
+      background-repeat: no-repeat;
       margin: 0 20px 0 20px;
       display: inline-block;
       &:hover {
@@ -30,7 +31,7 @@
   .buildingContainer {
     position: absolute;
     background: linear-gradient(180deg, #2b1d0e, #545218);
-    height: 190px;
+    height: 140px;
     bottom: 0;
     width: 100%;
     overflow-x: scroll;
@@ -50,31 +51,33 @@
     }
 
     .item {
-      background-image: url("pic/ui/item.png");
+      background-image: url(pic/ui/item.png);
+      background-size: 210px 128px;
+      background-repeat: no-repeat;
       cursor: pointer;
       text-align: center;
-      width: 270px;
-      height: 170px;
-      margin: 6px 0 0 30px;
+      width: 210px;
+      height: 128px;
+      margin: 6px 0 0 12px;
       display: inline-block;
       color: white;
-      font-size: 13px;
+      font-size: 14px;
       .overflow {
       }
 
       .preview {
-        background-size: 128px;
         background-repeat: no-repeat;
+        background-size: 96px;
         position: absolute;
-        width: 128px;
-        height: 128px;
-        top: 30px;
-        left: 14px;
+        width: 96px;
+        height: 96px;
+        top: 23px;
+        left: 12px;
       }
 
       .name {
         position: absolute;
-        margin: 8px 14px;
+        margin: 4px 10px;
         color: black;
       }
 
@@ -91,22 +94,22 @@
 
       .resources {
         position: absolute;
-        top: 27px;
-        right: 10px;
-        width: 100px;
+        top: 29px;
+        right: 1px;
+        width: 87px;
         .resource {
           position: relative;
-          height: 30px;
-          width: 100px;
+          height: 22px;
           .icon {
-            width: 30px;
-            height: 30px;
+            width: 17px;
+            height: 17px;
+            background-size: 17px;
           }
           .value {
             position: absolute;
             top: 0;
-            left: 35px;
-            line-height: 30px;
+            left: 23px;
+            line-height: 17px;
           }
         }
       }
@@ -138,10 +141,10 @@
 
   &.collapse {
     .categoriesContainer {
-      transform: translateY(190px);
+      transform: translateY(140px);
     }
     .buildingContainer {
-      transform: translateY(190px);
+      transform: translateY(140px);
     }
   }
 }

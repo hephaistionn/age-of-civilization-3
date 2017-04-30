@@ -7,7 +7,7 @@ module.exports = class MonitoringPanelPC {
         this.model = model;
 
         this.node = document.createElement('div');
-        this.node.className = 'monitoringPanel pc';
+        this.node.className = 'monitoringPanel';
         this.node.id = model._id;
 
         this.nodePreviewContainer = document.createElement('div');

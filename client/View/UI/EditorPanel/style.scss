@@ -15,41 +15,34 @@
     top: 0;
 
     .button {
+      position: absolute;
       border: solid 1px black;
       background-color: grey;
       cursor: pointer;
       text-align: center;
-      line-height: 40px;
+      line-height: 34px;
+      width: 34px;
+      height: 34px;
+      font-size: 12px;
+      border-radius: 21px;
       &:hover {
         background-color: #4444ff;
       }
     }
 
     .button.confirm {
-      position: absolute;
-      top: -77px;
-      left: 60px;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
+      top: -56px;
+      left: 35px;
     }
 
     .button.cancel {
-      position: absolute;
-      top: 30px;
-      left: 60px;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
+      top: 22px;
+      left: 35px;
     }
 
     .button.rotate {
-      position: absolute;
-      top: 30px;
-      left: -100px;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
+      top: 22px;
+      left: -64px;
     }
   }
 }
