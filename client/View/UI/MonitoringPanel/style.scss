@@ -42,6 +42,62 @@
     left: 50%;
     top: 5%;
     transform: translateX(-240px);
+
+    .header{
+      position: absolute;
+      font-size: 18px;
+      top: 30px;
+      &.resources{
+        left: 5px;
+      }
+      &.society{
+        left: 178px;
+      }
+    }
+
+    .list{
+      position: absolute;
+      top: 50px;
+      &.resources{
+        left: 5px;
+      }
+      &.society{
+        left: 178px;
+      }
+      .item{
+        position: relative;
+        background: #8a8a8a;
+        height: 20px;
+        width: 171px;
+        margin: 12px 2px;
+        font-size: 14px;
+        line-height: 20px;
+        .icon{
+          position: absolute;
+          left: 0;
+          width: 16px;
+          height: 16px;
+          background-size: 16px;
+        }
+        .value{
+          position: absolute;
+          left: 25px;
+        }
+        .tradeStatus{
+          left: 64px;
+          width: 106px;
+          height: 21px;
+          color: black;
+          background: #9e9e9e;
+          font-size: 11px;
+          text-align: center;
+          border-radius: 11px;
+          border: solid 1px;
+          box-sizing: border-box;
+        }
+      }
+
+    }
   }
 
   .button {

@@ -7,20 +7,22 @@ const locales = {
         meat: 'meat',
         population: 'population',
         'House': 'Hutte',
-        'Market': 'MarchÈ',
+        'Market': 'March√©',
         'WoodCutterHut': 'Cabane de bucheron',
         'Attic': 'Grenier',
         'Barrack': 'Caserne',
         'HunterHut': 'Cabane de chasseur',
         'LeaderHut': 'Hutte du chef',
-        'Repository': 'EntrepÙt',
+        'Repository': 'Entrep√ît',
         'StoneMine': 'Mine',
         'dirtRoad': 'Chemin de terre',
         'stoneRoad': 'Chemin de pierre',
-        'Destroy': 'DÈtruire'
+        'Destroy': 'D√©truire',
+        'Resources': 'Resources',
+        'Society': 'Soci√©t√©'
     }
 };
 
 module.exports = function wording(code) {
-    return locales[codeCountry][code]
+    return locales[codeCountry][code]||code
 };

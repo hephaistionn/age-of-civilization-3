@@ -52,7 +52,7 @@ gulp.task('build-js', () => {
   return browserify(config.browserifyOptions)
   .transform('babelify',config.babelifyOptions)
   .bundle()
-  .pipe(fs.createWriteStream("build/app.js"))
+  .pipe(fs.createWriteStream("build/app.js"), {defaultEncoding: 'utf8'})
 });
 
 gulp.task('build-css', function() {

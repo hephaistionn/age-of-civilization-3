@@ -48,20 +48,82 @@ module.exports = class MonitoringPanelPC {
         this.nodeButtonWorld.onclick = model.goWorldmap.bind(model);
         this.nodeMonitoringPanel.appendChild(this.nodeButtonWorld);
 
+        const nodeHeaderResources = document.createElement('div');
+        nodeHeaderResources.className = 'header resources';
+        nodeHeaderResources.textContent = wording('Resources');
+        this.nodeMonitoringPanel.appendChild(nodeHeaderResources);
+        this.nodeListResource = document.createElement('div');
+        this.nodeListResource.className = 'list resources';
+        this.nodeMonitoringPanel.appendChild(this.nodeListResource);
+
+        const nodeHeaderSociety = document.createElement('div');
+        nodeHeaderSociety.className = 'header society';
+        nodeHeaderSociety.textContent = wording('Society');
+        this.nodeMonitoringPanel.appendChild(nodeHeaderSociety);
+        this.nodeListSociety = document.createElement('div');
+        this.nodeListSociety.className = 'list society';
+        this.nodeMonitoringPanel.appendChild(this.nodeListSociety);
+
         this.updateState(model);
         this.add(parent);
     }
 
-    createItem(id) {
+    updateMonioringList(){
+        const states = stateManager.currentCity.states;
+
+        this.nodeListResource.style.display =  'none';
+        while(this.nodeListResource.firstChild) {
+            this.nodeListResource.removeChild(this.nodeListResource.firstChild);
+        }
+        for(let i = 0; i < this.model.resources.length; i++) {
+            const id = this.model.resources[i];
+            const node = this.createItem(id, states[id], true);
+            this.nodeListResource.appendChild(node);
+        }
+        this.nodeListResource.style.display =  'block';
+
+
+        this.nodeListSociety.style.display =  'none';
+        while(this.nodeListSociety.firstChild) {
+            this.nodeListSociety.removeChild(this.nodeListSociety.firstChild);
+        }
+        for(let i = 0; i < this.model.society.length; i++) {
+            const id = this.model.society[i];
+            const node = this.createItem(id, states[id]);
+            this.nodeListSociety.appendChild(node);
+        }
+        this.nodeListSociety.style.display =  'block';
+    }
+
+    createItem(id, value, trading) {
         const node = document.createElement('div');
         node.className = 'item';
         const nodePic = document.createElement('div');
         nodePic.className = 'icon '+id;
         const nodeValue = document.createElement('div');
         nodeValue.className = 'value';
+        nodeValue.textContent = value != undefined ? value : '';
         node.appendChild(nodePic);
         node.appendChild(nodeValue);
+        if(trading != undefined){
+            const tradeStatus = stateManager.currentCity.trade[id];
+            const nodeStatus = document.createElement('div');
+            nodeStatus.className = 'tradeStatus';
+            nodeStatus.textContent = this.tradeStatusToWord(tradeStatus);
+            node.appendChild(nodeStatus)
+        }
         return node;
+    }
+
+    tradeStatusToWord(value){
+        switch (value){
+            case 0:
+                return 'pas de commerce';
+            case 1:
+                return 'troquer';
+            default:
+                return 'vendre'
+        }
     }
 
 
@@ -70,6 +132,7 @@ module.exports = class MonitoringPanelPC {
         if(model.opened) {
             this.showNode(this.nodeMonitoringContainer);
             this.hideNode(this.nodeButtonOpen);
+            this.updateMonioringList();
         } else {
             this.hideNode(this.nodeMonitoringContainer);
             this.showNode(this.nodeButtonOpen);

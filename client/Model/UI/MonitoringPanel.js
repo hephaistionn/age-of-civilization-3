@@ -6,6 +6,8 @@ class MonitoringPanel {
     constructor() {
         this.opened = false;
         this.previewes = ['wood', 'stone', 'meat', 'population'];
+        this.resources = ['wood', 'stone', 'meat'];
+        this.society = ['population', 'workers'];
         this.updated = false;
         this.stateManager = stateManager;
         this._id = 0;
