@@ -10,4 +10,5 @@ RoadStone.description = 'This building increase the enable places for your popul
 RoadStone.cost = {stone: 2};
 RoadStone.require = {wood: 5 /*population: 16*/};
 RoadStone.code = 3;
+RoadStone.isRoad = true;
 module.exports = RoadStone;

@@ -35,9 +35,10 @@ module.exports = class Positioner {
     }
 
     selectEntity(id) {
-        if(!ENTITIES[id]) return;
+        if(!ENTITIES[id] || ENTITIES[id].isRoad ) return false;
         this.selected = new ENTITIES[id]({x: 0, y: 0, z: 0, a: 0});
         this.updated = true;
+        return true;
     }
 
     getSelectEntity() {

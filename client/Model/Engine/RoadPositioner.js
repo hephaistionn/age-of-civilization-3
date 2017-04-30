@@ -108,13 +108,14 @@ module.exports = class RoadPositioner {
     }
 
     selectEntity(id) {
-        if(!Road.roads[id] || !Road.available(id)) return;
+        if(!Road.roads[id] || !Road.available(id)) return false;
         if(!this.selected || this.selected !== id) {
             this.selected = id;
         } else {
             this.selected = null;
         }
         this.updated = true;
+        return true;
     }
 
     unselectEntity() {

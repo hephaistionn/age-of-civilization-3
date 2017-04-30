@@ -65,8 +65,9 @@ class ScreenCity extends Screen {
             } else {
                 positioner.selectEntity(entityId);
                 positioner.moveEntity(camera.targetX, camera.targetZ, ground);
-                roadPositioner.selectEntity(entityId);
-                editorPanel.showEntityEditor();
+                const  isRoad = roadPositioner.selectEntity(entityId);
+                if(!isRoad)
+                    editorPanel.showEntityEditor();
             }
             buildingMenu.close();
         });

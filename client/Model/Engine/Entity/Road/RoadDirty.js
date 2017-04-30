@@ -10,4 +10,5 @@ RoadDirty.description = 'This building increase the enable places for your popul
 RoadDirty.cost = {stone: 1};
 RoadDirty.require = {wood: 5 /*population: 2*/};
 RoadDirty.code = 2;
+RoadDirty.isRoad = true;
 module.exports = RoadDirty;
