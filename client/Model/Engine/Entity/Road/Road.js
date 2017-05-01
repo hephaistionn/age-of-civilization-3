@@ -54,21 +54,27 @@ class Road {
 
 Road.available = function available(type, size) {
     const require = Road.roads[type].require;
-    const cost = Road.roads[type].cost;
     for(let prop in require) {
-        if(require[prop] > stateManager[prop]) {
+        if(require[prop] > stateManager.currentCity.states[prop]) {
             return false;
         }
     }
+    return true;
+};
+
+Road.checkState = function checkState(type, size) {
+    const cost = Road.roads[type].cost;
+    const required = new Map();
     if(size) {
         for(let prop in cost) {
             const valueRequired = cost[prop] * (size || 1);
-            if(valueRequired > stateManager[prop]) {
-                return false;
+            if(valueRequired > stateManager.currentCity.states[prop]) {
+                required.set(prop, valueRequired);
             }
+
         }
     }
-    return true;
+    return required;
 };
 
 Road.walkable = true;

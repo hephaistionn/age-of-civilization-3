@@ -1,4 +1,5 @@
 const ENTITIES = require('./Entity/listEntity');
+const ee = require('../../services/eventEmitter');
 
 module.exports = class Positioner {
 
@@ -42,13 +43,18 @@ module.exports = class Positioner {
     }
 
     getSelectEntity() {
-        if(this.selected && !this.undroppable && ENTITIES[this.selected.constructor.name].available()) {
-            return {
-                x: this.selected.x,
-                z: this.selected.z,
-                y: this.selected.y,
-                a: this.selected.a,
-                type: this.selected.constructor.name
+        if(this.selected && !this.undroppable) {
+            const required = ENTITIES[this.selected.constructor.name].checkState();
+            if(required.size === 0) {
+                return {
+                    x: this.selected.x,
+                    z: this.selected.z,
+                    y: this.selected.y,
+                    a: this.selected.a,
+                    type: this.selected.constructor.name
+                }
+            } else {
+                ee.emit('warning', required);
             }
         }
     }

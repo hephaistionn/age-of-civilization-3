@@ -1,4 +1,5 @@
 const Road = require('./Entity/Road/Road');
+const ee = require('../../services/eventEmitter');
 
 module.exports = class RoadPositioner {
 
@@ -94,16 +95,21 @@ module.exports = class RoadPositioner {
     }
 
     getSelectEntity() {
-        if(this.road.length && Road.available(this.selected, this.road.length)) {
-            const result = {
-                tiles: this.road.tiles,
-                walkable: this.road.walkable,
-                length: this.road.length,
-                type: this.selected
-            };
-            this.road.length = 0;
-            this.updated = true;
-            return result;
+        if(this.road.length) {
+            const required = Road.checkState(this.selected, this.road.length);
+            if(required.size === 0) {
+                const result = {
+                    tiles: this.road.tiles,
+                    walkable: this.road.walkable,
+                    length: this.road.length,
+                    type: this.selected
+                };
+                this.road.length = 0;
+                this.updated = true;
+                return result;
+            } else {
+                ee.emit('warning', required);
+            }
         }
     }
 
