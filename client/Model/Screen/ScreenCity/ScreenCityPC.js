@@ -16,7 +16,6 @@ const RoadPositioner = require('../../Engine/RoadPositioner');
 const Road = require('../../Engine/Entity/Road/Road');
 const ENTITIES = require('../../Engine/Entity/listEntity');
 
-let removeMode = false;
 let codeToEntities;
 
 let camera;
@@ -56,13 +55,8 @@ class ScreenCity extends Screen {
         buildingMenu.onClickBuilding(entityId => {
             positioner.unselectEntity();
             roadPositioner.unselectEntity();
-            removeMode = false;
-            if(entityId === 'Destroy') {
-                removeMode = true;
-            } else {
-                positioner.selectEntity(entityId);
-                roadPositioner.selectEntity(entityId);
-            }
+            positioner.selectEntity(entityId);
+            roadPositioner.selectEntity(entityId);
             buildingMenu.close();
         });
 
@@ -72,6 +66,12 @@ class ScreenCity extends Screen {
 
         stateManager.cityOnCompleted(() => {
             this.add(new VictoryPanel());
+        });
+
+        entityManagerPanel.onRemove(id => {
+            this.get(id).restoreState();
+            this.removeEntity(id);
+            monitoringPanel.update();
         });
 
         this.add(camera);
@@ -114,7 +114,6 @@ class ScreenCity extends Screen {
         positioner.unselectEntity();
         roadPositioner.unselectEntity();
         buildingMenu.collapse();
-        removeMode = false;
     }
 
     mouseDownOnMap(x, z) {
@@ -126,11 +125,7 @@ class ScreenCity extends Screen {
     }
 
     mouseClick(x, z, id) {
-        if(removeMode && id) {
-            this.get(id).restoreState();
-            this.removeEntity(id);
-            monitoringPanel.update();
-        } else if(id) {
+        if(id) {
             entityManagerPanel.open(this.get(id));
         } else {
             this.buildEntity();

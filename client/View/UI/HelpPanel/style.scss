@@ -1,18 +1,30 @@
 .helpPanel.pc {
   position: fixed;
   z-index: 2;
-  .panel{
-    .preview{
+  .panel {
+    width: 330px;
+    height: 277px;
+    left: 50%;
+    top: 5%;
+    transform: translateX(-165px);
+    .preview {
       position: relative;
       width: 128px;
       height: 128px;
       margin: 20px;
+      float: left;
+    }
+
+    .title {
+      position: relative;
+      display: inherit;
+      margin: 17px 0;
     }
 
     .description {
       position: relative;
-      margin: 20px;
-      width: 482px;
+      margin: 0;
+      display: inline;
     }
 
     .button {
@@ -22,6 +34,7 @@
       text-align: center;
       line-height: 40px;
       width: 40px;
+      z-index: 2;
       &:hover {
         background-color: #4444ff;
       }

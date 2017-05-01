@@ -1,13 +1,31 @@
 .entityManagerPanel.pc {
   position: fixed;
 
-  .panel{
+  .panel {
+    width: 330px;
+    height: 277px;
+    left: 50%;
+    top: 5%;
+    transform: translateX(-165px);
+
+    .preview {
+      position: relative;
+      width: 128px;
+      height: 128px;
+      margin: 20px;
+      float: left;
+    }
+
+    .title {
+      position: relative;
+      display: inherit;
+      margin: 17px 0;
+    }
+
     .description {
-      position: absolute;
-      left: 5%;
-      top: 70px;
-      width: 90%;
-      text-align: center;
+      position: relative;
+      margin: 0;
+      display: inline;
     }
 
     .button {
@@ -17,6 +35,7 @@
       text-align: center;
       line-height: 40px;
       width: 40px;
+      z-index: 2;
       &:hover {
         background-color: #4444ff;
       }
@@ -25,6 +44,15 @@
     .button.close {
       position: absolute;
       top: 16px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+    }
+
+    .button.remove {
+      position: absolute;
+      bottom: 16px;
       right: 20px;
       width: 40px;
       height: 40px;

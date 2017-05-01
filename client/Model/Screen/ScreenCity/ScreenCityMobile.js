@@ -17,7 +17,6 @@ const RoadPositioner = require('../../Engine/RoadPositioner');
 const Road = require('../../Engine/Entity/Road/Road');
 const ENTITIES = require('../../Engine/Entity/listEntity');
 
-let removeMode = false;
 let codeToEntities;
 
 let camera;
@@ -59,19 +58,21 @@ class ScreenCity extends Screen {
         buildingMenu.onClickBuilding(entityId => {
             positioner.unselectEntity();
             roadPositioner.unselectEntity();
-            removeMode = false;
-            if(entityId === 'Destroy') {
-                removeMode = true;
-            } else {
-                positioner.selectEntity(entityId);
-                positioner.moveEntity(camera.targetX, camera.targetZ, ground);
-                const  isRoad = roadPositioner.selectEntity(entityId);
-                if(!isRoad)
-                    editorPanel.showEntityEditor();
-                else
-                    editorPanel.showRoadeEditor();
-            }
+            positioner.selectEntity(entityId);
+            positioner.moveEntity(camera.targetX, camera.targetZ, ground);
+            const isRoad = roadPositioner.selectEntity(entityId);
+            if(!isRoad)
+                editorPanel.showEntityEditor();
+            else
+                editorPanel.showRoadeEditor();
+
             buildingMenu.close();
+        });
+
+        entityManagerPanel.onRemove(id => {
+            this.get(id).restoreState();
+            this.removeEntity(id);
+            monitoringPanel.update();
         });
 
         stateManager.cityOnLevelUpdated(level => {
@@ -134,7 +135,7 @@ class ScreenCity extends Screen {
     }
 
     selectedProjection(screenX, screenY) {
-        console.log('selectedProjection',screenX, screenY);
+        console.log('selectedProjection', screenX, screenY);
         editorPanel.move(screenX, screenY);
     }
 
@@ -143,20 +144,13 @@ class ScreenCity extends Screen {
     }
 
     touchStartOnMap(x, z, id) {
-
-        if(removeMode && id) {
-            this.get(id).restoreState();
-            this.removeEntity(id);
-            monitoringPanel.update();
-            buildingMenu.open();
-        } else if(id && !positioner.selected) {
+        if(id && !positioner.selected) {
             entityManagerPanel.open(this.get(id));
-        } else if(roadPositioner.selected){
+        } else if(roadPositioner.selected) {
             roadPositioner.mouseDown(x, z)
-        }else{
+        } else {
             buildingMenu.open();
         }
-
     }
 
 

@@ -1,15 +1,19 @@
 const ee = require('../../services/eventEmitter');
 const stateManager = require('../../services/stateManager');
+const wording = require('../../Data/wording');
 
 class EntityManagerPanel {
 
     constructor() {
         this.opened = false;
         this.yourCity = false;
+        this.title = '';
         this.description = '';
         this.currentEntity = null;
         this.updated = false;
+        this.urlPicture = '';
         this._onBuild = null;
+        this._onRemove = null;
         this._id = 0;
     }
 
@@ -24,6 +28,9 @@ class EntityManagerPanel {
         this.actionLabel = entity.constructor.actionLabel;
         this.opened = true;
         this.yourCity = entity.leader === stateManager.getCurrentLeader().id;
+        this.isRemovable = entity.constructor.entity && !entity.constructor.resource;
+        this.title = wording(entity.constructor.name);
+        this.urlPicture = 'url("pic/entities/x.jpg")'.replace('x', entity.constructor.name).toLowerCase();
         this.currentEntity = entity;
         this.updated = true;
     }
@@ -32,7 +39,18 @@ class EntityManagerPanel {
         this.description = '';
         this.opened = false;
         this.currentEntity = null;
+        this.title = '';
+        this.isRemovable = false;
         this.updated = true;
+    }
+
+    remove() {
+        this._onRemove(this.currentEntity._id);
+        this.close();
+    }
+
+    onRemove(fct) {
+        this._onRemove = fct;
     }
 
     onActionHandler() {

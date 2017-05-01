@@ -19,6 +19,14 @@ module.exports = class EntityManagerPanel {
         this.nodeButtonBack.onclick = model.close.bind(model);
         this.nodePanel.appendChild(this.nodeButtonBack);
 
+        this.nodePreview = document.createElement('div');
+        this.nodePreview.className = 'preview';
+        this.nodePanel.appendChild(this.nodePreview);
+
+        this.nodeTitle = document.createElement('div');
+        this.nodeTitle.className = 'title';
+        this.nodePanel.appendChild(this.nodeTitle);
+
         this.nodeDescription = null;
         this.nodeVisitButton = null;
 
@@ -31,12 +39,16 @@ module.exports = class EntityManagerPanel {
             if(model.description) this.createDescription(model);
             if(model.yourCity) this.createVisiteButton(model);
             if(model.currentAction) this.createActionButton(model);
+            if(model.isRemovable) this.createRemoveButton(model);
+            this.nodePreview.style.backgroundImage = model.urlPicture;
+            this.nodeTitle.textContent = model.title;
             this.node.className = this.node.className.replace(' hide', '');
         } else {
             this.node.className += ' hide';
             if(this.nodeDescription) this.nodePanel.removeChild(this.nodeDescription);
             if(this.nodeVisitButton) this.nodePanel.removeChild(this.nodeVisitButton);
             if(this.nodeActionButton) this.nodePanel.removeChild(this.nodeActionButton);
+            if(this.nodeRemoveButton) this.nodePanel.removeChild(this.nodeRemoveButton);
         }
     }
 
@@ -53,6 +65,14 @@ module.exports = class EntityManagerPanel {
         this.nodeVisitButton.textContent = 'Go to';
         this.nodeVisitButton.onclick = model.visit.bind(model);
         this.nodePanel.appendChild(this.nodeVisitButton);
+    }
+
+    createRemoveButton(model) {
+        this.nodeButtonRemove = document.createElement('div');
+        this.nodeButtonRemove.className = 'button remove';
+        this.nodeButtonRemove.textContent = 'remove';
+        this.nodeButtonRemove.onclick = model.remove.bind(model);
+        this.nodePanel.appendChild(this.nodeButtonRemove);
     }
 
     createActionButton(model) {

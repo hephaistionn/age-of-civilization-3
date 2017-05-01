@@ -22,6 +22,10 @@ module.exports = class HelpPanel {
         this.nodePreview.className = 'preview';
         this.nodePanel.appendChild(this.nodePreview);
 
+        this.nodeTitle = document.createElement('div');
+        this.nodeTitle.className = 'title';
+        this.nodePanel.appendChild(this.nodeTitle);
+
         this.nodeDescription = document.createElement('div');
         this.nodeDescription.className = 'description';
         this.nodePanel.appendChild(this.nodeDescription);
@@ -33,7 +37,8 @@ module.exports = class HelpPanel {
     updateState(model) {
         if(model.opened) {
             this.nodeDescription.textContent = model.description;
-            this.nodePreview.style.backgroundImage  = model.urlPicture;
+            this.nodePreview.style.backgroundImage = model.urlPicture;
+            this.nodeTitle.textContent = model.title;
             this.node.className = this.node.className.replace(' hide', '');
         } else {
             this.node.className += ' hide';
