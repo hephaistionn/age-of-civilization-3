@@ -45,5 +45,20 @@
       left: -64px;
     }
   }
+
+  .editor.road {
+    position: fixed;
+    left: 41%;
+    top: initial;
+    bottom: 44px;
+    .button.confirm {
+      top: 0;
+      left: 30px;
+    }
+    .button.cancel {
+      top: 0;
+      left: -30px;
+    }
+  }
 }
 

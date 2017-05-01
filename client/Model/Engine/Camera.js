@@ -43,7 +43,7 @@ class Camera {
 
     dragg(x, z) {
         //Transformation of space. Apply a rotation of PI/4 at  direction vector.
-        //screen space to camera spaceè
+        //screen space to camera spaceï¿½
         if(!this.moveReady) {
             this.initMove(x, z);
         }
@@ -63,7 +63,7 @@ class Camera {
         this.pressZ = z;
     }
 
-    cleatMove() {
+    clearMove() {
         this.moveReady = false;
         this.zoomInit = this.zoom;
     }

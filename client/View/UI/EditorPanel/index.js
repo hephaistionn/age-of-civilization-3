@@ -9,11 +9,11 @@ module.exports = class EditorPanel {
         this.node.id = model._id;
 
         this.nodeEntityEditor = document.createElement('div');
-        this.nodeEntityEditor.className = 'editor hide';
+        this.nodeEntityEditor.className = 'editor entity hide';
         this.node.appendChild(this.nodeEntityEditor);
 
         this.nodeRoadeEditor = document.createElement('div');
-        this.nodeRoadeEditor.className = 'editor hide';
+        this.nodeRoadeEditor.className = 'editor road hide';
         this.node.appendChild(this.nodeRoadeEditor);
 
         this.nodeEraseEditor = document.createElement('div');
@@ -75,6 +75,7 @@ module.exports = class EditorPanel {
 
         if(model.roadeEditor) {
             this.showNode(this.nodeRoadeEditor);
+            this.nodeEntityEditor.style.transform = 'translate(@xpx, @ypx)'.replace('@x', model.position.x).replace('@y', model.position.y);
         }
 
         if(model.eraseEditor) {

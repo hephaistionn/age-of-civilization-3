@@ -121,7 +121,7 @@ class ScreenWorldmap extends Screen {
     }
 
     touchEnd() {
-        camera.cleatMove();
+        camera.clearMove();
     }
 
     touchStartOnMap(x, z, id) {

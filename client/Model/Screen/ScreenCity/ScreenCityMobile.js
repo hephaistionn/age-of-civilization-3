@@ -68,6 +68,8 @@ class ScreenCity extends Screen {
                 const  isRoad = roadPositioner.selectEntity(entityId);
                 if(!isRoad)
                     editorPanel.showEntityEditor();
+                else
+                    editorPanel.showRoadeEditor();
             }
             buildingMenu.close();
         });
@@ -96,6 +98,7 @@ class ScreenCity extends Screen {
 
         editorPanel.onConfirm(() => {
             this.buildEntity();
+            this.buildRoad();
             buildingMenu.open();
             positioner.unselectEntity();
             roadPositioner.unselectEntity();
@@ -131,6 +134,7 @@ class ScreenCity extends Screen {
     }
 
     selectedProjection(screenX, screenY) {
+        console.log('selectedProjection',screenX, screenY);
         editorPanel.move(screenX, screenY);
     }
 
@@ -144,18 +148,20 @@ class ScreenCity extends Screen {
             this.get(id).restoreState();
             this.removeEntity(id);
             monitoringPanel.update();
+            buildingMenu.open();
         } else if(id && !positioner.selected) {
             entityManagerPanel.open(this.get(id));
-        } else {
+        } else if(roadPositioner.selected){
             roadPositioner.mouseDown(x, z)
+        }else{
+            buildingMenu.open();
         }
-        buildingMenu.open();
+
     }
 
 
     touchEnd(x, z) {
-        camera.cleatMove();
-        this.buildRoad();
+        camera.clearMove();
     }
 
     zoom(delta) {

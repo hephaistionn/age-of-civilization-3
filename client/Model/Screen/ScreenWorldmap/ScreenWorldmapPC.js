@@ -120,7 +120,7 @@ class ScreenWorldmap extends Screen {
     }
 
     mouseUp() {
-        camera.cleatMove();
+        camera.clearMove();
     }
 
     mouseMoveOnMap(x, z) {

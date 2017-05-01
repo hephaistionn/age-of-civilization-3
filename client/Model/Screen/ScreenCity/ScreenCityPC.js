@@ -140,7 +140,7 @@ class ScreenCity extends Screen {
     }
 
     mouseUp() {
-        camera.cleatMove();
+        camera.clearMove();
         this.buildRoad();
         buildingMenu.open();
     }
