@@ -20,7 +20,9 @@ const locales = {
         'Destroy': 'Détruire',
         'Resources': 'Resources',
         'Society': 'Société',
-        'need': 'Il manque @1 en '
+        'need': 'Il manque @1 en ',
+        'cityName': 'nom de la cité : @1',
+        'cityLevel': 'niveau de la cité : @1'
     }
 };
 

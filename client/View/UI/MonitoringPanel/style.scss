@@ -46,7 +46,7 @@
     .header{
       position: absolute;
       font-size: 18px;
-      top: 30px;
+      top: 50px;
       &.resources{
         left: 5px;
       }
@@ -57,7 +57,7 @@
 
     .list{
       position: absolute;
-      top: 50px;
+      top: 70px;
       &.resources{
         left: 5px;
       }
@@ -98,6 +98,16 @@
       }
 
     }
+  }
+
+  .cityName{
+    position: relative;
+    width: 200px;
+  }
+
+  .cityLevel{
+    position: relative;
+    width: 200px;
   }
 
   .button {

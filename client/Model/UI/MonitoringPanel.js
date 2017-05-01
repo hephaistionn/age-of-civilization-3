@@ -9,6 +9,8 @@ class MonitoringPanel {
         this.resources = ['wood', 'stone', 'meat'];
         this.society = ['population', 'workers'];
         this.updated = false;
+        this.cityName = stateManager.currentCity.name;
+        this.cityLevel =  0;
         this.stateManager = stateManager;
         this._id = 0;
     }
@@ -17,6 +19,7 @@ class MonitoringPanel {
         if(this.opened === true) return;
         this.opened = true;
         this.updated = true;
+        this.cityLevel = stateManager.currentCity.level;
     }
 
     close() {

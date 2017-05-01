@@ -64,8 +64,21 @@ module.exports = class MonitoringPanelPC {
         this.nodeListSociety.className = 'list society';
         this.nodeMonitoringPanel.appendChild(this.nodeListSociety);
 
+        this.nodeCityName = document.createElement('div');
+        this.nodeCityName.className = 'cityName';
+        this.nodeMonitoringPanel.appendChild(this.nodeCityName);
+
+        this.nodeCityLevel = document.createElement('div');
+        this.nodeCityLevel.className = 'cityLevel';
+        this.nodeMonitoringPanel.appendChild(this.nodeCityLevel);
+
         this.updateState(model);
         this.add(parent);
+    }
+
+    updateDataCity(model){
+        this.nodeCityName.textContent  = wording('cityName').replace('@1', model.cityName);
+        this.nodeCityLevel.textContent  = wording('cityLevel').replace('@1', model.cityLevel);
     }
 
     updateMonioringList(){
@@ -132,7 +145,8 @@ module.exports = class MonitoringPanelPC {
         if(model.opened) {
             this.showNode(this.nodeMonitoringContainer);
             this.hideNode(this.nodeButtonOpen);
-            this.updateMonioringList();
+            this.updateMonioringList(model);
+            this.updateDataCity(model);
         } else {
             this.hideNode(this.nodeMonitoringContainer);
             this.showNode(this.nodeButtonOpen);
