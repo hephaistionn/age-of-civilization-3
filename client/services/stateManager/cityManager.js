@@ -93,30 +93,6 @@ module.exports = StateManager => {
         }
     };
 
-    StateManager.prototype.cityAddStone = function updateStone(value) {
-        this.currentCity.states.stone += value;
-    };
-
-    StateManager.prototype.cityAddWood = function updateWood(value) {
-        this.currentCity.states.wood += value;
-    };
-
-    StateManager.prototype.cityAddMeat = function updateMeat(value) {
-        this.currentCity.states.meat += value;
-    };
-
-    StateManager.prototype.cityAddPopulation = function updatePopulation(value) {
-        this.currentCity.states.population += value;
-    };
-
-    StateManager.prototype.cityAddWorkers = function updateWorkers(value) {
-        this.currentCity.states.workers += value;
-    };
-
-    StateManager.prototype.cityAddExplorers = function updateExplorers(value) {
-        this.currentCity.states.explorers += value;
-    };
-
     StateManager.prototype.cityUpdateTrade = function updateTrade(id) {
         const trade = this.currentCity.trade;
         if(trade[id] === CLOSE) {

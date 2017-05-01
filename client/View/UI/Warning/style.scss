@@ -1,0 +1,44 @@
+.warning {
+  position: fixed;
+  top: 50px;
+  left: 0;
+  .message {
+    color: red;
+    position: relative;
+    margin: 5px 0;
+    padding: 0 20px 0 100px;
+    background-color: rgba(255, 255, 255, 0.4);
+
+    .icon {
+      position: absolute;
+      right: 3px;
+      top: 3px;
+    }
+  }
+
+  &.hide {
+    display: none;
+  }
+
+  &.transitionByLeft {
+    animation-name: transitionByLeft;
+    animation-duration: 4s;
+    animation-iteration-count: 1;
+  }
+
+  @keyframes transitionByLeft {
+    0% {
+      transform: translate(-400px, 0);
+    }
+    10% {
+      transform: translate(0, 0);
+    }
+    90% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(-400px, 0);
+    }
+  }
+}
+

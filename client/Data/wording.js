@@ -19,7 +19,8 @@ const locales = {
         'stoneRoad': 'Chemin de pierre',
         'Destroy': 'Détruire',
         'Resources': 'Resources',
-        'Society': 'Société'
+        'Society': 'Société',
+        'need': 'Il manque @1 en '
     }
 };
 

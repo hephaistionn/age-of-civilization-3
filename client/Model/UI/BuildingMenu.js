@@ -80,8 +80,14 @@ class BuildingMenu {
     onClickBuilding(fct) {
         this._onClickBuilding = entityId => {
             this.currentFocus === entityId ? this.currentFocus = null : this.currentFocus = entityId;
-            fct(entityId);
-            this.updated = true;
+            const Entity = ENTITIES[entityId];
+            const required = Entity.checkState();
+            if(required.size === 0) {
+                fct(entityId);
+                this.updated = true;
+            } else {
+                ee.emit('warning', required);
+            }
         };
     }
 

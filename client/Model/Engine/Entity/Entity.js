@@ -91,10 +91,15 @@ class Entity {
     restoreState() {
         let eleId;
         const make = this.constructor.make;
+        const cost = this.constructor.cost;
         const states = stateManager.currentCity.states;
 
         for(eleId in make) {
             states[eleId] -= make[eleId];
+        }
+
+        for(eleId in cost) {
+            states[eleId] += cost[eleId];
         }
     }
 
@@ -104,6 +109,19 @@ class Entity {
     }
 
 }
+
+Entity.checkState= function checkState() {
+    let eleId;
+    const cost = this.cost;
+    const states = stateManager.currentCity.states;
+    const required =  new Map();
+    for(eleId in cost) {
+        if(states[eleId] < cost[eleId]){
+            required.set(eleId,  cost[eleId]);
+        }
+    }
+    return required;
+};
 
 Entity.available = function available() {
     const require = this.require;

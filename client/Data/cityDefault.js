@@ -10,7 +10,7 @@ module.exports = params => {
         states: {
             population: 0,
             workers: 0,
-            explorers: 0,
+            inactive: 0,
             wood: 200,
             stone: 100,
             meat: 100

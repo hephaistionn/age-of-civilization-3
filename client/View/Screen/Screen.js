@@ -15,6 +15,7 @@ COMPONENTS.EditorPanel = require('../UI/EditorPanel');
 COMPONENTS.MonitoringPanel = require('../UI/MonitoringPanel');
 COMPONENTS.HelpPanel = require('../UI/HelpPanel');
 COMPONENTS.WorldmapMenu = require('../UI/WorldmapMenu');
+COMPONENTS.Warning = require('../UI/Warning');
 COMPONENTS.EntityManagerPanel = require('../UI/EntityManagerPanel');
 COMPONENTS.FirstStartPanel = require('../UI/FirstStartPanel');
 COMPONENTS.LeaderCreationPanel = require('../UI/LeaderCreationPanel');

@@ -26,7 +26,7 @@ House.tile_z = 1;
 House.walkable = 0;
 House.cost = {wood: 20, stone: 1};
 House.require = {wood: 20};
-House.make = {population: 4};
+House.make = {population: 4, inactive: 4};
 House.instances = [];
 
 module.exports = House;
