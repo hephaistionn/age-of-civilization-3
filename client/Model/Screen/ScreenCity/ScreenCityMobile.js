@@ -261,7 +261,6 @@ class ScreenCity extends Screen {
     }
 
     syncEntityToState(model) {
-        const hiddenProps = '_';
         model.entities = {};
         for(let id of this.components.keys()) {
             const entity = this.components.get(id);
@@ -274,7 +273,6 @@ class ScreenCity extends Screen {
             }
             const entitySaved = {};
             for(let props in entity) {
-                if(props[0] === hiddenProps)continue;
                 entitySaved[props] = entity[props];
             }
             model.entities[type].push(entitySaved);
