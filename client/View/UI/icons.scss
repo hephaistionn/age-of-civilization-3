@@ -12,6 +12,12 @@
   &.population {
     background-image: url('pic/icons/peon.png');
   }
+  &.inactive {
+    background-image: url('pic/icons/peon.png');
+  }
+  &.workers {
+    background-image: url('pic/icons/worker.png');
+  }
   &.meat {
     background-image: url('pic/icons/meat.png');
   }

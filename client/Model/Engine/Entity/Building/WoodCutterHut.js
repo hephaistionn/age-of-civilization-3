@@ -24,6 +24,13 @@ class WoodCutterHut extends Entity {
         this.timer = 0;
         this.wood += value;
     }
+
+    getData() {
+        return {
+            workers: 2,
+            wood: this.wood
+        }
+    }
 }
 
 WoodCutterHut.selectable = true;

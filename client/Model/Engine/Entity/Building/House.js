@@ -17,6 +17,12 @@ class House extends Entity {
             this.time = 0;
         }
     }
+
+    getData() {
+        return {
+            population: 2
+        }
+    }
 }
 
 House.selectable = true;

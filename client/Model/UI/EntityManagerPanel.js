@@ -12,6 +12,7 @@ class EntityManagerPanel {
         this.currentEntity = null;
         this.updated = false;
         this.urlPicture = '';
+        this.data = null;
         this._onBuild = null;
         this._onRemove = null;
         this._id = 0;
@@ -31,6 +32,7 @@ class EntityManagerPanel {
         this.isRemovable = entity.constructor.entity && !entity.constructor.resource;
         this.title = wording(entity.constructor.name);
         this.urlPicture = 'url("pic/entities/x.jpg")'.replace('x', entity.constructor.name).toLowerCase();
+        this.data = entity.getData ? entity.getData() : null;
         this.currentEntity = entity;
         this.updated = true;
     }

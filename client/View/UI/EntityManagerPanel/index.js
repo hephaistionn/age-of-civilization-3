@@ -40,6 +40,7 @@ module.exports = class EntityManagerPanel {
             if(model.yourCity) this.createVisiteButton(model);
             if(model.currentAction) this.createActionButton(model);
             if(model.isRemovable) this.createRemoveButton(model);
+            if(model.data) this.createDataList(model);
             this.nodePreview.style.backgroundImage = model.urlPicture;
             this.nodeTitle.textContent = model.title;
             this.node.className = this.node.className.replace(' hide', '');
@@ -49,7 +50,26 @@ module.exports = class EntityManagerPanel {
             if(this.nodeVisitButton) this.nodePanel.removeChild(this.nodeVisitButton);
             if(this.nodeActionButton) this.nodePanel.removeChild(this.nodeActionButton);
             if(this.nodeRemoveButton) this.nodePanel.removeChild(this.nodeRemoveButton);
+            if(this.nodeDataList) this.nodePanel.removeChild(this.nodeDataList);
         }
+    }
+
+    createDataList(model) {
+        this.nodeDataList = document.createElement('div');
+        this.nodeDataList.className = 'nodeDataList';
+        for(let id in model.data ){
+            const node = document.createElement('div');
+            node.className = 'item';
+            const nodePic = document.createElement('div');
+            nodePic.className = 'icon '+id;
+            const nodeValue = document.createElement('div');
+            nodeValue.className = 'value';
+            nodeValue.textContent = model.data[id];
+            node.appendChild(nodePic);
+            node.appendChild(nodeValue);
+            this.nodeDataList.appendChild(node);
+        }
+        this.nodePanel.appendChild(this.nodeDataList);
     }
 
     createDescription(model) {

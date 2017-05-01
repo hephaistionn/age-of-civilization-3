@@ -41,6 +41,30 @@
       }
     }
 
+    .nodeDataList{
+      position: absolute;
+      bottom: 0;
+      .item {
+        position: relative;
+        height: 17px;
+        background-color: grey;
+        width: 100px;
+        margin: 11px;
+        padding: 3px;
+        .icon {
+          width: 18px;
+          height: 18px;
+          background-size: 17px;
+        }
+        .value {
+          position: absolute;
+          top: 2px;
+          left: 23px;
+          display: inline-block;
+        }
+      }
+    }
+
     .button.close {
       position: absolute;
       top: 16px;
