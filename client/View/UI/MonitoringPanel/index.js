@@ -118,11 +118,14 @@ module.exports = class MonitoringPanelPC {
         nodeValue.textContent = value != undefined ? value : '';
         node.appendChild(nodePic);
         node.appendChild(nodeValue);
-        if(trading != undefined){
+        if(trading != undefined) {
             const tradeStatus = stateManager.currentCity.trade[id];
             const nodeStatus = document.createElement('div');
             nodeStatus.className = 'tradeStatus';
             nodeStatus.textContent = this.tradeStatusToWord(tradeStatus);
+            nodeStatus.onclick = ()=> {
+                this.model.switchTrade(id);
+            };
             node.appendChild(nodeStatus)
         }
         return node;

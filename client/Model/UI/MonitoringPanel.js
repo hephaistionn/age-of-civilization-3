@@ -29,7 +29,7 @@ class MonitoringPanel {
     }
 
     switchTrade(id) {
-        this.stateManager.switchTrade(id);
+        this.stateManager.cityUpdateTrade(id);
         this.updated = true;
     }
 

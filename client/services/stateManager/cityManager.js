@@ -97,9 +97,9 @@ module.exports = StateManager => {
         const trade = this.currentCity.trade;
         if(trade[id] === CLOSE) {
             trade[id] = EXPORT;
-        } else if(this.trade[id] === EXPORT) {
+        } else if(trade[id] === EXPORT) {
             trade[id] = IMPORT;
-        } else if(this.trade[id] === IMPORT) {
+        } else if(trade[id] === IMPORT) {
             trade[id] = CLOSE;
         }
     };
