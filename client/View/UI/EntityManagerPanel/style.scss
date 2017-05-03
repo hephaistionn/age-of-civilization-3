@@ -28,6 +28,38 @@
       display: inline;
     }
 
+    .goalList{
+      position: absolute;
+      top: 156px;
+      left: 22px;
+      .goalHeader{
+        position: relative;
+        font-size: 21px;
+        margin: 5px;
+      }
+      .item{
+        position: relative;
+        background: #8a8a8a;
+        height: 20px;
+        width: 171px;
+        margin: 12px 2px;
+        font-size: 14px;
+        line-height: 20px;
+        .icon{
+          position: absolute;
+          left: 0; 
+          width: 16px;
+          height: 16px; 
+          background-size: 16px;
+        }
+        .value{
+          position: absolute;
+          left: 25px;
+        }
+      }
+
+    }
+
     .button {
       border: solid 1px black;
       background-color: grey;

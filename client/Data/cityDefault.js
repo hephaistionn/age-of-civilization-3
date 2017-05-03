@@ -25,6 +25,7 @@ module.exports = params => {
         z: params.z,
         camera: {x: 0, z: 0},
         goal: params.goal,
+        desc: params.desc, 
         entities: {}
-    }
+    };
 };

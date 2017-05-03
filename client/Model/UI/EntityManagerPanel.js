@@ -14,13 +14,13 @@ class EntityManagerPanel {
         this.urlPicture = '';
         this.data = null;
         this._onBuild = null;
-        this._onRemove = null;
+        this._onRemove = null; 
         this._id = 0;
     }
 
     open(entity) {
-        if(!entity || !entity.constructor.selectable) return;
-        this.description = entity.constructor.description;
+        if(!entity || !entity.constructor.selectable) return; 
+        this.description = wording(entity.desc) || wording(entity.constructor.description);
         if(entity.onAction) {
             this.currentAction = entity.onAction.bind(entity);
         } else {
@@ -29,6 +29,7 @@ class EntityManagerPanel {
         this.actionLabel = entity.constructor.actionLabel;
         this.opened = true;
         this.yourCity = entity.leader === stateManager.getCurrentLeader().id;
+        this.goal = entity.goal;
         this.isRemovable = entity.constructor.entity && !entity.constructor.resource;
         this.title = wording(entity.constructor.name);
         this.urlPicture = 'url("pic/entities/x.jpg")'.replace('x', entity.constructor.name).toLowerCase();

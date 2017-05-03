@@ -1,4 +1,5 @@
 const stateManager = require('../../../services/stateManager');
+const wording = require('../../../Data/wording');
 
 module.exports = class EntityManagerPanel {
 
@@ -41,6 +42,7 @@ module.exports = class EntityManagerPanel {
             if(model.currentAction) this.createActionButton(model);
             if(model.isRemovable) this.createRemoveButton(model);
             if(model.data) this.createDataList(model);
+            if(model.goal) this.createGoalList(model);
             this.nodePreview.style.backgroundImage = model.urlPicture;
             this.nodeTitle.textContent = model.title;
             this.node.className = this.node.className.replace(' hide', '');
@@ -51,6 +53,8 @@ module.exports = class EntityManagerPanel {
             if(this.nodeActionButton) this.nodePanel.removeChild(this.nodeActionButton);
             if(this.nodeRemoveButton) this.nodePanel.removeChild(this.nodeRemoveButton);
             if(this.nodeDataList) this.nodePanel.removeChild(this.nodeDataList);
+            if(this.nodeGoalList) this.nodePanel.removeChild(this.nodeGoalList);
+            
         }
     }
 
@@ -70,6 +74,29 @@ module.exports = class EntityManagerPanel {
             this.nodeDataList.appendChild(node);
         }
         this.nodePanel.appendChild(this.nodeDataList);
+    }
+
+    createGoalList(model) {
+        this.nodeGoalList = document.createElement('div');
+        this.nodeGoalList.className = 'goalList';
+        const nodeHeader = document.createElement('div');
+        nodeHeader.className = 'goalHeader'; 
+        nodeHeader.textContent = wording('goal');
+        this.nodeGoalList.appendChild(nodeHeader);
+         const states = stateManager.cities[model.currentEntity.cityId].states;
+        for(let id in model.goal ){
+            const node = document.createElement('div');
+            node.className = 'item';
+            const nodePic = document.createElement('div');
+            nodePic.className = 'icon '+id;
+            const nodeValue = document.createElement('div');
+            nodeValue.className = 'value';
+            nodeValue.textContent = states[id] + '/' + model.goal[id];
+            node.appendChild(nodePic);
+            node.appendChild(nodeValue);
+            this.nodeGoalList.appendChild(node);
+        }
+        this.nodePanel.appendChild(this.nodeGoalList);
     }
 
     createDescription(model) {

@@ -24,24 +24,10 @@ window.addEventListener('load', () => {
     const currentWorldmap = stateManager.getCurrentWorldmap();
     const currentScreen = stateManager.getCurrentScreen();
 
-    if(currentScreen === 'ScreenCity' && currentCity) {
+    if (currentScreen === 'ScreenCity' && currentCity) {
         app.openScreen('ScreenCity', currentCity);
     } else {
         app.openScreen('ScreenWorldmap', currentWorldmap);
     }
 
-
 });
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -80,18 +80,18 @@ class ScreenWorldmap extends Screen {
         for(let j = 0; j < nextCities.length; j++) {
             const newCity = nextCities[j];
             if(!cities.find(city => city.name === newCity.name)) {
-                this.newCity(spawns[currentIndex * 2], spawns[currentIndex * 2 + 1], 0, newCity.name, leaderId, newCity.goal);
+                this.newCity(spawns[currentIndex * 2], spawns[currentIndex * 2 + 1], 0, newCity.name, leaderId, newCity.goal, newCity.desc);
                 currentIndex++;
             }
         }
 
     }
 
-    newCity(x, z, level, name, leaderId, goal) {
+    newCity(x, z, level, name, leaderId, goal, desc) {
         const params = stateManager.newCity({
             level: level, x: x, z: z, name: name,
             y: worldmap.getHeightTile(x, z),
-            leader: leaderId, goal: goal
+            leader: leaderId, goal: goal, desc:desc
         });
         const city = this.newEntity(params);
         cities.push(city);

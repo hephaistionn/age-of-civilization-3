@@ -1,4 +1,3 @@
-//https://fr.wikipedia.org/wiki/Ville_en_M%C3%A9sopotamie
 module.exports = [
     [
         {
@@ -6,7 +5,8 @@ module.exports = [
             goal: {
                 population:10,
                 meat:100
-            }
+            },
+            desc: 'cityDescUruk' 
         }
     ],
     [
@@ -15,7 +15,8 @@ module.exports = [
             goal: {
                 population:15,
                 stone:100
-            }
+            },
+            desc: 'cityDescAkkad'
         }
     ],
     [
@@ -23,13 +24,15 @@ module.exports = [
             name: 'Nippur',
             goal: {
                 population:25
-            }
+            },
+            desc: 'cityDescNippur'
         },
         {
             name: 'Umma',
             goal: {
                 monument :10
-            }
+            },
+            desc: 'cityDescUmma'
         }
     ],
     [
@@ -40,7 +43,8 @@ module.exports = [
             name: 'Tell Leilan',
             goal: {
                 monument :15
-            }
+            },
+            desc: 'cityDescTell'
         }
     ]
 ];
