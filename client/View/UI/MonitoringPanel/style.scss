@@ -117,6 +117,38 @@
       width: 128px;
       height: 128px;
       margin: 20px;
+  }
+
+  .goalList{
+      position: absolute;
+      top: 182px;
+      right: 20px;
+      .goalHeader{
+        position: relative;
+        font-size: 21px;
+        margin: 5px;
+      }
+      .item{
+        position: relative;
+        background: #8a8a8a; 
+        height: 20px;
+        width: 140px;
+        margin: 12px 2px;
+        font-size: 14px;
+        line-height: 20px;
+        .icon{
+          position: absolute;
+          left: 0; 
+          width: 16px;
+          height: 16px; 
+          background-size: 16px;
+        }
+        .value{
+          position: absolute;
+          left: 25px;
+        }
+      }
+
     }
 
   .button {

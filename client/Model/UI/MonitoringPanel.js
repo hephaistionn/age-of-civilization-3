@@ -12,6 +12,7 @@ class MonitoringPanel {
         this.cityName = stateManager.currentCity.name;
         this.cityLevel = 0;
         this.urlPicture = '';
+        this.goal = stateManager.currentCity.goal;
         this._id = 0;
     }
 

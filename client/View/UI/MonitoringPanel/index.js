@@ -77,6 +77,10 @@ module.exports = class MonitoringPanelPC {
         this.nodeCityLevel.className = 'cityLevel';
         this.nodeMonitoringPanel.appendChild(this.nodeCityLevel);
 
+        this.nodeGoalList = document.createElement('div');
+        this.nodeGoalList.className = 'goalList';
+        this.nodeMonitoringPanel.appendChild(this.nodeGoalList);
+
         this.updateState(model);
         this.add(parent);
     }
@@ -140,6 +144,32 @@ module.exports = class MonitoringPanelPC {
         return node;
     }
 
+    updateGoalList(model) {
+        while (this.nodeGoalList.firstChild) {
+            this.nodeGoalList.removeChild(this.nodeGoalList.firstChild);
+        }
+         const states = stateManager.currentCity.states;
+
+        const nodeHeader = document.createElement('div');
+        nodeHeader.className = 'goalHeader'; 
+        nodeHeader.textContent = wording('goal');
+        this.nodeGoalList.appendChild(nodeHeader);
+
+        for(let id in model.goal ){
+            const node = document.createElement('div');
+            node.className = 'item';
+            const nodePic = document.createElement('div');
+            nodePic.className = 'icon '+id;
+            const nodeValue = document.createElement('div');
+            nodeValue.className = 'value';
+            nodeValue.textContent = states[id] + '/' + model.goal[id];
+            node.appendChild(nodePic);
+            node.appendChild(nodeValue);
+            this.nodeGoalList.appendChild(node);
+        }
+
+    }
+
     tradeStatusToWord(value) {
         switch (value) {
             case 0:
@@ -160,6 +190,7 @@ module.exports = class MonitoringPanelPC {
             this.updateMonioringList(model);
             this.updateDataCity(model);
             this.updatePreview(model);
+            this.updateGoalList(model);
         } else {
             this.hideNode(this.nodeMonitoringContainer);
             this.showNode(this.nodeButtonOpen);
