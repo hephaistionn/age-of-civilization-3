@@ -68,7 +68,7 @@
         position: relative;
         background: #8a8a8a;
         height: 20px;
-        width: 171px;
+        width: 150px;
         margin: 12px 2px;
         font-size: 14px;
         line-height: 20px;
@@ -103,12 +103,21 @@
   .cityName{
     position: relative;
     width: 200px;
-  }
+  } 
 
   .cityLevel{
     position: relative;
     width: 200px;
   }
+
+  .preview {
+      position: absolute;
+      top: 30px;
+      right: 0;
+      width: 128px;
+      height: 128px;
+      margin: 20px;
+    }
 
   .button {
     cursor: pointer;

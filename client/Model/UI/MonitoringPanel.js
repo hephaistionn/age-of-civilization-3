@@ -10,26 +10,29 @@ class MonitoringPanel {
         this.society = ['population', 'workers'];
         this.updated = false;
         this.cityName = stateManager.currentCity.name;
-        this.cityLevel =  0;
-        this.stateManager = stateManager;
+        this.cityLevel = 0;
+        this.urlPicture = '';
         this._id = 0;
     }
 
     open() {
-        if(this.opened === true) return;
+        if (this.opened === true) return;
         this.opened = true;
         this.updated = true;
         this.cityLevel = stateManager.currentCity.level;
+        this.urlPicture = 'url("pic/entities/@x@y.jpg")';
+        this.urlPicture = this.urlPicture.replace('@x', 'city').toLowerCase();
+        this.urlPicture = this.urlPicture.replace('@y', stateManager.currentCity.level);
     }
 
     close() {
-        if(this.opened === false) return;
+        if (this.opened === false) return;
         this.opened = false;
         this.updated = true;
     }
 
     switchTrade(id) {
-        this.stateManager.cityUpdateTrade(id);
+        stateManager.cityUpdateTrade(id);
         this.updated = true;
     }
 

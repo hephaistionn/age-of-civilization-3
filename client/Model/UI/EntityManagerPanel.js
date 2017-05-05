@@ -32,7 +32,9 @@ class EntityManagerPanel {
         this.goal = entity.goal;
         this.isRemovable = entity.constructor.entity && !entity.constructor.resource;
         this.title = wording(entity.constructor.name);
-        this.urlPicture = 'url("pic/entities/x.jpg")'.replace('x', entity.constructor.name).toLowerCase();
+        this.urlPicture = 'url("pic/entities/@x@y.jpg")';
+        this.urlPicture = this.urlPicture.replace('@x', entity.constructor.name).toLowerCase();
+        this.urlPicture = this.urlPicture.replace('@y', entity.level !== undefined ? entity.level : '');
         this.data = entity.getData ? entity.getData() : null;
         this.currentEntity = entity;
         this.updated = true;

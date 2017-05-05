@@ -12,8 +12,8 @@ class City {
         this.name = params.name || 'no name';
         this.leader = params.leader || 'free';
         this.cityId = params.id;
-        this.desc = params.desc; 
-        this.goal = params.goal; 
+        this.desc = params.desc;
+        this.goal = params.goal;
         City.instances.push(this);
     }
 
@@ -28,7 +28,7 @@ class City {
 }
 
 City.selectable = true;
-City.instances = [];  
+City.instances = [];
 City.tile_x = 1;
 City.tile_z = 1;
 
