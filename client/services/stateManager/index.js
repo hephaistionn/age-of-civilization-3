@@ -21,6 +21,7 @@ class StateManager {
 
         ee.on('save', this.saveGame.bind(this));
         ee.on('openScreen', this.setCurrentScreen.bind(this));
+        ee.on('updateCityStates', this.updateCityStates.bind(this));
 
     }
 

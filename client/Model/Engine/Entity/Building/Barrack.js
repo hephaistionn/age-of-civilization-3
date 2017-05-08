@@ -14,8 +14,8 @@ Barrack.tile_x = 1;
 Barrack.tile_z = 1;
 Barrack.walkable = 0;
 Barrack.cost = {wood: 5, stone: 2};
-Barrack.require = {wood: 5};
-Barrack.make = {};
+Barrack.require = {inactive: 2};
+Barrack.enabled = { population: 6};
 Barrack.instances = [];
 
 module.exports = Barrack;

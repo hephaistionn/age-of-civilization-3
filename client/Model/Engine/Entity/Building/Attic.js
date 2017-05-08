@@ -14,8 +14,8 @@ Attic.tile_x = 1;
 Attic.tile_z = 1;
 Attic.walkable = 0;
 Attic.cost = {wood: 5};
-Attic.require = {wood: 5};
-Attic.make = {};
+Attic.require = {inactive: 2};
+Attic.enabled = { population: 4};
 Attic.instances = [];
 
 module.exports = Attic;

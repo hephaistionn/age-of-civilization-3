@@ -77,7 +77,7 @@ Road.checkState = function checkState(type, size) {
     return required;
 };
 
-Road.walkable = true;
+Road.walkable = 2;
 Road.roads = {
     RoadDirty: require('./RoadDirty'),
     RoadStone: require('./RoadStone')

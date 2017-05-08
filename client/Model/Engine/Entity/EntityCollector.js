@@ -14,10 +14,15 @@ class EntityCollector {
         this.sourceId = params.sourceId;
         this.path = params.path ? params.path : null;
         this.resource = params.resource || 0;
+        this.ressourceId = 'wood';
         this.targetId = params.targetId ? params.targetId : null;
         this.cycle = params.cycle ? params.cycle : 1;
         this.timer = params.timer || 0;
         this.constructor.instances.push(this);
+    }
+
+    postCreate() {
+
     }
 
     move(x, y, z, a) {
@@ -60,17 +65,22 @@ class EntityCollector {
         this.state = 1;
         ee.emit('getEntity', this.sourceId, sourceEntity => {
             if(sourceEntity) {
-                const dataPath = pathfinding.computePath(sourceEntity, this._targetType);
+                const dataPath = pathfinding.computePath(sourceEntity, this._targetType, this.constructor.authorizedTile);
                 this.path = dataPath.path || null;
                 this.targetId = dataPath.targetId || null;
-                this.sourceId = dataPath.sourceId || null;
+                //this.sourceId = dataPath.sourceId || null;
                 this.cycle = dataPath.path ? pathfinding.getPathLength(this.path) / this._speed : 0;
                 this.updated = true;
-                if(this.path)
+                if(this.path){
                     ee.emit('getEntity', this.targetId, entity => {
                         entity.exp = true;
-                    })
+                    });
+                }else{
+                    this.store();
+                    ee.emit('removeEntity', this._id); 
+                }
             } else {
+                this.store();
                 ee.emit('removeEntity', this._id);
             }
         });
@@ -85,6 +95,7 @@ class EntityCollector {
                 this.moveFree(workerSlot.x, workerSlot.y, workerSlot.z, workerSlot.a);
                 this.updated = true;
             } else {
+                this.store();
                 ee.emit('removeEntity', this._id);
             }
         });
@@ -93,12 +104,13 @@ class EntityCollector {
     comeback() {
         this.state = 3;
         ee.emit('getEntity', this.targetId, entity => {
-            if(entity && entity.wood > 0) {
-                this.resource = entity.getResource(this._capacity);
+            if(entity && entity[this.ressourceId] > 0) {
+                this.resource = entity.deductRessource(this._capacity);
                 this.path = pathfinding.revert(this.path);
                 this.cycle = pathfinding.getPathLength(this.path) / this._speed;
                 this.updated = true;
             } else {
+                this.store();
                 ee.emit('removeEntity', this._id);
             }
         });
@@ -108,7 +120,7 @@ class EntityCollector {
         this.state = 4;
         ee.emit('getEntity', this.sourceId, entity => {
             if(entity) {
-                entity.store(this.resource);
+                entity.storeRessource(this.ressourceId, this.resource);
                 this.resource = 0;
             }
             ee.emit('removeEntity', this._id);
@@ -120,7 +132,7 @@ class EntityCollector {
         return [this.x - 0.5, this.x - 0.5];
     }
 
-    onRemove() {
+    dismount() {
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
     }

@@ -14,6 +14,10 @@ class MonitoringPanel {
         this.urlPicture = '';
         this.goal = stateManager.currentCity.goal;
         this._id = 0;
+        this._update = ()=>{
+            this.updated = true;
+        }
+        ee.on('statesUpdated', this._update);
     }
 
     open() {
@@ -34,10 +38,13 @@ class MonitoringPanel {
 
     switchTrade(id) {
         stateManager.cityUpdateTrade(id);
+<<<<<<< HEAD
         this.updated = true;
     }
 
     update() {
+=======
+>>>>>>> 7feb13bd2ed4d5cb8f2bedf5ea615377b3abcff3
         this.updated = true;
     }
 
@@ -45,6 +52,10 @@ class MonitoringPanel {
         this.close();
         const model = stateManager.loadCurrentWorldmap();
         ee.emit('openScreen', 'ScreenWorldmap', model);
+    }
+
+    dismount() {
+        ee.off('statesUpdated', this._update);
     }
 
 }

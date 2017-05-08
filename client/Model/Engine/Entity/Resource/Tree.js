@@ -9,7 +9,7 @@ class Tree extends Entity {
         this.exp = params.exp || false;
     }
 
-    getResource(value) {
+    deductRessource(value) {
         this.updated = true;
         const quantity = Math.min(value, this.wood);
         this.wood -= value;

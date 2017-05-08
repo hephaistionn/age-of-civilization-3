@@ -17,8 +17,8 @@ class Screen {
 
     remove(component) {
         this.components.delete(component._id);
-        if(component.onRemove) {
-            component.onRemove();
+        if(component.dismount) {
+            component.dismount();
         }
     }
 

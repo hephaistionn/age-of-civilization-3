@@ -61,7 +61,7 @@ module.exports = class Positioner {
 
     unselectEntity() {
         if(!this.selected) return;
-        this.selected.onRemove();
+        this.selected.dismount();
         this.selected = null;
         this.updated = true;
     }

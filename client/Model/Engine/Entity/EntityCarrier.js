@@ -20,6 +20,10 @@ class EntityCarrier {
         this.constructor.instances.push(this);
     }
 
+    postCreate() {
+
+    }
+
     move(x, y, z, a) {
         this.a = a !== undefined ? a : this.a;
         this.x = Math.round((x - 0.5));
@@ -76,7 +80,7 @@ class EntityCarrier {
         return [this.x - 0.5, this.x - 0.5];
     }
 
-    onRemove() {
+    dismount() {
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
     }

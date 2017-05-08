@@ -1,3 +1,5 @@
+const ee = require('../eventEmitter');
+
 module.exports = StateManager => {
 
     const IMPORT = 2;
@@ -27,6 +29,27 @@ module.exports = StateManager => {
             }
         }
     };
+
+    StateManager.prototype.updateCityStates = function updateCityStates() {
+        let eleId;
+        const states = this.currentCity.states;
+
+        for( eleId in states) {
+            states[eleId] = 0;
+        } 
+
+        //each entity return its states
+        ee.emit('getCityStates', entityStates => {
+            for(eleId in entityStates) {
+                states[eleId] +=entityStates[eleId];
+            }
+        });
+
+        //compute specifics states
+        states.inactive = states.population - states.workers;
+        ee.emit('statesUpdated');
+
+    }
 
     StateManager.prototype.loadCurrentCity = function loadCurrentCity() {
         const id = this.load('currentCityId');
@@ -116,5 +139,9 @@ module.exports = StateManager => {
         cycle += dt
     }
 
+
+    StateManager.prototype.getCityState = function getCityState() {
+            return this.currentCity.states;
+    }
 
 };

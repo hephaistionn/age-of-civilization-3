@@ -109,7 +109,9 @@ Grid.prototype.setWalkableAtByIndex = function setWalkableAtByIndex(index, walka
  * @param {Node} node
  * @param {DiagonalMovement} diagonalMovement
  */
-Grid.prototype.getNeighbors = function getNeighbors(nodeIndex, diagonalMovement) {
+Grid.prototype.getNeighbors = function getNeighbors(nodeIndex, diagonalMovement, nodeType) {
+    nodeType = nodeType||1;
+    nodeType--;
     const nodes = this.nodes;
     var x = nodes[nodeIndex + this.indexX],
         y = nodes[nodeIndex + this.indexY],
@@ -123,28 +125,28 @@ Grid.prototype.getNeighbors = function getNeighbors(nodeIndex, diagonalMovement)
     neighbors.pop();
 
     // ↑
-    if(this.isWalkableAt(tx, ty)) {
+    if(nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
         s0 = true;
     }
     // →
     tx = x + 1;
     ty = y;
-    if(this.isWalkableAt(tx, ty)) {
+    if(nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
         s1 = true;
     }
     // ↓
     tx = x;
     ty = y + 1;
-    if(this.isWalkableAt(tx, ty)) {
+    if(nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
         s2 = true;
     }
     // ←
     tx = x - 1;
     ty = y;
-    if(this.isWalkableAt(tx, ty)) {
+    if(nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
         s3 = true;
     }
@@ -175,25 +177,25 @@ Grid.prototype.getNeighbors = function getNeighbors(nodeIndex, diagonalMovement)
     // ↖
     tx = x - 1;
     ty = y - 1;
-    if(d0 && this.isWalkableAt(tx, ty)) {
+    if(d0 && nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
     }
     // ↗
     tx = x + 1;
     ty = y - 1;
-    if(d1 && this.isWalkableAt(tx, ty)) {
+    if(d1 && nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
     }
     // ↘
     tx = x + 1;
     ty = y + 1;
-    if(d2 && this.isWalkableAt(tx, ty)) {
+    if(d2 && nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
     }
     // ↙
     tx = x - 1;
     ty = y + 1;
-    if(d3 && this.isWalkableAt(tx, ty)) {
+    if(d3 && nodeType < this.isWalkableAt(tx, ty)) {
         neighbors.push((ty * this.width + tx) * this.sizeNode);
     }
 

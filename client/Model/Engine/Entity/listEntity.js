@@ -1,5 +1,6 @@
 module.exports = {
     House: require('./Building/House'),
+    Starter: require('./Building/Starter'),
     Market: require('./Building/Market'),
     City: require('./Building/City'),
     Attic: require('./Building/Attic'),

@@ -8,6 +8,7 @@ class House extends Entity {
         this.time = params.time || 0;
         this.cycle = params.cycle || 2000;
         this.timer = params.timer || 0;
+        this.states = { population: 4};
     }
 
     update() {
@@ -31,8 +32,8 @@ House.tile_x = 1;
 House.tile_z = 1;
 House.walkable = 0;
 House.cost = {wood: 20, stone: 1};
-House.require = {wood: 20};
-House.make = {population: 4, inactive: 4};
+House.require = {};
+House.enabled = {};
 House.instances = [];
 
 module.exports = House;
