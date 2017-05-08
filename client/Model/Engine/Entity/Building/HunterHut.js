@@ -14,8 +14,8 @@ HunterHut.tile_x = 1;
 HunterHut.tile_z = 1;
 HunterHut.walkable = 0;
 HunterHut.cost = {wood: 5};
-HunterHut.require = {wood: 5};
-HunterHut.make = {};
+HunterHut.require = {inactive: 2};
+HunterHut.enabled = { population: 4};
 HunterHut.instances = [];
 
 module.exports = HunterHut;

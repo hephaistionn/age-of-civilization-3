@@ -16,4 +16,5 @@ Peon.description = 'I will go to an home to transmit my knowledge';
 Peon.instances = [];
 Peon.tile_x = 1;
 Peon.tile_z = 1;
+Peon.authorizedTile = 2;
 module.exports = Peon;

@@ -14,8 +14,8 @@ StoneMine.tile_x = 1;
 StoneMine.tile_z = 1;
 StoneMine.walkable = 0;
 StoneMine.cost = {wood: 5};
-StoneMine.require = {wood: 5};
-StoneMine.make = {};
+StoneMine.require = {inactive: 5};
+StoneMine.enabled = {wood: 5};
 StoneMine.instances = [];
 
 module.exports = StoneMine;

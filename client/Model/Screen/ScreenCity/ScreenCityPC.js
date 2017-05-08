@@ -74,7 +74,6 @@ class ScreenCity extends Screen {
         entityManagerPanel.onRemove(id => {
             this.get(id).restoreState();
             this.removeEntity(id);
-            monitoringPanel.update();
         });
 
         this.add(camera);
@@ -90,6 +89,8 @@ class ScreenCity extends Screen {
         this.add(road);
 
         this.syncStateToEntity(model, mapProperties);
+
+        ee.emit('updateCityStates');
     }
 
     mouseMoveOnMap(x, z) {
@@ -152,6 +153,7 @@ class ScreenCity extends Screen {
 
     newEntity(params) {
         const entity = new ENTITIES[params.type](params);
+        entity.postCreate();
         this.add(entity);
         ground.setWalkableTile(entity);
         return entity;
@@ -162,6 +164,7 @@ class ScreenCity extends Screen {
         if(!entity) return;
         ground.setWalkableTile(entity, 1);
         this.remove(entity);
+        ee.emit('updateCityRessources');
     }
 
     getEntity(entityId, callback) {
@@ -175,7 +178,6 @@ class ScreenCity extends Screen {
         const entity = this.newEntity(params);
         entity.pullState();
         positioner.unselectEntity();
-        monitoringPanel.update();
     }
 
     buildRoad() {
@@ -184,7 +186,6 @@ class ScreenCity extends Screen {
         road.updateState(params);
         road.pullState(params);
         roadPositioner.unselectEntity();
-        monitoringPanel.update();
     }
 
     syncCodeEntity() {
@@ -201,6 +202,9 @@ class ScreenCity extends Screen {
     }
 
     syncEntityBuilding(modelCity) {
+        if(!modelCity.Starter){
+            this.newEntity({type:'Starter'});
+        }
         for(let type in modelCity) {
             const list = modelCity[type];
             for(let i = 0; i < list.length; i++) {

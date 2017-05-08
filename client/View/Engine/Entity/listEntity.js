@@ -9,6 +9,7 @@ module.exports = {
     Repository: require('./Building/Repository'),
     StoneMine: require('./Building/StoneMine'),
     WoodCutterHut: require('./Building/WoodCutterHut'),
+    Starter: require('./Building/Starter'),
 
     Tree: require('./Resource/Tree'),
     TreeWeary: require('./Resource/TreeWeary'),

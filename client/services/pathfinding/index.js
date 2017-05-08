@@ -14,7 +14,7 @@ function init(ground, entities) {
     currentGround = ground;
 }
 
-function computePath(source, targetType) {
+function computePath(source, targetType, tileType) {
     const grid = currentGround.grid;
     let x = Math.floor(source.x);
     let z = Math.floor(source.z);
@@ -26,7 +26,7 @@ function computePath(source, targetType) {
     for(let i = 0; i < length; i++) {
         let entity = nearests[i];
         let targetTiles = entity.getTiles();
-        let pathTarget = finder.findPathBetweenArea(sourceTiles, targetTiles, grid);
+        let pathTarget = finder.findPathBetweenArea(sourceTiles, targetTiles, grid, tileType);
         if(pathTarget.length > 0)
             paths.push(pathTarget);
     }

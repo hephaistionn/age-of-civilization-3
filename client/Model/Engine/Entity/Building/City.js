@@ -21,7 +21,7 @@ class City {
         this.level = model.level;
     }
 
-    onRemove() {
+    dismount() {
         const index = City.instances.indexOf(this);
         City.instances.splice(index, 1);
     }

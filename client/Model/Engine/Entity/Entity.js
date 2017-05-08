@@ -1,4 +1,5 @@
 const stateManager = require('../../../services/stateManager');
+const ee = require('../../../services/eventEmitter');
 
 class Entity {
 
@@ -9,7 +10,8 @@ class Entity {
         this.a = 0;
         this._id = parseInt(params._id, 10);
         this.move(params.x || 0, params.y || 0, params.z || 0, params.a || 0);
-        this.constructor.instances.push(this);
+        this._getStates = null;
+        this.constructor.instances.push(this); 
     }
 
     move(x, y, z, a) {
@@ -78,14 +80,8 @@ class Entity {
         const cost = this.constructor.cost;
         const make = this.constructor.make;
         const states = stateManager.currentCity.states;
-
-        for(eleId in cost) {
-            states[eleId] -= cost[eleId];
-        }
-
-        for(eleId in make) {
-            states[eleId] += make[eleId];
-        }
+        //effacer les ressources des entités proches.
+        ee.emit('updateCityStates');
     }
 
     restoreState() {
@@ -93,17 +89,49 @@ class Entity {
         const make = this.constructor.make;
         const cost = this.constructor.cost;
         const states = stateManager.currentCity.states;
+        ee.emit('updateCityStates');
+    }
 
-        for(eleId in make) {
-            states[eleId] -= make[eleId];
+    getData() {
+        const displayed = this.constructor.displayed;
+        const data = {};
+        for(let i=0; i<displayed.length; i++) {
+            const key = displayed[i];
+            if(this.states[key] !== undefined) {
+                data[key] = this.states[key];
+            }
         }
+        return data;
+    }
 
-        for(eleId in cost) {
-            states[eleId] += cost[eleId];
+    storeRessource(ressouceId, value) {
+        if(this.states[ressouceId] !== undefined) {
+            this.states[ressouceId] += value;
+            this.states[ressouceId] = Math.min(this.states[ressouceId], this.statesMax[ressouceId] );
+            ee.emit('updateCityStates');
+        }
+        this.workers--;
+    }
+
+    deductRessource(ressouceId, value) {
+        if(this.states[ressouceId] === undefined) {
+            this.states[ressouceId] -= Math.min(value, this.states[ressouceId]);
+            ee.emit('updateCityStates');
         }
     }
 
-    onRemove() {
+    postCreate() {
+        if(this.states) {
+            this._getStates = callback => callback(this.states);
+            ee.on('getCityStates', this._getStates);
+        }
+    }
+
+
+    dismount(){
+        if(this._getStates){
+            ee.off('getCityStates', this._getStates);    
+        }
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
     }
@@ -113,6 +141,7 @@ class Entity {
 Entity.checkState= function checkState() {
     let eleId;
     const cost = this.cost;
+    const require = this.require;
     const states = stateManager.currentCity.states;
     const required =  new Map();
     for(eleId in cost) {
@@ -120,14 +149,19 @@ Entity.checkState= function checkState() {
             required.set(eleId,  cost[eleId]);
         }
     }
+    for(eleId in require) {
+        if(states[eleId] < require[eleId]){
+            required.set(eleId,  require[eleId]);
+        }
+    }
     return required;
 };
 
 Entity.available = function available() {
-    const require = this.require;
+    const enabled = this.enabled;
     const states = stateManager.currentCity.states;
-    for(var stateId in require) {
-        if(require[stateId] > states[stateId]) {
+    for(var stateId in enabled) {
+        if(enabled[stateId] > states[stateId]) {
             return false;
         }
     }

@@ -11,8 +11,11 @@ class MonitoringPanel {
         this.updated = false;
         this.cityName = stateManager.currentCity.name;
         this.cityLevel =  0;
-        this.stateManager = stateManager;
         this._id = 0;
+        this._update = ()=>{
+            this.updated = true;
+        }
+        ee.on('statesUpdated', this._update);
     }
 
     open() {
@@ -29,11 +32,7 @@ class MonitoringPanel {
     }
 
     switchTrade(id) {
-        this.stateManager.cityUpdateTrade(id);
-        this.updated = true;
-    }
-
-    update() {
+        stateManager.cityUpdateTrade(id);
         this.updated = true;
     }
 
@@ -41,6 +40,10 @@ class MonitoringPanel {
         this.close();
         const model = stateManager.loadCurrentWorldmap();
         ee.emit('openScreen', 'ScreenWorldmap', model);
+    }
+
+    dismount() {
+        ee.off('statesUpdated', this._update);
     }
 
 }

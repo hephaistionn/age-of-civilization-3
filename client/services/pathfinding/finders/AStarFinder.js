@@ -51,7 +51,8 @@ function AStarFinder(opt) {
  * @return {Array<Array<number>>} The path, including both start and
  *     end positions.
  */
-AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid) {
+AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid, nodeType) {
+    nodeType = nodeType || 1;
     const indexOpended = grid.indexOpended;
     const indexClosed = grid.indexClosed;
     const indexF = grid.indexF;
@@ -95,7 +96,7 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid) {
         }
 
         // get neigbours of the current node
-        neighborsIndex = grid.getNeighbors(index, diagonalMovement);
+        neighborsIndex = grid.getNeighbors(index, diagonalMovement, nodeType);
         for(i = 0, l = neighborsIndex.length; i < l; ++i) {
             neighborIndex = neighborsIndex[i];
 
@@ -135,16 +136,16 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid) {
     grid.clear();
     return [];
 };
-AStarFinder.prototype.findPathBetweenArea = function(source, target, grid) {
+AStarFinder.prototype.findPathBetweenArea = function(source, target, grid, tileType) {
 
     let i, x, y = 0;
     let l = source.length;
     for(i = 0; i < l; i += 2) {
-        grid.setWalkableAt(source[i], source[i + 1], 1);
+        grid.setWalkableAt(source[i], source[i + 1], tileType);
     }
     l = target.length;
     for(i = 0; i < l; i += 2) {
-        grid.setWalkableAt(target[i], target[i + 1], 1);
+        grid.setWalkableAt(target[i], target[i + 1], tileType);
     }
 
     const sourceX1 = source[0];
@@ -156,7 +157,7 @@ AStarFinder.prototype.findPathBetweenArea = function(source, target, grid) {
     //const targetX2 = target[target.length - 2];
     //const targetZ2 = target[target.length - 1];
 
-    let path = this.findPath(sourceX1, sourceZ1, targetX1, targetZ1, grid);
+    let path = this.findPath(sourceX1, sourceZ1, targetX1, targetZ1, grid, tileType); //tileType authorized tile for path
 
     const result = [0];
     result.pop();//optimisation

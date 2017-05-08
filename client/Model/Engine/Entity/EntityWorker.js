@@ -17,6 +17,10 @@ class EntityWorker {
         this.constructor.instances.push(this);
     }
 
+    postCreate() {
+
+    }
+
     moveFree(x, y, z, a) {
         this.a = a;
         this.x = x;
@@ -55,7 +59,7 @@ class EntityWorker {
         return [this.x - 0.5, this.x - 0.5];
     }
 
-    onRemove() {
+    dismount() {
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
     }
