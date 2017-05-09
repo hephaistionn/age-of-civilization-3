@@ -38,13 +38,10 @@ class MonitoringPanel {
 
     switchTrade(id) {
         stateManager.cityUpdateTrade(id);
-<<<<<<< HEAD
         this.updated = true;
     }
 
     update() {
-=======
->>>>>>> 7feb13bd2ed4d5cb8f2bedf5ea615377b3abcff3
         this.updated = true;
     }
 

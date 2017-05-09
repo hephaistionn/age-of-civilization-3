@@ -173,6 +173,7 @@ class ScreenCity extends Screen {
 
     newEntity(params) {
         const entity = new ENTITIES[params.type](params);
+        entity.postCreate();
         this.add(entity);
         ground.setWalkableTile(entity);
         return entity;
