@@ -16,6 +16,7 @@ StoneMine.walkable = 0;
 StoneMine.cost = {wood: 5};
 StoneMine.require = {inactive: 5};
 StoneMine.enabled = {wood: 5};
+StoneMine.constuctDuration = 1000;
 StoneMine.instances = [];
 
 module.exports = StoneMine;

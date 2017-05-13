@@ -29,5 +29,6 @@ Market.cost = {wood: 5, stone: 5};
 Market.require = {inactive: 2};
 Market.enabled = {wood: 5, population: 4};
 Market.walkable = 0;
+Market.constuctDuration = 1000;
 Market.instances = [];
 module.exports = Market;

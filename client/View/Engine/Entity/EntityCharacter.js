@@ -10,15 +10,8 @@ class EntityCharacter {
         this.model = model;
         this.element = null;
         this.animations = null;
-        this.currentAnimation = 'walk';
+        this.currentAnimation = 'walk'; 
         this.currentAnimationChild = null;
-        if(model.path) {
-            this.shape = new Shape(model.path, tileSize, tileHeight);
-            this.walk = true;
-        } else {
-            this.shape = null;
-            this.walk = false;
-        }
         this.moveSpeed = model._speed * tileSize;
         this.moveProgress = model.timer * this.moveSpeed;
         this.initMesh(model);
@@ -34,8 +27,15 @@ class EntityCharacter {
         if(this.currentAnimation) this.playAnimation(dt);
         if(this.currentAnimationChild) this.playAnimationChild(dt);
     }
-
-    updateState() {
+ 
+    updateState(model) {
+    	if(model.path) {
+    		this.shape = new Shape(model.path || [], tileSize, tileHeight);
+    		this.walk = true;
+    	}else {
+            this.shape = null;
+            this.walk = false;
+        }
         const matrixWorld = this.element.matrixWorld.elements;
         matrixWorld[12] = (this.model.x) * tileSize;
         matrixWorld[14] = (this.model.z) * tileSize;

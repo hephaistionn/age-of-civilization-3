@@ -1,4 +1,4 @@
-const Entity = require('../Entity');
+const Entity = require('../EntityBasic');
 
 class Berry extends Entity {
 

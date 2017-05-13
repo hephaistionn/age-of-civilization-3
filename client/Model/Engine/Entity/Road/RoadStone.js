@@ -1,4 +1,4 @@
-const Entity = require('../Entity');
+const Entity = require('../EntityBasic');
 
 class RoadStone extends Entity {
     constructor(params) {
@@ -9,6 +9,7 @@ class RoadStone extends Entity {
 RoadStone.description = 'This building increase the enable places for your population';
 RoadStone.cost = {stone: 2};
 RoadStone.require = {wood: 5 /*population: 16*/};
+RoadStone.enabled = {stone: 2};
 RoadStone.code = 3;
 RoadStone.isRoad = true;
 module.exports = RoadStone;

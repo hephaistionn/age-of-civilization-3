@@ -34,6 +34,7 @@ House.walkable = 0;
 House.cost = {wood: 20, stone: 1};
 House.require = {};
 House.enabled = {};
+House.constuctDuration = 1000;
 House.instances = [];
 
 module.exports = House;

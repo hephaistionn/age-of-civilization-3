@@ -17,10 +17,6 @@ class EntityWorker {
         this.constructor.instances.push(this);
     }
 
-    postCreate() {
-
-    }
-
     moveFree(x, y, z, a) {
         this.a = a;
         this.x = x;

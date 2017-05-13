@@ -31,7 +31,7 @@ class Road {
         this.updated = true;
     }
 
-    pullState(newRoad) {
+    buildingStart(newRoad) {
         const cost = Road.roads[newRoad.type].cost;
         const states = stateManager.currentCity.states;
         for(var resourceId in cost) {

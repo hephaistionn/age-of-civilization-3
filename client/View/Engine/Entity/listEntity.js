@@ -9,7 +9,6 @@ module.exports = {
     Repository: require('./Building/Repository'),
     StoneMine: require('./Building/StoneMine'),
     WoodCutterHut: require('./Building/WoodCutterHut'),
-    Starter: require('./Building/Starter'),
 
     Tree: require('./Resource/Tree'),
     TreeWeary: require('./Resource/TreeWeary'),
@@ -20,6 +19,7 @@ module.exports = {
     Peon: require('./Character/Peon'),
     WoodCutter: require('./Character/WoodCutter'),
     Trader: require('./Character/Trader'),
+    Builder: require('./Character/Builder'),
 
     Road: require('./Road/Road')
 };

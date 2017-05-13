@@ -16,6 +16,7 @@ HunterHut.walkable = 0;
 HunterHut.cost = {wood: 5};
 HunterHut.require = {inactive: 2};
 HunterHut.enabled = { population: 4};
+HunterHut.constuctDuration = 1000;
 HunterHut.instances = [];
 
 module.exports = HunterHut;

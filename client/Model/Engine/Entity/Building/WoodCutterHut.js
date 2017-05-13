@@ -34,5 +34,6 @@ WoodCutterHut.require = {inactive: 2};
 WoodCutterHut.enabled = {stone: 2};
 WoodCutterHut.displayed = ['workers', 'wood'];
 WoodCutterHut.walkable = 0;
+WoodCutterHut.constuctDuration = 1000;
 WoodCutterHut.instances = [];
 module.exports = WoodCutterHut;

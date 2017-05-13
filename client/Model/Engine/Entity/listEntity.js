@@ -1,6 +1,5 @@
 module.exports = {
     House: require('./Building/House'),
-    Starter: require('./Building/Starter'),
     Market: require('./Building/Market'),
     City: require('./Building/City'),
     Attic: require('./Building/Attic'),
@@ -20,6 +19,7 @@ module.exports = {
     Peon: require('./Character/Peon'),
     WoodCutter: require('./Character/WoodCutter'),
     Trader: require('./Character/Trader'),
+    Builder: require('./Character/Builder'), 
 
     Road: require('./Road/Road'),
     RoadDirty: require('./Road/RoadDirty'),

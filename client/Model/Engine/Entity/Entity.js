@@ -10,7 +10,11 @@ class Entity {
         this.a = 0;
         this._id = parseInt(params._id, 10);
         this.move(params.x || 0, params.y || 0, params.z || 0, params.a || 0);
-        this._getStates = null;
+
+        //Trigger for stateManager for get all entities states
+
+        this.builded = params.builded !== undefined ? params.builded : true;
+        this.materials = {};
         this.constructor.instances.push(this); 
     }
 
@@ -75,23 +79,6 @@ class Entity {
         }
     }
 
-    pullState() {
-        let eleId;
-        const cost = this.constructor.cost;
-        const make = this.constructor.make;
-        const states = stateManager.currentCity.states;
-        //effacer les ressources des entités proches.
-        ee.emit('updateCityStates');
-    }
-
-    restoreState() {
-        let eleId;
-        const make = this.constructor.make;
-        const cost = this.constructor.cost;
-        const states = stateManager.currentCity.states;
-        ee.emit('updateCityStates');
-    }
-
     getData() {
         const displayed = this.constructor.displayed;
         const data = {};
@@ -114,24 +101,42 @@ class Entity {
     }
 
     deductRessource(ressouceId, value) {
-        if(this.states[ressouceId] === undefined) {
-            this.states[ressouceId] -= Math.min(value, this.states[ressouceId]);
+        if(this.states[ressouceId] !== undefined) {
+            const recovered = Math.min(value, this.states[ressouceId]);
+            this.states[ressouceId] -= recovered;
             ee.emit('updateCityStates');
+            return recovered;
         }
     }
 
-    postCreate() {
-        if(this.states) {
-            this._getStates = callback => callback(this.states);
-            ee.on('getCityStates', this._getStates);
-        }
+    buildingStart() {
+        this.builded = false;
+        ee.emit('updateCityStates');
+        ee.emit('newEntity', {sourceId: this._id, type: 'Builder', targetType: 'Repository'});
     }
 
+    buildingProgress(eleId, value) {
+        this.materials[eleId]===undefined ? this.materials[eleId] = value : this.materials[eleId] += value; 
+    }
+
+    buildingFinish() {
+        this.updated = true;
+        this.builded = true;
+        this.materials = {};
+    }
+
+    buildingNeed() {
+        const cost = this.constructor.cost;
+        for(let eleId in cost){
+            const current = this.materials[eleId]||0;
+            if(current<cost[eleId]) {
+                return [eleId, cost[eleId] - current];
+            }
+        }
+        return null;
+    }
 
     dismount(){
-        if(this._getStates){
-            ee.off('getCityStates', this._getStates);    
-        }
         const index = this.constructor.instances.indexOf(this);
         this.constructor.instances.splice(index, 1);
     }
@@ -166,12 +171,16 @@ Entity.available = function available() {
         }
     }
     return true;
-};
+}; 
 
-Entity.getNearestEntities = function getNearestEntities(x, z, max) {
+Entity.getNearestEntities = function getNearestEntities(x, z, max, eleId, value) {
     max = max || 20;
     function filterNearest(entity) {
         return Math.abs(entity.x - x) < max && Math.abs(entity.z - z) < max;
+    }
+
+    function filterNearestWithWantedElement(entity){
+       return Math.abs(entity.x - x) < max && Math.abs(entity.z - z) < max && entity.states[eleId] >= value; 
     }
 
     function sortNearest(entityA, entityB) {
@@ -180,7 +189,8 @@ Entity.getNearestEntities = function getNearestEntities(x, z, max) {
         return dA - dB;
     }
 
-    const nearest = this.instances.filter(filterNearest);
+    const nearest = !eleId ? this.instances.filter(filterNearest) : this.instances.filter(filterNearestWithWantedElement) ;
+
     nearest.sort(sortNearest);
     return nearest.splice(0, 3);
 };

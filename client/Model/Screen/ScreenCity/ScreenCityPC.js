@@ -64,7 +64,7 @@ class ScreenCity extends Screen {
         });
 
         stateManager.cityOnLevelUpdated(level => {
-            console.log('level updated ', level);
+            //console.log('level updated ', level);
         });
 
         stateManager.cityOnCompleted(() => {
@@ -72,7 +72,7 @@ class ScreenCity extends Screen {
         });
 
         entityManagerPanel.onRemove(id => {
-            this.get(id).restoreState();
+            //this.get(id).restoreState();
             this.removeEntity(id);
         });
 
@@ -153,7 +153,6 @@ class ScreenCity extends Screen {
 
     newEntity(params) {
         const entity = new ENTITIES[params.type](params);
-        entity.postCreate();
         this.add(entity);
         ground.setWalkableTile(entity);
         return entity;
@@ -176,7 +175,7 @@ class ScreenCity extends Screen {
         const params = positioner.getSelectEntity();
         if(!params) return;
         const entity = this.newEntity(params);
-        entity.pullState();
+        entity.buildingStart();
         positioner.unselectEntity();
     }
 
@@ -184,7 +183,7 @@ class ScreenCity extends Screen {
         let params = roadPositioner.getSelectEntity();
         if(!params) return;
         road.updateState(params);
-        road.pullState(params);
+        road.buildingStart(params);
         roadPositioner.unselectEntity();
     }
 
@@ -202,8 +201,8 @@ class ScreenCity extends Screen {
     }
 
     syncEntityBuilding(modelCity) {
-        if(!modelCity.Starter){
-            this.newEntity({type:'Starter'});
+        if(!modelCity.Repository){
+            this.newEntity({type:'Repository', starter: true });
         }
         for(let type in modelCity) {
             const list = modelCity[type];

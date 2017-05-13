@@ -4,7 +4,20 @@ const Entity = require('../Entity');
 
 module.exports = class WoodCutterHut extends Entity {
 
+
     initMesh(model, materialForce) {
-        this.element = THREE.getMesh('obj/woodCutterHut_00.obj', materialForce || material, model._id);
+    	this.building = THREE.getMesh('obj/woodCutterHut_00.obj', materialForce || material, model._id);
+    	this.foundation  = THREE.getMesh('obj/repository_00.obj', material, model._id);
+    	this.updateMesh(model);	
+    }
+
+    updateMesh(model){
+		if(model.builded){
+			this.removeMesh(this.foundation);
+			this.addMesh(this.building);
+    	}else{
+    		this.removeMesh(this.building);
+    		this.addMesh(this.foundation);
+    	}
     }
 };

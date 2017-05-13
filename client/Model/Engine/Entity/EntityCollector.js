@@ -21,10 +21,6 @@ class EntityCollector {
         this.constructor.instances.push(this);
     }
 
-    postCreate() {
-
-    }
-
     move(x, y, z, a) {
         this.a = a !== undefined ? a : this.a;
         this.x = Math.round((x - 0.5));

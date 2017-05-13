@@ -1,4 +1,4 @@
-const Entity = require('../Entity');
+const Entity = require('../EntityBasic');
 const ee = require('../../../../services/eventEmitter');
 
 class Tree extends Entity {

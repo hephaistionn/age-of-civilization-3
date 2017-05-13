@@ -11,9 +11,9 @@ module.exports = params => {
             population: 0,
             workers: 0,
             inactive: 0,
-            wood: 200,
-            stone: 100,
-            meat: 100
+            wood: 0,
+            stone: 0,
+            meat: 0
         },
         trade: {
             wood: 0,

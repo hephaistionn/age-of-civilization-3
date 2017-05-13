@@ -5,9 +5,30 @@ class Repository extends Entity {
 
     constructor(params) {
         super(params);
-        this.states = { wood: 0, stone: 0, workers: 2 };
+        this.starter = params.starter||false; //when game begin this is not real repository
+        if(this.starter) {
+        	if(params.states)
+        		this.states = { wood: params.states.wood, stone: params.states.stone };
+        	else
+        		this.states = { wood: 60, stone: 60 }; 
+        }else{
+        	if(params.states)
+        		this.states = { wood: params.states.wood, stone: params.states.stone, workers: 2 };
+        	else
+        		this.states = { wood: 0, stone: 0, workers: 2 };
+        } 
+        
         this.statesMax = { wood: 300, stone: 300 };
         this.capacity = 600;
+
+        this._getStates = callback => callback(this.states);
+        ee.on('getCityStates', this._getStates);
+    }
+
+    dismount(){
+        ee.off('getCityStates', this._getStates);    
+        const index = this.constructor.instances.indexOf(this);
+        this.constructor.instances.splice(index, 1);
     }
 }
 
@@ -20,6 +41,7 @@ Repository.cost = {wood: 5};
 Repository.require = {inactive: 2}; 
 Repository.enabled = {wood: 5};
 Repository.displayed = ['wood', 'stone'];
+Repository.constuctDuration = 1000;
 Repository.instances = [];
 
 module.exports = Repository;

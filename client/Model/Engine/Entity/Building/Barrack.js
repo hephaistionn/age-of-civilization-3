@@ -16,6 +16,7 @@ Barrack.walkable = 0;
 Barrack.cost = {wood: 5, stone: 2};
 Barrack.require = {inactive: 2};
 Barrack.enabled = { population: 6};
+Barrack.constuctDuration = 1000;
 Barrack.instances = [];
 
 module.exports = Barrack;
