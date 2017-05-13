@@ -2,9 +2,6 @@ const ee = require('../eventEmitter');
 
 module.exports = StateManager => {
 
-    const IMPORT = 2;
-    const EXPORT = 1;
-    const CLOSE = 0;
     let cycle = 0;
 
     StateManager.prototype.newCity = function newCity(params) {
@@ -116,14 +113,13 @@ module.exports = StateManager => {
         }
     };
 
-    StateManager.prototype.cityUpdateTrade = function updateTrade(id) {
+    StateManager.prototype.cityUpdateTrade = function cityUpdateTrade(id, swapId) {
         const trade = this.currentCity.trade;
-        if(trade[id] === CLOSE) {
-            trade[id] = EXPORT;
-        } else if(trade[id] === EXPORT) {
-            trade[id] = IMPORT;
-        } else if(trade[id] === IMPORT) {
-            trade[id] = CLOSE;
+        if(trade[id].indexOf(swapId) !== -1){
+            const index = trade[id].indexOf(swapId);
+            trade[id].splice(index, 1);
+        }else{
+            trade[id].push(swapId)
         }
     };
 

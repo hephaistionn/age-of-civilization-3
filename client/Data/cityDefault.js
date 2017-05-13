@@ -16,9 +16,9 @@ module.exports = params => {
             meat: 0
         },
         trade: {
-            wood: 0,
-            stone: 0,
-            meat: 0
+            wood: [],
+            stone: [],
+            meat: []
         },
         x: params.x,
         y: params.y,

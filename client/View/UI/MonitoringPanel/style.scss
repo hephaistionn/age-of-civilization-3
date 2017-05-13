@@ -64,6 +64,18 @@
       &.society{
         left: 178px;
       }
+
+      .headerQuatity{
+        display: inline-block;
+        width: 72px;
+
+      }
+
+      .headerImport{
+        display: inline-block;
+      }
+
+
       .item{
         position: relative;
         background: #8a8a8a;
@@ -83,18 +95,42 @@
           position: absolute;
           left: 25px;
         }
-        .tradeStatus{
+        .barter{
+          position: absolute;
           left: 64px;
-          width: 106px;
-          height: 21px;
-          color: black;
-          background: #9e9e9e;
+          top: 1px;
+          width: 84px;
+          height: 17px;
+          background: #616161;
           font-size: 11px;
           text-align: center;
-          border-radius: 11px;
-          border: solid 1px;
-          box-sizing: border-box;
+          color: beige;
+          .icon{
+            position: relative;
+            display: inline-block;
+          }
         }
+      }
+
+    }
+
+    .manageTrad{
+      position: absolute;
+      top: 88px;
+      height: 121px;
+      width: 96%;
+      background-color: #9e9e9e; 
+      .icon{
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        margin: 5px;
+        background-size: 40px;
+        border: solid 1px black;
+        background-repeat: no-repeat;
+      }
+      .traded{
+        background-color: white;
       }
 
     }

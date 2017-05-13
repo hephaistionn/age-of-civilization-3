@@ -36,8 +36,8 @@ class MonitoringPanel {
         this.updated = true;
     }
 
-    switchTrade(id) {
-        stateManager.cityUpdateTrade(id);
+    swap(id, swapId) {
+        stateManager.cityUpdateTrade(id, swapId);
         this.updated = true;
     }
 

@@ -92,14 +92,26 @@ module.exports = class MonitoringPanelPC {
 
     updateMonioringList() {
         const states = stateManager.currentCity.states;
+        const trade = stateManager.currentCity.trade;
 
         this.nodeListResource.style.display = 'none';
         while (this.nodeListResource.firstChild) {
             this.nodeListResource.removeChild(this.nodeListResource.firstChild);
         }
+
+        const headerQuatity = document.createElement('div');
+        headerQuatity.className = 'headerQuatity';
+        headerQuatity.textContent  = wording('quantity');
+        this.nodeListResource.appendChild(headerQuatity);
+
+        const headerImport = document.createElement('div');
+        headerImport.className = 'headerImport';
+        headerImport.textContent  = wording('barter');
+        this.nodeListResource.appendChild(headerImport);
+
         for (let i = 0; i < this.model.resources.length; i++) {
             const id = this.model.resources[i];
-            const node = this.createItem(id, states[id], true);
+            const node = this.createItemRessource(id, states[id], trade[id]);
             this.nodeListResource.appendChild(node);
         }
         this.nodeListResource.style.display = 'block';
@@ -121,7 +133,7 @@ module.exports = class MonitoringPanelPC {
         this.nodePreview.style.backgroundImage = model.urlPicture;
     }
 
-    createItem(id, value, trading) {
+    createItem(id, value) {
         const node = document.createElement('div');
         node.className = 'item';
         const nodePic = document.createElement('div');
@@ -131,18 +143,68 @@ module.exports = class MonitoringPanelPC {
         nodeValue.textContent = value != undefined ? value : '';
         node.appendChild(nodePic);
         node.appendChild(nodeValue);
-        if (trading != undefined) {
-            const tradeStatus = stateManager.currentCity.trade[id];
-            const nodeStatus = document.createElement('div');
-            nodeStatus.className = 'tradeStatus';
-            nodeStatus.textContent = this.tradeStatusToWord(tradeStatus);
-            nodeStatus.onclick = () => {
-                this.model.switchTrade(id);
-            };
-            node.appendChild(nodeStatus)
-        }
         return node;
     }
+
+    createItemRessource(id, value, swap ) {
+        const node = document.createElement('div');
+        node.className = 'item';
+        const nodePic = document.createElement('div');
+        nodePic.className = 'icon ' + id;
+        const nodeValue = document.createElement('div');
+        nodeValue.className = 'value';
+        nodeValue.textContent = value != undefined ? value : '';
+        node.appendChild(nodePic);
+        node.appendChild(nodeValue);
+
+        const nodeBarter = document.createElement('div');
+        nodeBarter.className = 'barter';
+        if(swap.length === 0)
+            nodeBarter.textContent = wording('barter');
+        for(let i = 0; i < swap.length ; i++){
+            const swapId = swap[i];
+            const nodePic = document.createElement('div');
+            nodePic.className = 'icon ' + swapId;
+            nodeBarter.appendChild(nodePic);
+        }
+        nodeBarter.onclick = () => {
+            this.barter(id, swap);
+        };
+        node.appendChild(nodeBarter);
+        
+        return node;
+    }
+
+    barter(id, swap){
+        const trade = stateManager.currentCity.trade;
+
+        const manageTradNode = document.createElement('div');
+        manageTradNode.className = 'manageTrad';
+
+        for(let tradeId in  trade) {
+            if(id === tradeId) continue;
+            const nodePic = document.createElement('div');
+            const traded = swap.indexOf(tradeId) !== -1 ? ' traded': '';
+            nodePic.className = 'icon ' + tradeId + traded;
+            nodePic.onclick = ()=>{
+                this.model.swap(id, tradeId);
+                this.nodeMonitoringPanel.removeChild(manageTradNode); 
+            }
+            manageTradNode.appendChild(nodePic);
+        }
+
+        const close = document.createElement('div');
+        close.className = 'icon close ';
+        close.onclick = ()=>{
+            this.nodeMonitoringPanel.removeChild(manageTradNode); 
+        }
+        manageTradNode.appendChild(close);
+
+
+        this.nodeMonitoringPanel.appendChild(manageTradNode);
+    }
+
+
 
     updateGoalList(model) {
         while (this.nodeGoalList.firstChild) {
@@ -169,18 +231,6 @@ module.exports = class MonitoringPanelPC {
         }
 
     }
-
-    tradeStatusToWord(value) {
-        switch (value) {
-            case 0:
-                return 'pas de commerce';
-            case 1:
-                return 'troquer';
-            default:
-                return 'vendre'
-        }
-    }
-
 
     updateState(model) {
 
