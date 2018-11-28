@@ -25,7 +25,7 @@ module.exports = class Shape {
             point = new Float32Array(3);
             point[0] = path[i] * scaling + scaling / 2;
             point[1] = path[i + 1] * scaling + scaling / 2;
-            point[2] = path[i + 2] * height / 255;
+            point[2] = path[i + 2] * height / 55;
             this.points.push(point);
             pointLength = this.points.length - 2;
             previousPoint = this.points[pointLength];

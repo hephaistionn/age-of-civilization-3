@@ -22,7 +22,7 @@ class Worldmap {
 
     getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
-        return this.tilesHeight[index] / 255;
+        return this.tilesHeight[index] / 55;
     }
 
     updateAreaMap(cities) {

@@ -8,18 +8,18 @@ class Repository extends Entity {
         this.starter = params.starter||false; //when game begin this is not real repository
         if(this.starter) {
         	if(params.states)
-        		this.states = { wood: params.states.wood, stone: params.states.stone };
+        		this.states = { wood: params.states.wood, stone: params.states.stone, meat: params.states.meat };
         	else
-        		this.states = { wood: 60, stone: 60 }; 
+        		this.states = { wood: 60, stone: 60, meat: 0 }; 
         }else{
         	if(params.states)
-        		this.states = { wood: params.states.wood, stone: params.states.stone, workers: 2 };
+        		this.states = { wood: params.states.wood, stone: params.states.stone, meat: params.states.meat, workers: 2 };
         	else
-        		this.states = { wood: 0, stone: 0, workers: 2 };
+        		this.states = { wood: 0, stone: 0, workers: 2, meat: 0  };
         } 
         
-        this.statesMax = { wood: 300, stone: 300 };
-        this.capacity = 600;
+        this.statesMax = { wood: 300, stone: 300, meat: 50 };
+        this.capacity = 650;
 
         this._getStates = callback => callback(this.states);
         ee.on('getCityStates', this._getStates);

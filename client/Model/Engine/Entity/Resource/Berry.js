@@ -1,6 +1,6 @@
-const Entity = require('../EntityBasic');
+const EntityBasic = require('../EntityBasic');
 
-class Berry extends Entity {
+class Berry extends EntityBasic {
 
     constructor(params) {
         super(params);
@@ -12,7 +12,7 @@ Berry.selectable = false;
 Berry.tile_x = 1;
 Berry.tile_z = 1;
 Berry.walkable = 0;
-Berry.code = 247; //value in alpha blue  246for png
+Berry.code = 251;
 Berry.resource = true;
 Berry.instances = [];
 module.exports = Berry;

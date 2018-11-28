@@ -23,7 +23,7 @@ class Worldmap {
 
     initGround(model) {
         this.materialWorldmap = materialWorldmap;
-        this.materialWater = new THREE.MeshBasicMaterial({color: 0x006699, transparent: true, opacity: 0.80});
+        this.materialWater = new THREE.MeshBasicMaterial({color: 0x006699, transparent: true, opacity: 0.10});
         //this.materialWorldmap = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe : false});
 
         const nbPointX = model.nbPointX;
@@ -50,12 +50,13 @@ class Worldmap {
         return mapMesh;
     }
 
-    createWater(nbTileX, nbTileZ) {
+    createWater(nbTileX, nbTileZ) { 
+    	const height = 2.3
         const xSize = nbTileX * this.tileSize * 4;
         const zSize = nbTileZ * this.tileSize * 4;
         const waterGeometry = new THREE.PlaneBufferGeometry(xSize, zSize, 1, 1);
         let waterMesh = new THREE.Mesh(waterGeometry, this.materialWater);
-        waterMesh.position.set(-xSize / 4, 3, -zSize / 4);
+        waterMesh.position.set(-xSize / 4, height, -zSize / 4);
         waterMesh.updateMatrix();
         waterMesh.updateMatrixWorld();
         waterMesh.matrixAutoUpdate = false;
@@ -78,10 +79,11 @@ class Worldmap {
         const length = vertices.length;
         for(let i = 0; i < length; i++) {
             let pointsHeights = model.pointsHeights[i];
-            vertices[i].y = pointsHeights / 255 * this.tileHeight;
+            vertices[i].y = pointsHeights / 55 * this.tileHeight;
         }
 
-        const lengthFace = chunkGeometry.faces.length;
+        //remove face inder WATER
+        /*const lengthFace = chunkGeometry.faces.length;
         const filterdFaces = [];
         let face;
         for(let i = 0; i < lengthFace; i++) {
@@ -90,12 +92,12 @@ class Worldmap {
                 filterdFaces.push(face.clone());
             }
         }
-        chunkGeometry.faces = filterdFaces;
+        chunkGeometry.faces = filterdFaces;*/
 
         //const modifierSubdivi = new THREE.SubdivisionModifier(1);
         //modifierSubdivi.modify( chunkGeometry );
 
-        const modiferSimplify = new THREE.SimplifyModifier();
+        const modiferSimplify = new THREE.SimplifyModifier(); 
         chunkGeometry = modiferSimplify.modify(chunkGeometry, Math.round(chunkGeometry.vertices.length * 0.6));
 
         chunkGeometry.computeVertexNormals();

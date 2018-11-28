@@ -53,6 +53,7 @@ class ScreenCity extends Screen {
         road = new Road(ground, model.road);
         positioner = new Positioner(mapProperties);
         roadPositioner = new RoadPositioner(mapProperties);
+
         pathfinding.init(ground, ENTITIES);
 
         buildingMenu.onClickBuilding(entityId => {
@@ -179,6 +180,14 @@ class ScreenCity extends Screen {
         positioner.unselectEntity();
     }
 
+    spawnEntity(params){
+        const tile = ground.getSpawnerTile();
+        params.x = tile[0];
+        params.z = tile[1];
+        console.log('spawn : ', params);
+        this.newEntity(params);
+    }
+
     buildRoad() {
         let params = roadPositioner.getSelectEntity();
         if(!params) return;
@@ -187,15 +196,12 @@ class ScreenCity extends Screen {
         roadPositioner.unselectEntity();
     }
 
-    syncCodeEntity() {
+    syncCodeEntity() { //pixel rgb in PNG depend of alpha. value is not exact
         codeToEntities = new Map();
         for(let id in ENTITIES) {
             if(ENTITIES[id].code) {
                 codeToEntities.set(ENTITIES[id].code, id);
                 codeToEntities.set(ENTITIES[id].code - 1, id);
-                codeToEntities.set(ENTITIES[id].code - 2, id);
-                codeToEntities.set(ENTITIES[id].code - 3, id);
-                codeToEntities.set(ENTITIES[id].code - 4, id);
             }
         }
     }
@@ -219,6 +225,7 @@ class ScreenCity extends Screen {
         const params = {x: 0, y: 0, z: 0, a: 0};
         for(let i = 0; i < length; i++) {
             let value = resources[i];
+
 
             if(value === 0) continue;
 

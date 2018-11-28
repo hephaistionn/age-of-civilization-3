@@ -2,8 +2,8 @@
   "name": "AgeOfCivilization",
   "version": "0.1.0",
   "engines": {
-    "node": "4.4.0",
-    "npm": "2.14.20"
+    "node": "6.11.0",
+    "npm": "4.4.2"
   },
   "description": "MVP game",
   "scripts": {

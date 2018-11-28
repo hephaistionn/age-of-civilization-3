@@ -6,7 +6,7 @@ class Market extends Entity {
     constructor(params) {
         super(params);
         this.food = params.food || 0;
-        ee.emit('newEntity', {sourceId: this._id, type: 'Trader'});
+        ee.emit('newEntity', {sourceId: this._id, type: 'Seller'});
     }
 
     store(value) {

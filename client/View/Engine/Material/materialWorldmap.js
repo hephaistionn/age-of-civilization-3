@@ -43,8 +43,9 @@ const fragShader = "" +
     "} \n" +
     "sumLights = ambientLightColor + sumLights ; \n" +
     "color *= sumLights; \n" +
-    "if(vAbsolutePosition.y<3.0){ \n" +
-     "   color = mix(vec3(0.0,0.0,0.0), color, vAbsolutePosition.y/1.0-2.0); \n" +
+    "if(vAbsolutePosition.y<2.3){ \n" +
+     "   color = mix(vec3(0.0,0.39,0.6), color, vAbsolutePosition.y/1.0-2.0); \n" +  //WATER
+    // "   color = mix(vec3(0.0,0.0,0.0), color, vAbsolutePosition.y/1.0-2.0); \n" +  //WATER
     "}\n" +
     "color = color * areaCode.y;\n" +
     "gl_FragColor = vec4(color , 1.0); \n" +

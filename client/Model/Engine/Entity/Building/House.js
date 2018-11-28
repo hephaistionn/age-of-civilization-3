@@ -9,12 +9,15 @@ class House extends Entity {
         this.cycle = params.cycle || 2000;
         this.timer = params.timer || 0;
         this.states = { population: 4};
+
+        this._getStates = callback => callback(this.states);
+        ee.on('getCityStates', this._getStates);  
     }
 
     update() {
         this.time += 1;
         if(this.time >= 10) {
-            ee.emit('newEntity', {wood: 0, sourceId: this._id, type: 'Peon'});
+           // ee.emit('newEntity', {wood: 0, sourceId: this._id, type: 'Peon'}); 
             this.time = 0;
         }
     }
@@ -23,6 +26,12 @@ class House extends Entity {
         return {
             population: 2
         }
+    }
+
+    dismount(){
+        ee.off('getCityStates', this._getStates);    
+        const index = this.constructor.instances.indexOf(this);
+        this.constructor.instances.splice(index, 1);
     }
 }
 

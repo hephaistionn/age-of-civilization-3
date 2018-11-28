@@ -5,7 +5,7 @@ module.exports = class PixelMap {
         this.heightMax = 4;
     }
 
-    compute(url, urlArea, cb) {
+    compute(url, urlArea, cb) { 
         return this.loadImage(url, (context, canvas)=> {
             const dataMap = this.getDataMap(context);
             dataMap.canvas = canvas;
@@ -69,12 +69,11 @@ module.exports = class PixelMap {
         const dataHeights = new Uint8Array(size);
         const dataResources = new Uint8Array(size);
         let index = 0;
-
-        for(let i = 0; i < size; i++) {
+        for(let i = 0; i < size; i++) { 
             index = i * 4;
-            dataHeights[i] = imageData[index + 3];
+            dataHeights[i] = Math.max(imageData[index + 3]-200, 0); //min 0 max
             dataResources[i] = imageData[index] > 240 ? imageData[index] : 0;
-        }
+        } 
         this.extrapolation(imageData, data.nbPointX, data.nbPointZ);
         this.addGrid(imageData, data.nbPointX, data.nbPointZ);
 
@@ -83,6 +82,7 @@ module.exports = class PixelMap {
         data.tilesColor = imageData;
         data.tilesHeight = this.averageByTile(dataHeights, data.nbTileX, data.nbTileZ, data.nbPointX);
         data.tilesTilt = this.rangeByTile(dataHeights, data.nbTileX, data.nbTileZ, data.nbPointX);
+        data.spawns = this.getSpawns(dataResources, data.nbTileX, data.nbTileZ); 
         context.putImageData(image, 0, 0);
         return data;
     }
@@ -200,6 +200,19 @@ module.exports = class PixelMap {
             }
         }
         return tiles;
+    }
+
+    getSpawns(redColor, nbTileX, nbTileZ) {
+    	const spwans = [];
+    	for(let x = 0; x < nbTileX; x++) {
+            for(let z = 0; z < nbTileZ; z++) {
+                let indexTile = z * nbTileX + x; 
+                if(redColor[indexTile] === 242 || redColor[indexTile] === 241){
+                	spwans.push([x,z]);
+                }
+            }
+        }
+        return spwans;
     }
 
 };

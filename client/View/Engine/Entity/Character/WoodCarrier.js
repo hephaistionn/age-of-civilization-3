@@ -8,44 +8,24 @@ const THREE = require('three');
 const EntityCharacter = require('../EntityCharacter');
 
 const animations = {
-    walk: {duration: 800, steps: new Uint8Array([0, 1, 2, 3, 0])},
     carrier: {duration: 800, steps: new Uint8Array([4, 5, 6, 7, 4])},
-    cut: {duration: 600, steps: new Uint8Array([11, 10, 9, 8, 9])},
-    cutAxe: {duration: 600, steps: new Uint8Array([3, 2, 1, 0, 1])}
 };
 
-class WoodCutter extends EntityCharacter {
+class WoodCarrier extends EntityCharacter {
 
     initMesh(model) {
         this.element = new THREE.getMesh('obj/peon.obj', material, model._id);
         const wood = THREE.getMesh('obj/wood_00.obj', materialWood);
-        const axe = THREE.getMesh('obj/axe.obj', material);
         wood.visible = false;
-        axe.visible = false;
-        this.element.add(axe, wood);
+        this.element.add(wood);
         this.animations = animations;
     }
 
     updateState(model, init) {
         switch(this.model.state) {
             case 1:
-                this.currentAnimation = 'walk';
-                this.currentAnimationChild = null;
-                this.moveProgress = init ? this.moveProgress : 0;
-                this.shape = new Shape(this.model.path || [], tileSize, tileHeight);
-                this.walk = true;
-                break;
-            case 2:
-                this.currentAnimation = 'cut';
-                this.currentAnimationChild = 'cutAxe';
-                this.element.children[0].visible = true;
-                this.walk = false;
-                break;
-            case 3:
                 this.currentAnimation = 'carrier';
-                this.currentAnimationChild = null;
-                this.element.children[0].visible = false;
-                this.element.children[1].visible = true;
+                this.element.children[0].visible = true;
                 this.shape = new Shape(this.model.path || [], tileSize, tileHeight);
                 this.walk = true;
                 this.moveProgress = init ? this.moveProgress : 0;
@@ -64,4 +44,4 @@ class WoodCutter extends EntityCharacter {
 
 }
 
-module.exports = WoodCutter;
+module.exports = WoodCarrier;

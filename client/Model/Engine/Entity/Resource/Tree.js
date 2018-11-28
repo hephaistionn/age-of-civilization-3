@@ -1,7 +1,7 @@
-const Entity = require('../EntityBasic');
+const EntityBasic = require('../EntityBasic');
 const ee = require('../../../../services/eventEmitter');
 
-class Tree extends Entity {
+class Tree extends EntityBasic {
 
     constructor(params) {
         super(params);

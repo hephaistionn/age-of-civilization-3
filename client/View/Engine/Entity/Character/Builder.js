@@ -8,13 +8,14 @@ const THREE = require('three');
 const EntityCharacter = require('../EntityCharacter');
 
 const animations = {
+    wait: {duration: 800, steps: new Uint8Array([1, 1])},
     walk: {duration: 800, steps: new Uint8Array([0, 1, 2, 3, 0])},
     carrier: {duration: 800, steps: new Uint8Array([4, 5, 6, 7, 4])},
-    cut: {duration: 600, steps: new Uint8Array([11, 10, 9, 8, 9])},
+    construct: {duration: 600, steps: new Uint8Array([11, 10, 9, 8, 9])},
     cutAxe: {duration: 600, steps: new Uint8Array([3, 2, 1, 0, 1])}
 };
 
-class WoodCutter extends EntityCharacter {
+class Builder extends EntityCharacter {
 
     initMesh(model) {
         this.element = new THREE.getMesh('obj/peon.obj', material, model._id);
@@ -26,22 +27,30 @@ class WoodCutter extends EntityCharacter {
         this.animations = animations;
     }
 
-    updateState(model, init) {
-        switch(this.model.state) {
+    updateState(model, init) { 
+        
+        const step = this.model.step;
+
+        switch(step) {
+
+            case 0:
+                this.shape  = null;
+                this.currentAnimation = 'wait';
+                this.currentAnimationChild = null;
+                this.element.children[0].visible = false;
+                this.element.children[1].visible = false; 
+                this.walk = false;
+                break;
             case 1:
+                this.shape = new Shape(this.model.path || [], tileSize, tileHeight);
                 this.currentAnimation = 'walk';
                 this.currentAnimationChild = null;
+                this.element.children[0].visible = false;
+                this.element.children[1].visible = false; 
                 this.moveProgress = init ? this.moveProgress : 0;
-                this.shape = new Shape(this.model.path || [], tileSize, tileHeight);
                 this.walk = true;
                 break;
             case 2:
-                this.currentAnimation = 'cut';
-                this.currentAnimationChild = 'cutAxe';
-                this.element.children[0].visible = true;
-                this.walk = false;
-                break;
-            case 3:
                 this.currentAnimation = 'carrier';
                 this.currentAnimationChild = null;
                 this.element.children[0].visible = false;
@@ -50,6 +59,14 @@ class WoodCutter extends EntityCharacter {
                 this.walk = true;
                 this.moveProgress = init ? this.moveProgress : 0;
                 break;
+            case 3:
+                this.currentAnimation = 'cutAxe';
+                this.currentAnimationChild = 'cutAxe';
+                this.element.children[0].visible = true;
+                this.walk = false;
+                break;
+                
+ 
         }
 
         const matrixWorld = this.element.matrixWorld.elements;
@@ -64,4 +81,4 @@ class WoodCutter extends EntityCharacter {
 
 }
 
-module.exports = WoodCutter;
+module.exports = Builder;

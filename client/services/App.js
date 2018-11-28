@@ -38,6 +38,7 @@ class App {
         ee.on('newEntity', this.newEntity.bind(this));
         ee.on('removeEntity', this.removeEntity.bind(this));
         ee.on('getEntity', this.getEntity.bind(this));
+        ee.on('spawnEntity', this.spawnEntity.bind(this) );
 
         ee.on('touchStart', this.touchStart.bind(this));
         ee.on('touchEnd', this.touchEnd.bind(this));
@@ -111,7 +112,7 @@ class App {
     }
 
     createScreen(id, params, cb) {
-        //params.mapId = 'worldmap4';
+        //params.mapId = 'test';   
         const mapPath = 'map/' + params.mapId + '.png';
         const areaMapPath = params.areaMapId ? 'map/' + params.areaMapId + '.png' : null;
         this.pixelMap.compute(mapPath, areaMapPath, (dataMap)=> {
@@ -231,6 +232,11 @@ class App {
     newEntity(config) {
         if(this.model.newEntity)
             this.model.newEntity(config);
+    }
+
+    spawnEntity(config) {
+        if(this.model.spawnEntity)
+            this.model.spawnEntity(config);
     }
 
     removeEntity(entityId) {

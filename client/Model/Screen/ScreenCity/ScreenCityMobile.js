@@ -199,6 +199,12 @@ class ScreenCity extends Screen {
         positioner.unselectEntity();
     }
 
+    spawnEntity(params){
+        const tile = ground.getSpawnerTile();
+        params.x = tile[0];
+        params.z = tile[1];
+    }
+
     buildRoad() {
         let params = roadPositioner.getSelectEntity();
         if(!params) return;

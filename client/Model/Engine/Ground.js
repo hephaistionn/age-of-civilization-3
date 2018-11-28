@@ -9,12 +9,13 @@ class Ground {
         this.nbPointZ = config.nbPointZ;
         this.nbTileX = config.nbTileX;
         this.nbTileZ = config.nbTileZ;
-        this.tiltMax = config.tiltMax || 50;
+        this.tiltMax = config.tiltMax || 55 ;
         this.pointsHeights = config.pointsHeights;
         this.tilesHeight = config.tilesHeight;
         this.tilesTilt = config.tilesTilt;
         this.tilesColor = config.tilesColor;
         this.canvasColor = config.canvas;
+        this.spawns  = config.spawns;
         this.grid = new pathfinding.Grid(this.nbTileX, this.nbTileZ, 1);
         this.updated = false;
         this._id = 2;
@@ -28,9 +29,9 @@ class Ground {
             let z = Math.floor(i / this.nbTileX);
             let tilt = this.tilesTilt[i];
             let height = this.tilesHeight[i];
-            if(tilt > this.tiltMax) {
+            if(tilt > this.tiltMax) { 
                 this.grid.setWalkableAt(x, z, 0);
-            } else if(height < 41) {
+            } else if(height < 13) {
                 this.grid.setWalkableAt(x, z, 0);
             }
         }
@@ -59,7 +60,13 @@ class Ground {
 
     getHeightTile(x, z) {
         const index = Math.floor(z) * this.nbTileX + Math.floor(x);
-        return this.tilesHeight[index] / 255;
+        return this.tilesHeight[index] / 55;
+    }
+
+    getSpawnerTile() {
+        const nbSpwans = this.spawns.length;
+        const randomIndex = Math.floor(Math.random() * (nbSpwans-0.001));
+        return this.spawns[randomIndex];
     }
 
     update(dt) {

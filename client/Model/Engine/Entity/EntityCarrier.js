@@ -13,6 +13,7 @@ class EntityCarrier {
         this.state = params.state || 0;
         this.path = params.path ? params.path : null;
         this.sourceId = params.sourceId;
+        this.ressourceId = 'wood';
         this.resource = params.resource || 0;
         this.targetId = params.targetId ? params.targetId : null;
         this.cycle = params.cycle ? params.cycle : 1;
@@ -45,11 +46,12 @@ class EntityCarrier {
         }
     }
 
-    goTarget() {
+    goTarget() { 
         this.state = 1;
         ee.emit('getEntity', this.sourceId, sourceEntity => {
             if(sourceEntity) {
-                const dataPath = pathfinding.computePath(sourceEntity, this._targetType);
+                this.resource = sourceEntity.deductRessource(this.ressourceId, this._capacity);
+                const dataPath = pathfinding.computePath(sourceEntity, this._targetType, this.constructor.authorizedTile, this.ressourceId, this.resource); 
                 this.path = dataPath.path || null;
                 this.targetId = dataPath.targetId || null;
                 this.sourceId = dataPath.sourceId || null;
@@ -65,7 +67,7 @@ class EntityCarrier {
         this.state = 2;
         ee.emit('getEntity', this.targetId, entity => {
             if(entity) {
-                entity.store(this.resource);
+                entity.storeRessource(this.ressourceId, this.resource);
                 this.resource = 0;
             }
             ee.emit('removeEntity', this._id);

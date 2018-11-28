@@ -1,6 +1,6 @@
-const Entity = require('../EntityBasic');
+const EntityBasic = require('../EntityBasic');
 
-class Stone extends Entity {
+class Stone extends EntityBasic {
 
     constructor(params) {
         super(params);
@@ -12,7 +12,7 @@ Stone.selectable = false;
 Stone.tile_x = 1;
 Stone.tile_z = 1;
 Stone.walkable = 0;
-Stone.code = 253; //value in alpha blue  252  for png
+Stone.code = 253;
 Stone.resource = true;
 Stone.instances = [];
 module.exports = Stone;

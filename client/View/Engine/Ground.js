@@ -45,7 +45,7 @@ class Ground {
     }
 
     drawWaterMesh(model) {
-        const heightWater = 3;
+        const heightWater = 4; 
         if(this.chunkMesh.geometry.boundingBox.min.y <= heightWater) {
 
             const sizeX = this.tileSize * model.nbTileX - 0.3;
@@ -103,7 +103,7 @@ class Ground {
         const length = vertices.length;
         for(let i = 0; i < length; i++) {
             let pointsHeights = model.pointsHeights[i];
-            vertices[i].y = pointsHeights / 255 * this.tileHeight;
+            vertices[i].y = pointsHeights / 55 * this.tileHeight;
         }
 
         const modiferSimplify = new THREE.SimplifyModifier();
@@ -125,7 +125,7 @@ class Ground {
         const nbZm = nbZ - 1;
         const topLeft = new Float32Array(nbX * 3);
         const topRight = new Float32Array(nbZ * 3);
-        const heightFactor = this.tileHeight / 255;
+        const heightFactor = this.tileHeight / 55;
         let i;
 
         //compute border left

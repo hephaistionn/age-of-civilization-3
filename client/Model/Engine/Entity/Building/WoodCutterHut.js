@@ -5,8 +5,9 @@ class WoodCutterHut extends Entity {
 
     constructor(params) {
         super(params);
-
-        this.states = { wood: params.states.wood || 0, workers: 2};
+        this.states =  {} 
+        this.states.wood =  params.states&&params.states.wood ?  params.states.wood : 0;
+        this.states.workers =  2;
         this.statesMax = { wood: 20};
 
         this.workers = params.workers || 0;
@@ -18,9 +19,12 @@ class WoodCutterHut extends Entity {
     }
 
     update() {
-        if(this.workers < this.WorkersMax) {
+        if(this.builded && this.workers < this.WorkersMax) {
             ee.emit('newEntity', {sourceId: this._id, type: 'WoodCutter'});
             this.workers++;
+        }
+        if(this.builded && this.states.wood >= this.statesMax.wood) {
+            ee.emit('newEntity', {sourceId: this._id, type: 'WoodCarrier'});
         }
     }
 }

@@ -17,9 +17,10 @@ function init(ground, entities) {
 function computePath(source, targetType, tileType, eleId, value) {
     const grid = currentGround.grid;
     let x = Math.floor(source.x);
-    let z = Math.floor(source.z);
+    let z = Math.floor(source.z); 
     if(!targetType) return {};
-    const nearests = ENTITIES[targetType].getNearestEntities(x, z, 20, eleId, value);
+    
+    const nearests = ENTITIES[targetType].getNearestEntities(x, z, 20, eleId, value);  
     const sourceTiles = source.getTiles();
     let length = nearests.length;
     const paths = [];

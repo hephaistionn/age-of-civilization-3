@@ -2,7 +2,8 @@ const ee = require('../eventEmitter');
 
 module.exports = StateManager => {
 
-    let cycle = 0;
+    let cycleGoal = 0;
+    let cycleTrade = 0;
 
     StateManager.prototype.newCity = function newCity(params) {
         params.id = this.computeUUID('city_');
@@ -124,15 +125,44 @@ module.exports = StateManager => {
     };
 
     StateManager.prototype.cityUpdate = function cityUpdate(dt) {
-        if(cycle > 1000) {
-            cycle = 0;
+        if(cycleGoal > 1000) {
+            cycleGoal = 0;
             this.cityUpdateLevel();
             if(this.cityGoalAchieved() && !this.cityIsItCompleted()) {
                 this.incraseLeaderLevel();
                 this.cityComplete();
             }
         }
-        cycle += dt
+        cycleGoal += dt
+
+
+        if(cycleTrade > 5000) {
+            cycleTrade = 0;
+            this.spawnTrader();
+        }
+        cycleTrade += dt
+    }
+
+    StateManager.prototype.spawnTrader = function spawnTrader()  {
+        const trade = Object.keys(this.currentCity.trade);
+        const quantity = 5;
+        const luky = Math.random() > 0.1 ? true : false;
+        let purchased;
+        if(luky){
+            const sold = trade[Math.floor(Math.random()*(trade.length-0.001))];
+            const exportables = this.currentCity.trade[sold];
+
+            for(let i=0; i<exportables.length; i++) {
+                const eleId = exportables[i];
+                if(this.currentCity.states[eleId] >= quantity ){//factor
+                   purchased = eleId; 
+                   break;    
+                };
+            }
+            if(purchased){
+                ee.emit('spawnEntity', { type:'Trader', sold: sold, purchased: purchased, quantity:quantity });
+            }
+        }
     }
 
 

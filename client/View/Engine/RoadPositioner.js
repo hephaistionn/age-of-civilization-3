@@ -64,7 +64,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 55 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             vx = x + 1;
@@ -72,7 +72,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 55 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             vx = x;
@@ -80,7 +80,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 55 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
 
@@ -89,7 +89,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 55 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             vx = x + 1;
@@ -97,7 +97,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 55 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             vx = x;
@@ -105,7 +105,7 @@ module.exports = class RoadPositioner {
             absoluteIndex = vz * nbPointX + vx;
             walkables[ctnColor++] = color;
             positions[ctn++] = vx * tileSize;
-            positions[ctn++] = pointsHeights[absoluteIndex] / 255 * tileHeight + 0.1;
+            positions[ctn++] = pointsHeights[absoluteIndex] / 55 * tileHeight + 0.1;
             positions[ctn++] = vz * tileSize;
 
             geometry.drawRange.count = ctn / 3;

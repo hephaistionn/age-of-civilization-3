@@ -18,7 +18,9 @@ module.exports = {
 
     Peon: require('./Character/Peon'),
     WoodCutter: require('./Character/WoodCutter'),
+    WoodCarrier: require('./Character/WoodCarrier'),
     Trader: require('./Character/Trader'),
+    Seller: require('./Character/Seller'),
     Builder: require('./Character/Builder'), 
 
     Road: require('./Road/Road'),
